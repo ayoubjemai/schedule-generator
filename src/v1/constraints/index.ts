@@ -1,0 +1,9 @@
+export { ActivitiesNotOverlapping } from './time/ActivitiesNotOverlapping';
+export { MaxConsecutiveHoursForTeacher } from './time/MaxConsecutiveHoursForTeacher';
+export { MinGapsBetweenActivities } from './time/MinGapsBetweenActivities';
+export { PreferredStartingTimesForActivity } from './time/PreferredStartingTimesForActivity';
+export { StudentSetNotAvailablePeriods } from './time/StudentSetNotAvailablePeriods';
+export { TeacherMaxDaysPerWeek } from './time/TeacherMaxDaysPerWeek';
+export { TeacherNotAvailablePeriods } from './time/TeacherNotAvailablePeriods';
+export { PreferredRoomsForActivity } from './space/PreferredRoomsForActivity';
+export { RoomNotAvailable } from './space/RoomNotAvailable';

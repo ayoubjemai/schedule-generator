@@ -1,0 +1,468 @@
+// filepath: /generate-schedule/generate-schedule/src/scheduler/TimetableScheduler.ts
+import { TimetableAssignment } from './TimetableAssignment';
+import { Activity } from '../models/Activity';
+import { Room } from '../models/Room';
+import { TimeConstraint } from '../models/interfaces';
+import { SpaceConstraint } from '../models/interfaces';
+
+class TimetableScheduler {
+  private activities: Activity[] = [];
+  private timeConstraints: TimeConstraint[] = [];
+  private spaceConstraints: SpaceConstraint[] = [];
+  private rooms: Room[] = [];
+  private daysCount: number;
+  private periodsPerDay: number;
+  private randomSeed: number;
+
+  constructor(daysCount: number, periodsPerDay: number, randomSeed = 123456) {
+    this.daysCount = daysCount;
+    this.periodsPerDay = periodsPerDay;
+    this.randomSeed = randomSeed;
+  }
+
+  addActivity(activity: Activity): void {
+    this.activities.push(activity);
+  }
+
+  addTimeConstraint(constraint: TimeConstraint): void {
+    this.timeConstraints.push(constraint);
+  }
+
+  addSpaceConstraint(constraint: SpaceConstraint): void {
+    this.spaceConstraints.push(constraint);
+  }
+
+  addRoom(room: Room): void {
+    this.rooms.push(room);
+  }
+
+  private random(): number {
+    this.randomSeed = (this.randomSeed * 9301 + 49297) % 233280;
+    return this.randomSeed / 233280;
+  }
+
+  private shuffle<T>(array: T[]): T[] {
+    const result = [...array];
+    for (let i = result.length - 1; i > 0; i--) {
+      const j = Math.floor(this.random() * (i + 1));
+      [result[i], result[j]] = [result[j], result[i]];
+    }
+    return result;
+  }
+
+  private evaluateConstraint(
+    constraint: TimeConstraint | SpaceConstraint,
+    assignment: TimetableAssignment
+  ): number {
+    if (!constraint.active) return 100;
+    return constraint.isSatisfied(assignment) ? 100 : 0;
+  }
+
+  private evaluateSchedule(assignment: TimetableAssignment): number {
+    let totalWeight = 0;
+    let weightedScore = 0;
+
+    for (const constraint of this.timeConstraints) {
+      const weight = constraint.weight;
+      totalWeight += weight;
+      const score = this.evaluateConstraint(constraint, assignment);
+      weightedScore += score * weight;
+    }
+
+    for (const constraint of this.spaceConstraints) {
+      const weight = constraint.weight;
+      totalWeight += weight;
+      const score = this.evaluateConstraint(constraint, assignment);
+      weightedScore += score * weight;
+    }
+
+    return totalWeight > 0 ? weightedScore / totalWeight : 0;
+  }
+
+  private generateInitialSchedule(): TimetableAssignment {
+    const assignment = new TimetableAssignment(this.daysCount, this.periodsPerDay);
+    const sortedActivities = [...this.activities].sort((a, b) => {
+      const aConstraintLevel =
+        a.teachers.length +
+        a.studentSets.length +
+        a.totalDuration +
+        (a.preferredTimeSlots.length > 0 ? 1 : 0);
+      const bConstraintLevel =
+        b.teachers.length +
+        b.studentSets.length +
+        b.totalDuration +
+        (b.preferredTimeSlots.length > 0 ? 1 : 0);
+      return bConstraintLevel - aConstraintLevel;
+    });
+
+    for (const activity of sortedActivities) {
+      let placed = false;
+
+      if (activity.preferredStartingTime) {
+        const room = this.findSuitableRoom(activity);
+        if (room && this.canPlaceActivity(activity, activity.preferredStartingTime, room.id, assignment)) {
+          assignment.assignActivity(activity, activity.preferredStartingTime, room.id);
+          placed = true;
+        }
+      }
+
+      if (!placed && activity.preferredStartingTimes.length > 0) {
+        for (const time of activity.preferredStartingTimes) {
+          const room = this.findSuitableRoom(activity);
+          if (room && this.canPlaceActivity(activity, time, room.id, assignment)) {
+            assignment.assignActivity(activity, time, room.id);
+            placed = true;
+            break;
+          }
+        }
+      }
+
+      if (!placed && activity.preferredTimeSlots.length > 0) {
+        for (const time of activity.preferredTimeSlots) {
+          const room = this.findSuitableRoom(activity);
+          if (room && this.canPlaceActivity(activity, time, room.id, assignment)) {
+            assignment.assignActivity(activity, time, room.id);
+            placed = true;
+            break;
+          }
+        }
+      }
+
+      if (!placed) {
+        const possibleTimes: Period[] = [];
+        for (let day = 0; day < this.daysCount; day++) {
+          for (let hour = 0; hour <= this.periodsPerDay - activity.totalDuration; hour++) {
+            possibleTimes.push({ day, hour });
+          }
+        }
+
+        const shuffledTimes = this.shuffle(possibleTimes);
+
+        for (const time of shuffledTimes) {
+          const room = this.findSuitableRoom(activity);
+          if (room && this.canPlaceActivity(activity, time, room.id, assignment)) {
+            assignment.assignActivity(activity, time, room.id);
+            placed = true;
+            break;
+          }
+        }
+      }
+
+      if (!placed) {
+        console.warn(`Could not place activity ${activity.id}: ${activity.name}`);
+      }
+    }
+
+    return assignment;
+  }
+
+  private findSuitableRoom(activity: Activity): Room | undefined {
+    let candidates: Room[] = [];
+
+    if (activity.preferredRooms.length > 0) {
+      candidates = this.rooms.filter(r => activity.preferredRooms.includes(r.id));
+    }
+
+    if (candidates.length === 0 && activity.subject.preferredRooms.length > 0) {
+      candidates = this.rooms.filter(r => activity.subject.preferredRooms.includes(r.id));
+    }
+
+    if (candidates.length === 0) {
+      candidates = [...this.rooms];
+    }
+
+    return this.shuffle(candidates)[0];
+  }
+
+  private canPlaceActivity(
+    activity: Activity,
+    period: Period,
+    roomId: string,
+    assignment: TimetableAssignment
+  ): boolean {
+    for (let i = 0; i < activity.totalDuration; i++) {
+      const hourToCheck = period.hour + i;
+      if (hourToCheck >= this.periodsPerDay) {
+        return false;
+      }
+
+      const existingActivity = assignment.getActivityAtSlot(period.day, hourToCheck);
+      if (existingActivity) {
+        return false;
+      }
+
+      const existingActivityInRoom = assignment.getActivityInRoomAtSlot(roomId, period.day, hourToCheck);
+      if (existingActivityInRoom) {
+        return false;
+      }
+    }
+
+    const tempResult = assignment.assignActivity(activity, period, roomId);
+    if (!tempResult) {
+      return false;
+    }
+
+    let satisfiesHardConstraints = true;
+
+    for (const constraint of this.timeConstraints) {
+      if (constraint.weight === 100 && !constraint.isSatisfied(assignment)) {
+        satisfiesHardConstraints = false;
+        break;
+      }
+    }
+
+    if (satisfiesHardConstraints) {
+      for (const constraint of this.spaceConstraints) {
+        if (constraint.weight === 100 && !constraint.isSatisfied(assignment)) {
+          satisfiesHardConstraints = false;
+          break;
+        }
+      }
+    }
+
+    assignment.removeActivity(activity);
+
+    return satisfiesHardConstraints;
+  }
+
+  generateSchedule(maxIterations = 10000, initialTemperature = 100, coolingRate = 0.99): TimetableAssignment {
+    let currentSolution = this.generateInitialSchedule();
+    let currentScore = this.evaluateSchedule(currentSolution);
+    let bestSolution = currentSolution;
+    let bestScore = currentScore;
+
+    console.log(`Initial schedule score: ${currentScore}`);
+
+    let temperature = initialTemperature;
+    let iteration = 0;
+
+    while (iteration < maxIterations && temperature > 0.1) {
+      const neighborSolution = this.generateNeighbor(currentSolution);
+      const neighborScore = this.evaluateSchedule(neighborSolution);
+
+      const acceptanceProbability = this.calculateAcceptanceProbability(
+        currentScore,
+        neighborScore,
+        temperature
+      );
+
+      if (acceptanceProbability > this.random()) {
+        currentSolution = neighborSolution;
+        currentScore = neighborScore;
+
+        if (currentScore > bestScore) {
+          bestSolution = currentSolution;
+          bestScore = currentScore;
+          console.log(`New best score: ${bestScore} at iteration ${iteration}`);
+        }
+      }
+
+      temperature *= coolingRate;
+      iteration++;
+
+      if (iteration % 100 === 0) {
+        console.log(
+          `Iteration ${iteration}, Temperature: ${temperature.toFixed(2)}, Score: ${currentScore.toFixed(2)}`
+        );
+      }
+    }
+
+    console.log(`Final best score: ${bestScore} after ${iteration} iterations`);
+    return bestSolution;
+  }
+
+  private generateNeighbor(currentSolution: TimetableAssignment): TimetableAssignment {
+    const neighbor = currentSolution; // Placeholder, should be a deep copy
+
+    const modification = Math.floor(this.random() * 3);
+
+    switch (modification) {
+      case 0:
+        this.moveRandomActivity(neighbor);
+        break;
+      case 1:
+        this.swapRandomActivities(neighbor);
+        break;
+      case 2:
+        this.changeRandomRoom(neighbor);
+        break;
+    }
+
+    return neighbor;
+  }
+
+  private moveRandomActivity(solution: TimetableAssignment): void {
+    // Implement moving a random activity to a new time slot
+  }
+
+  private swapRandomActivities(solution: TimetableAssignment): void {
+    // Implement swapping two random activities
+  }
+
+  private changeRandomRoom(solution: TimetableAssignment): void {
+    // Implement changing the room of a random activity
+  }
+
+  private calculateAcceptanceProbability(
+    currentScore: number,
+    newScore: number,
+    temperature: number
+  ): number {
+    if (newScore > currentScore) {
+      return 1.0;
+    }
+
+    const delta = currentScore - newScore;
+    return Math.exp(-delta / temperature);
+  }
+
+  analyzeConstraintViolations(assignment: TimetableAssignment): Record<string, number> {
+    const violations: Record<string, number> = {};
+
+    for (const constraint of this.timeConstraints) {
+      if (!constraint.isSatisfied(assignment)) {
+        violations[constraint.type] = (violations[constraint.type] || 0) + 1;
+      }
+    }
+
+    for (const constraint of this.spaceConstraints) {
+      if (!constraint.isSatisfied(assignment)) {
+        violations[constraint.type] = (violations[constraint.type] || 0) + 1;
+      }
+    }
+
+    return violations;
+  }
+
+  exportSchedule(assignment: TimetableAssignment): ScheduleExport {
+    return {
+      teacherSchedules: this.exportTeacherSchedules(assignment),
+      studentSetSchedules: this.exportStudentSetSchedules(assignment),
+      roomSchedules: this.exportRoomSchedules(assignment),
+    };
+  }
+
+  private exportTeacherSchedules(assignment: TimetableAssignment): Record<string, TeacherScheduleExport> {
+    const result: Record<string, TeacherScheduleExport> = {};
+
+    const teachers = new Map<string, Teacher>();
+    for (const activity of this.activities) {
+      for (const teacher of activity.teachers) {
+        teachers.set(teacher.id, teacher);
+      }
+    }
+
+    for (const [teacherId, teacher] of teachers) {
+      const schedule: Record<string, ActivityScheduleItem[]> = {};
+
+      for (let day = 0; day < this.daysCount; day++) {
+        schedule[day] = [];
+      }
+
+      const activities = assignment.getActivitiesForTeacher(teacherId);
+      for (const activity of activities) {
+        const slot = assignment.getSlotForActivity(activity.id);
+        const roomId = assignment.getRoomForActivity(activity.id);
+
+        if (slot && roomId) {
+          const room = this.rooms.find(r => r.id === roomId);
+
+          schedule[slot.day].push({
+            activityId: activity.id,
+            activityName: activity.name,
+            subjectName: activity.subject.name,
+            startHour: slot.hour,
+            endHour: slot.hour + activity.totalDuration - 1,
+            roomName: room ? room.name : 'Unknown Room',
+            studentSets: activity.studentSets.map(s => s.name),
+          });
+        }
+      }
+
+      for (let day = 0; day < this.daysCount; day++) {
+        schedule[day].sort((a, b) => a.startHour - b.startHour);
+      }
+
+      result[teacherId] = {
+        teacherName: teacher.name,
+        schedule,
+      };
+    }
+
+    return result;
+  }
+
+  private exportStudentSetSchedules(
+    assignment: TimetableAssignment
+  ): Record<string, StudentSetScheduleExport> {
+    const result: Record<string, StudentSetScheduleExport> = {};
+
+    const studentSets = new Map<string, StudentSet>();
+    for (const activity of this.activities) {
+      for (const studentSet of activity.studentSets) {
+        studentSets.set(studentSet.id, studentSet);
+      }
+    }
+
+    for (const [studentSetId, studentSet] of studentSets) {
+      const schedule: Record<string, ActivityScheduleItem[]> = {};
+
+      for (let day = 0; day < this.daysCount; day++) {
+        schedule[day] = [];
+      }
+
+      const activities = assignment.getActivitiesForStudentSet(studentSetId);
+      for (const activity of activities) {
+        const slot = assignment.getSlotForActivity(activity.id);
+        const roomId = assignment.getRoomForActivity(activity.id);
+
+        if (slot && roomId) {
+          // Add to schedule logic here
+        }
+      }
+
+      for (let day = 0; day < this.daysCount; day++) {
+        // Sort activities by start hour logic here
+      }
+
+      result[studentSetId] = {
+        studentSetName: studentSet.name,
+        schedule,
+      };
+    }
+
+    return result;
+  }
+
+  private exportRoomSchedules(assignment: TimetableAssignment): Record<string, RoomScheduleExport> {
+    const result: Record<string, RoomScheduleExport> = {};
+
+    for (const room of this.rooms) {
+      const schedule: Record<string, ActivityScheduleItem[]> = {};
+
+      for (let day = 0; day < this.daysCount; day++) {
+        schedule[day] = [];
+      }
+
+      const activities = assignment.getActivitiesInRoom(room.id);
+      for (const activity of activities) {
+        // Add to schedule logic here
+      }
+
+      for (let day = 0; day < this.daysCount; day++) {
+        // Sort activities by start hour logic here
+      }
+
+      result[room.id] = {
+        roomName: room.name,
+        building: room.building,
+        capacity: room.capacity,
+        schedule,
+      };
+    }
+
+    return result;
+  }
+}
+
+export { TimetableScheduler };
