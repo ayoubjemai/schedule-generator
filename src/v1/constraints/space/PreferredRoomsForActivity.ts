@@ -1,8 +1,8 @@
 import { Activity } from '../../models/Activity';
-import { SpaceConstraint } from '../../models/interfaces';
 import { TimetableAssignment } from '../../scheduler/TimetableAssignment';
+import { Constraint } from '../../types/constraints';
 
-export class PreferredRoomsForActivity implements SpaceConstraint {
+export class PreferredRoomsForActivity implements Constraint {
   type = 'PreferredRoomsForActivity';
   weight: number;
   active: boolean;

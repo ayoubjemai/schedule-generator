@@ -1,7 +1,7 @@
-import { TimeConstraint } from '../../models/interfaces';
 import { TimetableAssignment } from '../../scheduler/TimetableAssignment';
+import { Constraint } from '../../types/constraints';
 
-export class MinGapsBetweenActivities implements TimeConstraint {
+export class MinGapsBetweenActivities implements Constraint {
   type = 'MinGapsBetweenActivities';
   weight: number;
   active: boolean;

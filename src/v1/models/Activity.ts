@@ -1,5 +1,5 @@
+import { Period } from '../types/core';
 import { ActivityTag } from './ActivityTag';
-import { Period } from './interfaces';
 import { StudentSet } from './StudentSet';
 import Subject from './Subject';
 import { Teacher } from './Teacher';

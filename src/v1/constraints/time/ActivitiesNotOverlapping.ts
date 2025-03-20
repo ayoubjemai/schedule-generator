@@ -1,9 +1,9 @@
 import { Activity } from '../../models/Activity';
-import { TimeConstraint } from '../../models/interfaces';
 import { TimetableAssignment } from '../../scheduler/TimetableAssignment';
+import { Constraint } from '../../types/constraints';
 //import { TimetableAssignment } from '../../scheduler/TimetableAssignment';
 
-export class ActivitiesNotOverlapping implements TimeConstraint {
+export class ActivitiesNotOverlapping implements Constraint {
   type = 'ActivitiesNotOverlapping';
   weight: number;
   active: boolean;

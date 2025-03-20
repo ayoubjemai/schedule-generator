@@ -1,4 +1,4 @@
-import { Period } from './interfaces';
+import { Period } from '../types/core';
 
 export class Teacher {
   id: string;

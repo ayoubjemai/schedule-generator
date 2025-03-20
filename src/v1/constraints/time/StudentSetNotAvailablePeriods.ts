@@ -1,8 +1,9 @@
-import { Period, TimeConstraint } from '../../models/interfaces';
 import { StudentSet } from '../../models/StudentSet';
 import { TimetableAssignment } from '../../scheduler/TimetableAssignment';
+import { Constraint } from '../../types/constraints';
+import { Period } from '../../types/core';
 
-export class StudentSetNotAvailablePeriods implements TimeConstraint {
+export class StudentSetNotAvailablePeriods implements Constraint {
   type = 'StudentSetNotAvailablePeriods';
   weight: number;
   active: boolean;

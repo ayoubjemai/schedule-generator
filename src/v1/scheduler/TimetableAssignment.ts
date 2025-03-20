@@ -1,6 +1,6 @@
 // filepath: /generate-schedule/generate-schedule/src/scheduler/TimetableAssignment.ts
 import { Activity } from '../models/Activity';
-import { Period } from '../models/interfaces';
+import { Period } from '../types/core';
 
 class TimetableAssignment {
   private activitySlots: Map<string, Period> = new Map(); // activityId -> Period
@@ -96,7 +96,7 @@ class TimetableAssignment {
     const activities: Activity[] = [];
 
     // For each assigned activity, check if the student set is involved
-    for (const [activityId, _] of this.activitySlots) {
+    for (const [activityId] of this.activitySlots) {
       const activity = this.getActivityById(activityId);
       if (activity && activity.studentSets.some(s => s.id === studentSetId)) {
         activities.push(activity);

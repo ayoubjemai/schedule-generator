@@ -1,8 +1,9 @@
 import { Activity } from '../../models/Activity';
-import { Period, TimeConstraint } from '../../models/interfaces';
 import { TimetableAssignment } from '../../scheduler/TimetableAssignment';
+import { Constraint } from '../../types/constraints';
+import { Period } from '../../types/core';
 
-export class PreferredStartingTimesForActivity implements TimeConstraint {
+export class PreferredStartingTimesForActivity implements Constraint {
   type = 'PreferredStartingTimesForActivity';
   weight: number;
   active: boolean;

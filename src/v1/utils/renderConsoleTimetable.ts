@@ -8,7 +8,14 @@ export function renderConsoleTimetable(
   const timetable = [];
 
   for (let day = 0; day < daysCount; day++) {
-    const daySchedule = { day: day + 1, periods: [] as any[] };
+    const daySchedule = {
+      day: day + 1,
+      periods: [] as {
+        hour: number;
+        activity: string;
+        room: string | null;
+      }[],
+    };
 
     for (let hour = 0; hour < periodsPerDay; hour++) {
       const activity = assignment.getActivityAtSlot(day, hour);
@@ -17,7 +24,7 @@ export function renderConsoleTimetable(
         daySchedule.periods.push({
           hour,
           activity: activity.name,
-          room: roomId,
+          room: roomId || null,
         });
       } else {
         daySchedule.periods.push({

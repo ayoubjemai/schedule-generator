@@ -16,7 +16,6 @@ import { StudentSet } from './models/StudentSet';
 import Subject from './models/Subject';
 import { Teacher } from './models/Teacher';
 import { TimetableScheduler } from './scheduler/TimetableScheduler';
-import { Period } from './models/interfaces';
 import { renderConsoleTimetable } from './utils/renderConsoleTimetable';
 
 // Initialize the scheduler

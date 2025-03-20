@@ -2,8 +2,6 @@
 import { TimetableAssignment } from './TimetableAssignment';
 import { Activity } from '../models/Activity';
 import { Room } from '../models/Room';
-import { Period, TimeConstraint } from '../models/interfaces';
-import { SpaceConstraint } from '../models/interfaces';
 import {
   ActivityScheduleItem,
   RoomScheduleExport,
@@ -13,11 +11,13 @@ import {
 } from '../../v0/main';
 import { Teacher } from '../models/Teacher';
 import { StudentSet } from '../models/StudentSet';
+import { Constraint } from '../types/constraints';
+import { Period } from '../types/core';
 
 class TimetableScheduler {
   private activities: Activity[] = [];
-  private timeConstraints: TimeConstraint[] = [];
-  private spaceConstraints: SpaceConstraint[] = [];
+  private timeConstraints: Constraint[] = [];
+  private spaceConstraints: Constraint[] = [];
   private rooms: Room[] = [];
   private daysCount: number;
   private periodsPerDay: number;
@@ -33,11 +33,11 @@ class TimetableScheduler {
     this.activities.push(activity);
   }
 
-  addTimeConstraint(constraint: TimeConstraint): void {
+  addTimeConstraint(constraint: Constraint): void {
     this.timeConstraints.push(constraint);
   }
 
-  addSpaceConstraint(constraint: SpaceConstraint): void {
+  addSpaceConstraint(constraint: Constraint): void {
     this.spaceConstraints.push(constraint);
   }
 
@@ -59,10 +59,7 @@ class TimetableScheduler {
     return result;
   }
 
-  private evaluateConstraint(
-    constraint: TimeConstraint | SpaceConstraint,
-    assignment: TimetableAssignment
-  ): 100 | 0 {
+  private evaluateConstraint(constraint: Constraint, assignment: TimetableAssignment): 100 | 0 {
     if (!constraint.active) return 100;
     return constraint.isSatisfied(assignment) ? 100 : 0;
   }
