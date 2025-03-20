@@ -5,18 +5,31 @@ export function renderConsoleTimetable(
   daysCount: number,
   periodsPerDay: number
 ): void {
-  console.log('Timetable:');
+  const timetable = [];
+
   for (let day = 0; day < daysCount; day++) {
-    console.log(`Day ${day + 1}:`);
+    const daySchedule = { day: day + 1, periods: [] as any[] };
+
     for (let hour = 0; hour < periodsPerDay; hour++) {
       const activity = assignment.getActivityAtSlot(day, hour);
       if (activity) {
         const roomId = assignment.getRoomForActivity(activity.id);
-        console.log(`  Hour ${hour}: ${activity.name} (Room: ${roomId})`);
+        daySchedule.periods.push({
+          hour,
+          activity: activity.name,
+          room: roomId,
+        });
       } else {
-        console.log(`  Hour ${hour}: Free`);
+        daySchedule.periods.push({
+          hour,
+          activity: 'Free',
+          room: null,
+        });
       }
     }
-    console.log(''); // Add a blank line between days
+
+    timetable.push(daySchedule);
   }
+
+  console.log(JSON.stringify(timetable, null, 2)); // Log the JSON object to the terminal
 }

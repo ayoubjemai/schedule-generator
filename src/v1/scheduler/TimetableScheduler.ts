@@ -62,7 +62,7 @@ class TimetableScheduler {
   private evaluateConstraint(
     constraint: TimeConstraint | SpaceConstraint,
     assignment: TimetableAssignment
-  ): number {
+  ): 100 | 0 {
     if (!constraint.active) return 100;
     return constraint.isSatisfied(assignment) ? 100 : 0;
   }
