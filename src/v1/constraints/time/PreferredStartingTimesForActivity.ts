@@ -1,3 +1,7 @@
+import { Activity } from '../../models/Activity';
+import { Period, TimeConstraint } from '../../models/interfaces';
+import { TimetableAssignment } from '../../scheduler/TimetableAssignment';
+
 export class PreferredStartingTimesForActivity implements TimeConstraint {
   type = 'PreferredStartingTimesForActivity';
   weight: number;
@@ -18,9 +22,8 @@ export class PreferredStartingTimesForActivity implements TimeConstraint {
     const assignedSlot = assignment.getSlotForActivity(this.activity.id);
     if (!assignedSlot) return true; // Not yet assigned
 
-    return this.preferredTimes.some(preferredTime => 
-      preferredTime.day === assignedSlot.day && 
-      preferredTime.hour === assignedSlot.hour
+    return this.preferredTimes.some(
+      preferredTime => preferredTime.day === assignedSlot.day && preferredTime.hour === assignedSlot.hour
     );
   }
 }

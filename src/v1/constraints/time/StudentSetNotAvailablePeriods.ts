@@ -1,3 +1,7 @@
+import { Period, TimeConstraint } from '../../models/interfaces';
+import { StudentSet } from '../../models/StudentSet';
+import { TimetableAssignment } from '../../scheduler/TimetableAssignment';
+
 export class StudentSetNotAvailablePeriods implements TimeConstraint {
   type = 'StudentSetNotAvailablePeriods';
   weight: number;

@@ -1,3 +1,7 @@
+import { TimeConstraint } from '../../models/interfaces';
+import { Teacher } from '../../models/Teacher';
+import { TimetableAssignment } from '../../scheduler/TimetableAssignment';
+
 export class TeacherMaxDaysPerWeek implements TimeConstraint {
   type = 'TeacherMaxDaysPerWeek';
   weight: number;

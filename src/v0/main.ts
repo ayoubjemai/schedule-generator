@@ -286,7 +286,7 @@ class PreferredRoomsForActivity implements SpaceConstraint {
   }
 }
 
-// Main timetable data structure
+// // Main timetable data structure
 class TimetableAssignment {
   private activitySlots: Map<string, Period> = new Map();
   private activityRooms: Map<string, string> = new Map();
@@ -1525,31 +1525,31 @@ function renderConsoleTimetable(
 }
 
 // Export all classes and interfaces for modular use
-// export {
-//   Period,
-//   TimeConstraint,
-//   SpaceConstraint,
-//   Teacher,
-//   StudentSet,
-//   Subject,
-//   ActivityTag,
-//   Room,
-//   Activity,
-//   TeacherNotAvailablePeriods,
-//   TeacherMaxDaysPerWeek,
-//   StudentSetNotAvailablePeriods,
-//   MaxConsecutiveHoursForTeacher,
-//   PreferredStartingTimesForActivity,
-//   ActivitiesNotOverlapping,
-//   MinGapsBetweenActivities,
-//   RoomNotAvailable,
-//   PreferredRoomsForActivity,
-//   TimetableAssignment,
-//   TimetableScheduler,
-//   ActivityScheduleItem,
-//   TeacherScheduleExport,
-//   StudentSetScheduleExport,
-//   RoomScheduleExport,
-//   ScheduleExport,
-//   renderConsoleTimetable,
-// };
+export {
+  Period,
+  TimeConstraint,
+  SpaceConstraint,
+  Teacher,
+  StudentSet,
+  Subject,
+  ActivityTag,
+  Room,
+  Activity,
+  TeacherNotAvailablePeriods,
+  TeacherMaxDaysPerWeek,
+  StudentSetNotAvailablePeriods,
+  MaxConsecutiveHoursForTeacher,
+  PreferredStartingTimesForActivity,
+  ActivitiesNotOverlapping,
+  MinGapsBetweenActivities,
+  RoomNotAvailable,
+  PreferredRoomsForActivity,
+  TimetableAssignment,
+  TimetableScheduler,
+  ActivityScheduleItem,
+  TeacherScheduleExport,
+  StudentSetScheduleExport,
+  RoomScheduleExport,
+  ScheduleExport,
+  renderConsoleTimetable,
+};

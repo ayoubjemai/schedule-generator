@@ -1,3 +1,5 @@
+import { TimetableAssignment } from '../scheduler/TimetableAssignment';
+
 // filepath: /generate-schedule/generate-schedule/src/types/core.ts
 export interface Period {
   day: number;

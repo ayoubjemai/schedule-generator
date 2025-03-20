@@ -1,4 +1,5 @@
-import { SpaceConstraint } from '../../models/interfaces';
+import { Period, SpaceConstraint } from '../../models/interfaces';
+import { Room } from '../../models/Room';
 import { TimetableAssignment } from '../../scheduler/TimetableAssignment';
 
 export class RoomNotAvailable implements SpaceConstraint {

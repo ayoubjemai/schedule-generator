@@ -2,8 +2,17 @@
 import { TimetableAssignment } from './TimetableAssignment';
 import { Activity } from '../models/Activity';
 import { Room } from '../models/Room';
-import { TimeConstraint } from '../models/interfaces';
+import { Period, TimeConstraint } from '../models/interfaces';
 import { SpaceConstraint } from '../models/interfaces';
+import {
+  ActivityScheduleItem,
+  RoomScheduleExport,
+  ScheduleExport,
+  StudentSetScheduleExport,
+  TeacherScheduleExport,
+} from '../../v0/main';
+import { Teacher } from '../models/Teacher';
+import { StudentSet } from '../models/StudentSet';
 
 class TimetableScheduler {
   private activities: Activity[] = [];

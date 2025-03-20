@@ -11,5 +11,7 @@
   "dependencies": {
     "typescript": "^5.8.2"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "ts-node": "^10.9.2"
+  }
 }

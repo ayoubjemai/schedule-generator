@@ -1,3 +1,5 @@
+import { TimetableAssignment } from '../scheduler/TimetableAssignment';
+
 export interface TimeConstraint {
   type: string;
   weight: number; // 0-100% importance
