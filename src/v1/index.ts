@@ -132,6 +132,7 @@ scheduler.addSpaceConstraint(new PreferredRoomsForActivity(physicsLab, physicsLa
 // Generate the schedule
 console.log('Generating timetable...');
 const assignment = scheduler.generateSchedule();
+console.dir(assignment, { colors: true, depth: 40 });
 
 // Output the schedule
 console.log('\nGenerated Timetable:');

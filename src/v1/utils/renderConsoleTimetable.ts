@@ -1,4 +1,6 @@
 import { TimetableAssignment } from '../scheduler/TimetableAssignment';
+import { writeFileSync, mkdirSync } from 'fs';
+import * as path from 'path';
 
 export function renderConsoleTimetable(
   assignment: TimetableAssignment,
@@ -37,6 +39,11 @@ export function renderConsoleTimetable(
 
     timetable.push(daySchedule);
   }
+  //  console.log(JSON.stringify(timetable, null, 2)); // Log the JSON object to the terminal
 
-  console.log(JSON.stringify(timetable, null, 2)); // Log the JSON object to the terminal
+  const examplesDir = path.resolve(__dirname, '../../../examples');
+  console.log('🚀 ~ examplesDir:', examplesDir);
+  mkdirSync(examplesDir, { recursive: true }); // Create the directory if it doesn't exist
+  writeFileSync(path.join(examplesDir, 'timetable.json'), JSON.stringify(timetable, null, 2)); // Write the JSON object to a file
+  //writeFileSync(`./../examples/timetable.json`, JSON.stringify(timetable, null, 2)); // Write the JSON object to a file
 }
