@@ -24,7 +24,10 @@ export class PreferredStartingTimesForActivity implements Constraint {
     if (!assignedSlot) return true; // Not yet assigned
 
     return this.preferredTimes.some(
-      preferredTime => preferredTime.day === assignedSlot.day && preferredTime.hour === assignedSlot.hour
+      preferredTime =>
+        preferredTime.day === assignedSlot.day &&
+        preferredTime.hour === assignedSlot.hour &&
+        preferredTime.minute === assignedSlot.minute
     );
   }
 }

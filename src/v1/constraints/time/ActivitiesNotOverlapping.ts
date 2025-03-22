@@ -42,8 +42,8 @@ export class ActivitiesNotOverlapping implements Constraint {
 
     if (!slotA || !slotB) return false;
 
-    const endA = slotA.hour + activityA.totalDuration;
-    const endB = slotB.hour + activityB.totalDuration;
+    const endA = slotA.hour + activityA.totalDuration + slotA.minute / 60;
+    const endB = slotB.hour + activityB.totalDuration + slotB.minute / 60;
 
     return (
       slotA.day === slotB.day &&

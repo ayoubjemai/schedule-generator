@@ -1,3 +1,4 @@
+import { log } from 'console';
 import {
   ActivitiesNotOverlapping,
   MaxConsecutiveHoursForTeacher,
@@ -17,6 +18,7 @@ import Subject from './models/Subject';
 import { Teacher } from './models/Teacher';
 import { TimetableScheduler } from './scheduler/TimetableScheduler';
 import { renderConsoleTimetable } from './utils/renderConsoleTimetable';
+import { logToFile } from './utils/logToFile';
 
 // Initialize the scheduler
 const daysCount = 5;
@@ -28,8 +30,8 @@ const teacher1 = new Teacher('t1', 'John Doe');
 const teacher2 = new Teacher('t2', 'Jane Smith');
 
 // Define teacher availability
-teacher1.notAvailablePeriods.push({ day: 0, hour: 0 }, { day: 4, hour: 7 });
-teacher2.notAvailablePeriods.push({ day: 1, hour: 0 }, { day: 1, hour: 1 });
+teacher1.notAvailablePeriods.push({ day: 0, hour: 0, minute: 50 }, { day: 4, hour: 7, minute: 10 });
+teacher2.notAvailablePeriods.push({ day: 1, hour: 0, minute: 30 }, { day: 1, hour: 1, minute: 30 });
 
 // Set teacher preferences/constraints
 teacher1.maxDaysPerWeek = 4;
@@ -44,8 +46,8 @@ const class1A = new StudentSet('s1', 'Class 1A');
 const class1B = new StudentSet('s2', 'Class 1B');
 
 // Define student availability
-class1A.notAvailablePeriods.push({ day: 4, hour: 6 }, { day: 4, hour: 7 });
-class1B.notAvailablePeriods.push({ day: 0, hour: 0 }, { day: 0, hour: 1 });
+class1A.notAvailablePeriods.push({ day: 4, hour: 6, minute: 20 }, { day: 4, hour: 7, minute: 0 });
+class1B.notAvailablePeriods.push({ day: 0, hour: 0, minute: 20 }, { day: 0, hour: 1, minute: 30 });
 
 // Set student set constraints
 class1A.maxHoursDaily = 6;
@@ -76,15 +78,15 @@ const room3 = new Room('r3', 'Lab Room', 20, 'Science Building');
 const room4 = new Room('r4', 'Computer Lab', 20, 'Tech Building');
 
 // Set room unavailability
-room1.notAvailablePeriods.push({ day: 2, hour: 4 });
-room3.notAvailablePeriods.push({ day: 3, hour: 3 }, { day: 3, hour: 4 });
+room1.notAvailablePeriods.push({ day: 2, hour: 4, minute: 12 });
+room3.notAvailablePeriods.push({ day: 3, hour: 3, minute: 45 }, { day: 3, hour: 4, minute: 40 });
 
 // Create activities
 const mathLecture = new Activity('a1', 'Math Lecture', math, 2);
 mathLecture.teachers.push(teacher1);
 mathLecture.studentSets.push(class1A, class1B);
 mathLecture.activityTags.push(lectureTags);
-mathLecture.preferredStartingTimes.push({ day: 0, hour: 1 }, { day: 2, hour: 3 });
+mathLecture.preferredStartingTimes.push({ day: 0, hour: 1, minute: 0 }, { day: 2, hour: 3, minute: 30 });
 
 const physicsLab = new Activity('a2', 'Physics Lab', physics, 3);
 physicsLab.teachers.push(teacher2);
@@ -97,7 +99,7 @@ const chemistryLecture = new Activity('a3', 'Chemistry Lecture', chemistry, 1);
 chemistryLecture.teachers.push(teacher1);
 chemistryLecture.studentSets.push(class1B);
 chemistryLecture.activityTags.push(lectureTags);
-chemistryLecture.preferredStartingTime = { day: 3, hour: 2 };
+chemistryLecture.preferredStartingTime = { day: 3, hour: 2, minute: 0 };
 chemistryLecture.endsStudentsDay = true;
 
 // Add rooms and activities to scheduler
@@ -132,11 +134,15 @@ scheduler.addSpaceConstraint(new PreferredRoomsForActivity(physicsLab, physicsLa
 // Generate the schedule
 console.log('Generating timetable...');
 const assignment = scheduler.generateSchedule();
-console.dir(assignment, { colors: true, depth: 40 });
 
 // Output the schedule
 console.log('\nGenerated Timetable:');
 renderConsoleTimetable(assignment, daysCount, periodsPerDay);
+
+const { teacherSchedules, studentSetSchedules, roomSchedules } = scheduler.exportSchedule(assignment);
+
+// Log the schedule to a file
+logToFile('schedule', { teacherSchedules, studentSetSchedules, roomSchedules });
 
 // Print constraint violations if any
 const violations = scheduler.analyzeConstraintViolations(assignment);

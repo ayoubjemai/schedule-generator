@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "v1": "ts-node src/v1/index.ts"
   },
   "author": "",
   "license": "ISC",

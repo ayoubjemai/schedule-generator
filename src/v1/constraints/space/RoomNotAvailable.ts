@@ -32,6 +32,7 @@ export class RoomNotAvailable implements Constraint {
         const period: Period = {
           day: slot.day,
           hour: slot.hour + i,
+          minute: slot.minute,
         };
 
         if (this.periods.some(p => p.day === period.day && p.hour === period.hour)) {

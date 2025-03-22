@@ -2,18 +2,45 @@
 export interface Period {
   day: number;
   hour: number;
+  minute: number;
 }
 
-// export interface TimeConstraint {
-//   type: string;
-//   weight: number; // 0-100% importance
-//   active: boolean;
-//   isSatisfied(assignment: TimetableAssignment): boolean;
-// }
+export interface ActivityScheduleItem {
+  activityId: string;
+  activityName: string;
+  subjectName: string;
+  startTime: {
+    hour: number;
+    minute: number;
+  };
+  endTime: {
+    hour: number;
+    minute: number;
+  };
+  roomName?: string;
+  teachers?: string[];
+  studentSets?: string[];
+}
 
-// export interface SpaceConstraint {
-//   type: string;
-//   weight: number; // 0-100% importance
-//   active: boolean;
-//   isSatisfied(assignment: TimetableAssignment): boolean;
-// }
+export interface TeacherScheduleExport {
+  teacherName: string;
+  schedule: Record<string, ActivityScheduleItem[]>;
+}
+
+export interface StudentSetScheduleExport {
+  studentSetName: string;
+  schedule: Record<string, ActivityScheduleItem[]>;
+}
+
+export interface RoomScheduleExport {
+  roomName: string;
+  building?: string;
+  capacity: number;
+  schedule: Record<string, ActivityScheduleItem[]>;
+}
+
+export interface ScheduleExport {
+  teacherSchedules: Record<string, TeacherScheduleExport>;
+  studentSetSchedules: Record<string, StudentSetScheduleExport>;
+  roomSchedules: Record<string, RoomScheduleExport>;
+}

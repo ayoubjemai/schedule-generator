@@ -13,12 +13,12 @@ class TimetableAssignment {
   assignActivity(activity: Activity, period: Period, roomId: string): boolean {
     // Check if the slot is available
     for (let i = 0; i < activity.totalDuration; i++) {
-      const slotKey = `${period.day}_${period.hour + i}`;
+      const slotKey = `${period.day}_${period.hour + i}_${period.minute}`;
       if (this.timeMatrix.has(slotKey)) {
         return false; // Time slot already occupied
       }
 
-      const roomSlotKey = `${roomId}_${period.day}_${period.hour + i}`;
+      const roomSlotKey = `${roomId}_${period.day}_${period.hour + i}_${period.minute}`;
       if (this.roomTimeMatrix.has(roomSlotKey)) {
         return false; // Room already occupied at this time
       }
@@ -30,10 +30,10 @@ class TimetableAssignment {
 
     // Update the matrices
     for (let i = 0; i < activity.totalDuration; i++) {
-      const slotKey = `${period.day}_${period.hour + i}`;
+      const slotKey = `${period.day}_${period.hour + i}_${period.minute}`;
       this.timeMatrix.set(slotKey, activity);
 
-      const roomSlotKey = `${roomId}_${period.day}_${period.hour + i}`;
+      const roomSlotKey = `${roomId}_${period.day}_${period.hour + i}_${period.minute}`;
       this.roomTimeMatrix.set(roomSlotKey, activity);
     }
 
@@ -48,10 +48,10 @@ class TimetableAssignment {
 
     // Remove from matrices
     for (let i = 0; i < activity.totalDuration; i++) {
-      const slotKey = `${period.day}_${period.hour + i}`;
+      const slotKey = `${period.day}_${period.hour + i}_${period.minute}`;
       this.timeMatrix.delete(slotKey);
 
-      const roomSlotKey = `${roomId}_${period.day}_${period.hour + i}`;
+      const roomSlotKey = `${roomId}_${period.day}_${period.hour + i}_${period.minute}`;
       this.roomTimeMatrix.delete(roomSlotKey);
     }
 
@@ -68,13 +68,14 @@ class TimetableAssignment {
     return this.activityRooms.get(activityId);
   }
 
-  getActivityAtSlot(day: number, hour: number): Activity | undefined {
-    const slotKey = `${day}_${hour}`;
+  getActivityAtSlot(slot: Period): Activity | undefined {
+    const { day, hour, minute } = slot;
+    const slotKey = `${day}_${hour}_${minute}`;
     return this.timeMatrix.get(slotKey);
   }
 
-  getActivityInRoomAtSlot(roomId: string, day: number, hour: number): Activity | undefined {
-    const roomSlotKey = `${roomId}_${day}_${hour}`;
+  getActivityInRoomAtSlot(roomId: string, day: number, hour: number, minute: number): Activity | undefined {
+    const roomSlotKey = `${roomId}_${day}_${hour}_${minute}`;
     return this.roomTimeMatrix.get(roomSlotKey);
   }
 
