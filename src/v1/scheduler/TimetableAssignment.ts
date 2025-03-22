@@ -83,7 +83,7 @@ class TimetableAssignment {
     const activities: Activity[] = [];
 
     // For each assigned activity, check if the teacher is involved
-    for (const [activityId, _] of this.activitySlots) {
+    for (const [activityId] of this.activitySlots) {
       const activity = this.getActivityById(activityId);
       if (activity && activity.teachers.some(t => t.id === teacherId)) {
         activities.push(activity);

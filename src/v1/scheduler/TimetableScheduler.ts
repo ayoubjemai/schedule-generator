@@ -19,15 +19,8 @@ class TimetableScheduler {
   private timeConstraints: Constraint[] = [];
   private spaceConstraints: Constraint[] = [];
   private rooms: Room[] = [];
-  private daysCount: number;
-  private periodsPerDay: number;
-  private randomSeed: number;
 
-  constructor(daysCount: number, periodsPerDay: number, randomSeed = 123456) {
-    this.daysCount = daysCount;
-    this.periodsPerDay = periodsPerDay;
-    this.randomSeed = randomSeed;
-  }
+  constructor(private daysCount: number, private periodsPerDay: number, private randomSeed = 123456) {}
 
   addActivity(activity: Activity): void {
     this.activities.push(activity);
@@ -144,12 +137,12 @@ class TimetableScheduler {
           }
         }
 
-        const shuffledTimes = this.shuffle(possibleTimes);
+        const shuffledPeriod = this.shuffle(possibleTimes);
 
-        for (const time of shuffledTimes) {
+        for (const period of shuffledPeriod) {
           const room = this.findSuitableRoom(activity);
-          if (room && this.canPlaceActivity(activity, time, room.id, assignment)) {
-            assignment.assignActivity(activity, time, room.id);
+          if (room && this.canPlaceActivity(activity, period, room.id, assignment)) {
+            assignment.assignActivity(activity, period, room.id);
             placed = true;
             break;
           }
