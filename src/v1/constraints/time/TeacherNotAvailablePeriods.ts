@@ -1,7 +1,8 @@
-import { TimetableAssignment } from '../../scheduler/TimetableAssignment';
 import { Teacher } from '../../models/Teacher';
-import { Period } from '../../types/core';
+import { TimetableAssignment } from '../../scheduler/TimetableAssignment';
 import { Constraint } from '../../types/constraints';
+import { Period } from '../../types/core';
+import { convertMinutesToHoursAndMinutes } from '../../utils/helper';
 
 class TeacherNotAvailablePeriods implements Constraint {
   type = 'TeacherNotAvailablePeriods';
@@ -26,17 +27,22 @@ class TeacherNotAvailablePeriods implements Constraint {
       const slot = assignment.getSlotForActivity(activity.id);
       if (!slot) continue;
 
-      for (let i = 0; i < activity.totalDuration; i++) {
-        const period: Period = {
-          day: slot.day,
-          hour: slot.hour + i,
-          minute: slot.minute,
-        };
+      const { hours, minutes } = convertMinutesToHoursAndMinutes(activity.totalDurationInMinutes);
+      for (let hour = 0; hour < hours; hour++) {
+        for (let min = 0; min < minutes; min++) {
+          const period: Period = {
+            day: slot.day,
+            hour: slot.hour + hour,
+            minute: slot.minute + min,
+          };
 
-        if (
-          this.periods.some(p => p.day === period.day && p.hour === period.hour && p.minute === period.minute)
-        ) {
-          return false;
+          if (
+            this.periods.some(
+              p => p.day === period.day && p.hour === period.hour && p.minute === period.minute
+            )
+          ) {
+            return false;
+          }
         }
       }
     }

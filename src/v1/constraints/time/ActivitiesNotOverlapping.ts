@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Activity } from '../../models/Activity';
 import { TimetableAssignment } from '../../scheduler/TimetableAssignment';
 import { Constraint } from '../../types/constraints';
@@ -42,8 +43,8 @@ export class ActivitiesNotOverlapping implements Constraint {
 
     if (!slotA || !slotB) return false;
 
-    const endA = slotA.hour + activityA.totalDuration + slotA.minute / 60;
-    const endB = slotB.hour + activityB.totalDuration + slotB.minute / 60;
+    const endA = moment(slotA).add(activityA.totalDurationInMinutes, 'minutes').get('millisecond');
+    const endB = moment(slotB).add(activityB.totalDurationInMinutes, 'minutes').get('millisecond');
 
     return (
       slotA.day === slotB.day &&
