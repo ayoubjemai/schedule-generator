@@ -82,24 +82,24 @@ room1.notAvailablePeriods.push({ day: 2, hour: 4, minute: 12 });
 room3.notAvailablePeriods.push({ day: 3, hour: 3, minute: 45 }, { day: 3, hour: 4, minute: 40 });
 
 // Create activities
-const mathLecture = new Activity('a1', 'Math Lecture', math, 2);
+const mathLecture = new Activity('a1', 'Math Lecture', math, 2 * 60);
 mathLecture.teachers.push(teacher1);
 mathLecture.studentSets.push(class1A, class1B);
 mathLecture.activityTags.push(lectureTags);
-mathLecture.preferredStartingTimes.push({ day: 0, hour: 1, minute: 0 }, { day: 2, hour: 3, minute: 30 });
+mathLecture.preferredStartingTimes.push({ day: 0, hour: 1, minute: 10 }, { day: 2, hour: 3, minute: 30 });
 
-const physicsLab = new Activity('a2', 'Physics Lab', physics, 3);
+const physicsLab = new Activity('a2', 'Physics Lab', physics, 3 * 60);
 physicsLab.teachers.push(teacher2);
 physicsLab.studentSets.push(class1A);
 physicsLab.activityTags.push(labTag);
 physicsLab.preferredRooms = ['r3'];
 physicsLab.minDaysBetween = 1;
 
-const chemistryLecture = new Activity('a3', 'Chemistry Lecture', chemistry, 1);
+const chemistryLecture = new Activity('a3', 'Chemistry Lecture', chemistry, 1 * 60);
 chemistryLecture.teachers.push(teacher1);
 chemistryLecture.studentSets.push(class1B);
 chemistryLecture.activityTags.push(lectureTags);
-chemistryLecture.preferredStartingTime = { day: 3, hour: 2, minute: 0 };
+chemistryLecture.preferredStartingTime = { day: 3, hour: 2, minute: 10 };
 chemistryLecture.endsStudentsDay = true;
 
 // Add rooms and activities to scheduler
@@ -120,7 +120,8 @@ scheduler.addTimeConstraint(new TeacherMaxDaysPerWeek(teacher1, teacher1.maxDays
 scheduler.addTimeConstraint(new MaxConsecutiveHoursForTeacher(teacher1, teacher1.maxHoursContinuously || 4));
 scheduler.addTimeConstraint(new StudentSetNotAvailablePeriods(class1A));
 scheduler.addTimeConstraint(new StudentSetNotAvailablePeriods(class1B));
-scheduler.addTimeConstraint(new MinGapsBetweenActivities(1));
+//TODO this constraint need to be fixed
+//scheduler.addTimeConstraint(new MinGapsBetweenActivities(60));
 scheduler.addTimeConstraint(
   new PreferredStartingTimesForActivity(mathLecture, mathLecture.preferredStartingTimes, 50)
 );

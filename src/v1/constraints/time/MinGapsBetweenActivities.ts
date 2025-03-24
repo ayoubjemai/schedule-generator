@@ -1,17 +1,11 @@
+import moment from 'moment';
 import { TimetableAssignment } from '../../scheduler/TimetableAssignment';
 import { Constraint } from '../../types/constraints';
 
 export class MinGapsBetweenActivities implements Constraint {
   type = 'MinGapsBetweenActivities';
-  weight: number;
-  active: boolean;
-  minGaps: number;
 
-  constructor(minGaps: number, weight = 100, active = true) {
-    this.minGaps = minGaps;
-    this.weight = weight;
-    this.active = active;
-  }
+  constructor(private minGapInMinutes: number, public weight = 100, public active = true) {}
 
   isSatisfied(assignment: TimetableAssignment): boolean {
     if (!this.active) return true;
@@ -29,9 +23,9 @@ export class MinGapsBetweenActivities implements Constraint {
         const slotB = assignment.getSlotForActivity(activityB.id);
 
         if (!slotB) continue;
-
-        const gap = Math.abs(slotA.hour - slotB.hour);
-        if (gap < this.minGaps) {
+        const gap = moment(slotA).diff(moment(slotB), 'minutes');
+        //const gap = Math.abs(slotA.hour - slotB.hour);
+        if (gap < this.minGapInMinutes) {
           return false;
         }
       }

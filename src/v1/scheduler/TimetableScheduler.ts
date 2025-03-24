@@ -13,6 +13,7 @@ import { Teacher } from '../models/Teacher';
 import { StudentSet } from '../models/StudentSet';
 import { Constraint } from '../types/constraints';
 import { Period } from '../types/core';
+import { convertMinutesToHoursAndMinutes } from '../utils/helper';
 
 class TimetableScheduler {
   private activities: Activity[] = [];
@@ -84,12 +85,12 @@ class TimetableScheduler {
       const aConstraintLevel =
         a.teachers.length +
         a.studentSets.length +
-        a.totalDuration +
+        a.totalDurationInMinutes +
         (a.preferredTimeSlots.length > 0 ? 1 : 0);
       const bConstraintLevel =
         b.teachers.length +
         b.studentSets.length +
-        b.totalDuration +
+        b.totalDurationInMinutes +
         (b.preferredTimeSlots.length > 0 ? 1 : 0);
       return bConstraintLevel - aConstraintLevel;
     });
@@ -130,8 +131,9 @@ class TimetableScheduler {
       if (!placed) {
         const possibleTimes: Period[] = [];
         for (let day = 0; day < this.daysCount; day++) {
-          for (let hour = 0; hour <= this.periodsPerDay - activity.totalDuration; hour++) {
-            for (let min = 0; min < 60; min++) {
+          const { hours, minutes } = convertMinutesToHoursAndMinutes(activity.totalDurationInMinutes);
+          for (let hour = 0; hour <= this.periodsPerDay - hours; hour++) {
+            for (let min = 0; min < 60 - minutes; min++) {
               possibleTimes.push({ day, hour, minute: min });
             }
           }
@@ -181,29 +183,64 @@ class TimetableScheduler {
     roomId: string,
     assignment: TimetableAssignment
   ): boolean {
-    for (let i = 0; i < activity.totalDuration; i++) {
-      const hourToCheck = period.hour + i;
-      if (hourToCheck >= this.periodsPerDay) {
-        return false;
+    const totalMinutes = activity.totalDurationInMinutes;
+
+    let currentMinute = period.minute;
+    let currentHour = period.hour;
+    let currentDay = period.day;
+
+    for (let minutesElapsed = 0; minutesElapsed < totalMinutes; minutesElapsed++) {
+      // Check if we've moved to the next hour
+      if (currentMinute >= 60) {
+        currentMinute = 0;
+        currentHour++;
+
+        // Check if we've moved to the next day
+        if (currentHour >= this.periodsPerDay) {
+          currentHour = 0;
+          currentDay++;
+
+          // Check if we've exceeded available days
+          if (currentDay >= this.daysCount) {
+            return false;
+          }
+        }
       }
 
+      // Check if there's an existing activity at this precise time slot
       const existingActivity = assignment.getActivityAtSlot({
-        day: period.day,
-        hour: hourToCheck,
-        minute: period.minute,
+        day: currentDay,
+        hour: currentHour,
+        minute: currentMinute,
       });
+
       if (existingActivity) {
         return false;
       }
 
+      // Check if there's an existing activity in this room at this time
       const existingActivityInRoom = assignment.getActivityInRoomAtSlot(
         roomId,
-        period.day,
-        hourToCheck,
-        period.minute
+        currentDay,
+        currentHour,
+        currentMinute
       );
+
       if (existingActivityInRoom) {
         return false;
+      }
+
+      currentMinute++;
+      if (currentMinute >= 60) {
+        currentMinute = 0;
+        currentHour++;
+        if (currentHour >= this.periodsPerDay) {
+          currentHour = 0;
+          currentDay++;
+          if (currentDay >= this.daysCount) {
+            return false;
+          }
+        }
       }
     }
 
@@ -282,7 +319,7 @@ class TimetableScheduler {
   }
 
   private generateNeighbor(currentSolution: TimetableAssignment): TimetableAssignment {
-    const neighbor = currentSolution; // Placeholder, should be a deep copy
+    const neighbor = currentSolution.clone(); // Placeholder, should be a deep copy
 
     const modification = Math.floor(this.random() * 3);
 
@@ -462,7 +499,7 @@ class TimetableScheduler {
         schedule[day] = [];
       }
 
-      const activities = assignment.getActivitiesInRoom(room.id);
+      const activities = assignment.getAllActivitiesInRoom(room.id);
       for (const activity of activities) {
         const slot = assignment.getSlotForActivity(activity.id);
         const roomId = assignment.getRoomForActivity(activity.id);
@@ -497,17 +534,20 @@ class TimetableScheduler {
   }
 
   private generateActivityTimeSchedule(
-    activity: {
-      id: string;
-      name: string;
-      subject: { name: string };
-      totalDuration: number;
-      teachers: { name: string }[];
-      studentSets: { name: string }[];
-    },
+    activity: Pick<
+      Activity,
+      'id' | 'name' | 'subject' | 'totalDurationInMinutes' | 'teachers' | 'studentSets'
+    >,
+
     slot: { hour: number; minute: number },
     room: { name: string } | undefined
   ): ActivityScheduleItem {
+    if (activity.name === 'Chemistry Lecture') {
+      console.log(slot);
+      console.log(activity.totalDurationInMinutes);
+    }
+
+    const { hours, minutes } = convertMinutesToHoursAndMinutes(activity.totalDurationInMinutes);
     return {
       activityId: activity.id,
       activityName: activity.name,
@@ -517,8 +557,8 @@ class TimetableScheduler {
         minute: slot.minute,
       },
       endTime: {
-        hour: slot.hour + activity.totalDuration - 1,
-        minute: slot.minute,
+        hour: slot.hour + hours,
+        minute: slot.minute + minutes,
       },
       roomName: room ? room.name : 'Unknown Room',
       teachers: activity.teachers.map(t => t.name),

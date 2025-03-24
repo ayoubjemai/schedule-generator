@@ -2,6 +2,7 @@
 import { TimetableAssignment } from '../../scheduler/TimetableAssignment';
 import { Teacher } from '../../models/Teacher';
 import { Constraint } from '../../types/constraints';
+import { convertMinutesToHoursAndMinutes } from '../../utils/helper';
 
 class MaxConsecutiveHoursForTeacher implements Constraint {
   type = 'MaxConsecutiveHoursForTeacher';
@@ -26,16 +27,20 @@ class MaxConsecutiveHoursForTeacher implements Constraint {
     for (const activity of teacherActivities) {
       const slot = assignment.getSlotForActivity(activity.id);
       if (slot) {
-        for (let i = 0; i < activity.totalDuration; i++) {
-          const hour = slot.hour + i;
-          if (assignment.getActivityAtSlot({ day: slot.day, hour, minute: slot.minute })) {
-            consecutiveHours++;
-          } else {
-            consecutiveHours = 0; // Reset if there's a gap
-          }
+        const { hours, minutes } = convertMinutesToHoursAndMinutes(activity.totalDurationInMinutes);
+        for (let i = 0; i < hours; i++) {
+          for (let min = 0; min < minutes; min++) {
+            const hour = slot.hour + i;
+            const minute = slot.minute + min;
+            if (assignment.getActivityAtSlot({ day: slot.day, hour, minute })) {
+              consecutiveHours++;
+            } else {
+              consecutiveHours = 0; // Reset if there's a gap
+            }
 
-          if (consecutiveHours > this.maxHours) {
-            return false; // Exceeds max consecutive hours
+            if (consecutiveHours > this.maxHours) {
+              return false; // Exceeds max consecutive hours
+            }
           }
         }
       }
