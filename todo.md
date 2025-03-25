@@ -8,9 +8,11 @@
 
 - Not available periods ✅
 - Max days per week ✅
-- Min days per week ✅
+- Min days per week
 - Max gaps per day/week
-- Max hours daily/continuously
+- Max hours daily
+- Max hours continuously ✅
+- Min hours continuously
 - Max span per day
 - Min hours daily
 - Max hours daily/continuously with an activity tag

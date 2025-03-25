@@ -3,9 +3,10 @@ import { Activity } from '../../../models/Activity';
 import { TimetableAssignment } from '../../../scheduler/TimetableAssignment';
 import { Constraint } from '../../../types/constraints';
 import { DEFAULT_WEIGHT } from '../../../utils/defaultWeight';
+import { ConstraintType } from '../../constraintType.enum';
 
 export class ActivitiesNotOverlapping implements Constraint {
-  type = 'ActivitiesNotOverlapping';
+  type = ConstraintType.time.activity.ActivitiesNotOverlapping;
   weight: number;
   active: boolean;
 

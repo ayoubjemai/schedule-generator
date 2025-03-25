@@ -3,9 +3,10 @@ import { Teacher } from '../../../models/Teacher';
 import { Constraint } from '../../../types/constraints';
 import { convertMinutesToHoursAndMinutes } from '../../../utils/convertMinutesToHoursAndMinutes';
 import { DEFAULT_WEIGHT } from '../../../utils/defaultWeight';
+import { ConstraintType } from '../../constraintType.enum';
 
 class MaxConsecutiveHoursForTeacher implements Constraint {
-  type = 'MaxConsecutiveHoursForTeacher';
+  type = ConstraintType.time.teacher.MaxConsecutiveHoursForTeacher;
   weight: number;
   active: boolean;
   teacher: Teacher;

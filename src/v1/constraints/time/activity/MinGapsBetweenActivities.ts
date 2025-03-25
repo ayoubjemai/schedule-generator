@@ -2,9 +2,10 @@ import moment from 'moment';
 import { TimetableAssignment } from '../../../scheduler/TimetableAssignment';
 import { Constraint } from '../../../types/constraints';
 import { Period } from '../../../types/core';
+import { ConstraintType } from '../../constraintType.enum';
 
 export class MinGapsBetweenActivities implements Constraint {
-  type = 'MinGapsBetweenActivities';
+  type = ConstraintType.time.activity.MinGapsBetweenActivities;
 
   constructor(private minGapInMinutes: number, public weight = 100, public active = true) {}
 

@@ -4,9 +4,11 @@ import { Constraint } from '../../../types/constraints';
 import { Period } from '../../../types/core';
 import { convertMinutesToHoursAndMinutes } from '../../../utils/convertMinutesToHoursAndMinutes';
 import { DEFAULT_WEIGHT } from '../../../utils/defaultWeight';
+import { ConstraintType } from '../../constraintType.enum';
 
 export class RoomNotAvailable implements Constraint {
-  type = 'RoomNotAvailable';
+  type = ConstraintType.space.room.RoomNotAvailable;
+
   weight: number;
   active: boolean;
   room: Room;
