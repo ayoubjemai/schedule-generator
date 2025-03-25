@@ -25,25 +25,23 @@ class MaxConsecutiveHoursForTeacher implements Constraint {
     let consecutiveHours = 0;
 
     for (const activity of teacherActivities) {
+      const { totalDurationInMinutes } = activity;
       const slot = assignment.getSlotForActivity(activity.id);
-      if (slot) {
-        const { hours, minutes } = convertMinutesToHoursAndMinutes(activity.totalDurationInMinutes);
-        for (let i = 0; i < hours; i++) {
-          for (let min = 0; min < minutes; min++) {
-            const hour = slot.hour + i;
-            const minute = slot.minute + min;
-            if (assignment.getActivityAtSlot({ day: slot.day, hour, minute })) {
-              consecutiveHours++;
-            } else {
-              consecutiveHours = 0; // Reset if there's a gap
-            }
+      if (!slot) continue;
+      for (let durationInMinutes = 0; durationInMinutes < totalDurationInMinutes; durationInMinutes++) {
+        const { hours, minutes } = convertMinutesToHoursAndMinutes(durationInMinutes);
 
-            if (consecutiveHours > this.maxHours) {
-              return false; // Exceeds max consecutive hours
-            }
-          }
+        const hour = slot.hour + hours;
+        const minute = slot.minute + minutes;
+        if (assignment.getActivityAtSlot({ day: slot.day, hour, minute })) {
+          consecutiveHours++;
+        } else {
+          consecutiveHours = 0; // Reset if there's a gap
         }
       }
+    }
+    if (consecutiveHours > this.maxHours) {
+      return false; // Exceeds max consecutive hours
     }
 
     return true;

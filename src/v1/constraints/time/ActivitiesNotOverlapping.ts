@@ -2,7 +2,6 @@ import moment from 'moment';
 import { Activity } from '../../models/Activity';
 import { TimetableAssignment } from '../../scheduler/TimetableAssignment';
 import { Constraint } from '../../types/constraints';
-//import { TimetableAssignment } from '../../scheduler/TimetableAssignment';
 
 export class ActivitiesNotOverlapping implements Constraint {
   type = 'ActivitiesNotOverlapping';
@@ -24,7 +23,7 @@ export class ActivitiesNotOverlapping implements Constraint {
         const activityA = activityAssignments[i];
         const activityB = activityAssignments[j];
 
-        if (this.activitiesOverlap(assignment, activityA, activityB)) {
+        if (this.checkActivityOverlap(assignment, activityA, activityB)) {
           return false;
         }
       }
@@ -33,7 +32,7 @@ export class ActivitiesNotOverlapping implements Constraint {
     return true;
   }
 
-  private activitiesOverlap(
+  private checkActivityOverlap(
     assignment: TimetableAssignment,
     activityA: Activity,
     activityB: Activity
@@ -43,12 +42,22 @@ export class ActivitiesNotOverlapping implements Constraint {
 
     if (!slotA || !slotB) return false;
 
-    const endA = moment(slotA).add(activityA.totalDurationInMinutes, 'minutes').get('millisecond');
-    const endB = moment(slotB).add(activityB.totalDurationInMinutes, 'minutes').get('millisecond');
+    const baseDate = moment().startOf('week');
 
-    return (
-      slotA.day === slotB.day &&
-      ((slotA.hour < endB && endA > slotB.hour) || (slotB.hour < endA && endB > slotA.hour))
-    );
+    const startA = moment(baseDate)
+      .add(slotA.day, 'days')
+      .add(slotA.hour, 'hours')
+      .add(slotA.minute, 'minutes');
+
+    const endA = startA.add(activityA.totalDurationInMinutes, 'minutes');
+
+    const startB = moment(baseDate)
+      .add(slotB.day, 'days')
+      .add(slotB.hour, 'hours')
+      .add(slotB.minute, 'minutes');
+
+    const endB = startB.add(activityB.totalDurationInMinutes, 'minutes');
+
+    return startA.isBefore(endB) && startB.isBefore(endA);
   }
 }

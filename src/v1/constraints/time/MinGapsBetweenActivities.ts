@@ -23,7 +23,7 @@ export class MinGapsBetweenActivities implements Constraint {
         const slotB = assignment.getSlotForActivity(activityB.id);
 
         if (!slotB) continue;
-        const gap = moment(slotA).diff(moment(slotB), 'minutes');
+        const gap = Math.abs(moment(slotA).diff(moment(slotB), 'minutes'));
         //const gap = Math.abs(slotA.hour - slotB.hour);
         if (gap < this.minGapInMinutes) {
           return false;

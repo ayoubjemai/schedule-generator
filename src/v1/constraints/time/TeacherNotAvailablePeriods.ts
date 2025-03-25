@@ -26,23 +26,21 @@ class TeacherNotAvailablePeriods implements Constraint {
     for (const activity of teacherActivities) {
       const slot = assignment.getSlotForActivity(activity.id);
       if (!slot) continue;
+      const { totalDurationInMinutes } = activity;
 
-      const { hours, minutes } = convertMinutesToHoursAndMinutes(activity.totalDurationInMinutes);
-      for (let hour = 0; hour < hours; hour++) {
-        for (let min = 0; min < minutes; min++) {
-          const period: Period = {
-            day: slot.day,
-            hour: slot.hour + hour,
-            minute: slot.minute + min,
-          };
+      for (let duration = 0; duration < totalDurationInMinutes; duration++) {
+        const { hours, minutes } = convertMinutesToHoursAndMinutes(duration);
 
-          if (
-            this.periods.some(
-              p => p.day === period.day && p.hour === period.hour && p.minute === period.minute
-            )
-          ) {
-            return false;
-          }
+        const period: Period = {
+          day: slot.day,
+          hour: slot.hour + hours,
+          minute: slot.minute + minutes,
+        };
+
+        if (
+          this.periods.some(p => p.day === period.day && p.hour === period.hour && p.minute === period.minute)
+        ) {
+          return false;
         }
       }
     }
