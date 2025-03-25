@@ -542,11 +542,6 @@ class TimetableScheduler {
     slot: { hour: number; minute: number },
     room: { name: string } | undefined
   ): ActivityScheduleItem {
-    if (activity.name === 'Chemistry Lecture') {
-      console.log(slot);
-      console.log(activity.totalDurationInMinutes);
-    }
-
     const { hours, minutes } = convertMinutesToHoursAndMinutes(activity.totalDurationInMinutes);
     return {
       activityId: activity.id,
