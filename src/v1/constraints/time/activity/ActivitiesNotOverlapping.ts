@@ -1,8 +1,8 @@
 import moment from 'moment';
-import { Activity } from '../../models/Activity';
-import { TimetableAssignment } from '../../scheduler/TimetableAssignment';
-import { Constraint } from '../../types/constraints';
-import { DEFAULT_WEIGHT } from '../../utils/defaultWeight';
+import { Activity } from '../../../models/Activity';
+import { TimetableAssignment } from '../../../scheduler/TimetableAssignment';
+import { Constraint } from '../../../types/constraints';
+import { DEFAULT_WEIGHT } from '../../../utils/defaultWeight';
 
 export class ActivitiesNotOverlapping implements Constraint {
   type = 'ActivitiesNotOverlapping';

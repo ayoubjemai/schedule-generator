@@ -1,9 +1,8 @@
-// filepath: /generate-schedule/generate-schedule/src/constraints/time/MaxConsecutiveHoursForTeacher.ts
-import { TimetableAssignment } from '../../scheduler/TimetableAssignment';
-import { Teacher } from '../../models/Teacher';
-import { Constraint } from '../../types/constraints';
-import { convertMinutesToHoursAndMinutes } from '../../utils/convertMinutesToHoursAndMinutes';
-import { DEFAULT_WEIGHT } from '../../utils/defaultWeight';
+import { TimetableAssignment } from '../../../scheduler/TimetableAssignment';
+import { Teacher } from '../../../models/Teacher';
+import { Constraint } from '../../../types/constraints';
+import { convertMinutesToHoursAndMinutes } from '../../../utils/convertMinutesToHoursAndMinutes';
+import { DEFAULT_WEIGHT } from '../../../utils/defaultWeight';
 
 class MaxConsecutiveHoursForTeacher implements Constraint {
   type = 'MaxConsecutiveHoursForTeacher';

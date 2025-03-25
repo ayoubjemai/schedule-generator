@@ -1,7 +1,7 @@
-import { Teacher } from '../../models/Teacher';
-import { TimetableAssignment } from '../../scheduler/TimetableAssignment';
-import { Constraint } from '../../types/constraints';
-import { DEFAULT_WEIGHT } from '../../utils/defaultWeight';
+import { Teacher } from '../../../models/Teacher';
+import { TimetableAssignment } from '../../../scheduler/TimetableAssignment';
+import { Constraint } from '../../../types/constraints';
+import { DEFAULT_WEIGHT } from '../../../utils/defaultWeight';
 
 export class TeacherMaxDaysPerWeek implements Constraint {
   type = 'TeacherMaxDaysPerWeek';

@@ -1,36 +1,37 @@
-import { Room } from '../../models/Room';
-import { TimetableAssignment } from '../../scheduler/TimetableAssignment';
-import { Constraint } from '../../types/constraints';
-import { Period } from '../../types/core';
-import { convertMinutesToHoursAndMinutes } from '../../utils/convertMinutesToHoursAndMinutes';
-import { DEFAULT_WEIGHT } from '../../utils/defaultWeight';
+import { Teacher } from '../../../models/Teacher';
+import { TimetableAssignment } from '../../../scheduler/TimetableAssignment';
+import { Constraint } from '../../../types/constraints';
+import { Period } from '../../../types/core';
+import { convertMinutesToHoursAndMinutes } from '../../../utils/convertMinutesToHoursAndMinutes';
+import { DEFAULT_WEIGHT } from '../../../utils/defaultWeight';
 
-export class RoomNotAvailable implements Constraint {
-  type = 'RoomNotAvailable';
+class TeacherNotAvailablePeriods implements Constraint {
+  type = 'TeacherNotAvailablePeriods';
   weight: number;
   active: boolean;
-  room: Room;
+  teacher: Teacher;
   periods: Period[];
 
-  constructor(room: Room, weight = DEFAULT_WEIGHT, active = true) {
-    this.room = room;
+  constructor(teacher: Teacher, weight = DEFAULT_WEIGHT, active = true) {
+    this.teacher = teacher;
     this.weight = weight;
     this.active = active;
-    this.periods = [...room.notAvailablePeriods];
+    this.periods = [...teacher.notAvailablePeriods];
   }
 
   isSatisfied(assignment: TimetableAssignment): boolean {
     if (!this.active) return true;
 
-    const roomActivities = assignment.getAllActivitiesInRoom(this.room.id);
+    const teacherActivities = assignment.getActivitiesForTeacher(this.teacher.id);
 
-    for (const activity of roomActivities) {
+    for (const activity of teacherActivities) {
       const slot = assignment.getSlotForActivity(activity.id);
       if (!slot) continue;
-
       const { totalDurationInMinutes } = activity;
+
       for (let duration = 0; duration < totalDurationInMinutes; duration++) {
         const { hours, minutes } = convertMinutesToHoursAndMinutes(duration);
+
         const period: Period = {
           day: slot.day,
           hour: slot.hour + hours,
@@ -48,3 +49,5 @@ export class RoomNotAvailable implements Constraint {
     return true;
   }
 }
+
+export { TeacherNotAvailablePeriods };

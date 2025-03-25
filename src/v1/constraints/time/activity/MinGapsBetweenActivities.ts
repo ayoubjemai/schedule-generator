@@ -1,7 +1,7 @@
 import moment from 'moment';
-import { TimetableAssignment } from '../../scheduler/TimetableAssignment';
-import { Constraint } from '../../types/constraints';
-import { Period } from '../../types/core';
+import { TimetableAssignment } from '../../../scheduler/TimetableAssignment';
+import { Constraint } from '../../../types/constraints';
+import { Period } from '../../../types/core';
 
 export class MinGapsBetweenActivities implements Constraint {
   type = 'MinGapsBetweenActivities';

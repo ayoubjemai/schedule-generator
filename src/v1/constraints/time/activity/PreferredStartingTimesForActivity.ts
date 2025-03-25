@@ -1,8 +1,8 @@
-import { Activity } from '../../models/Activity';
-import { TimetableAssignment } from '../../scheduler/TimetableAssignment';
-import { Constraint } from '../../types/constraints';
-import { Period } from '../../types/core';
-import { DEFAULT_WEIGHT } from '../../utils/defaultWeight';
+import { Activity } from '../../../models/Activity';
+import { TimetableAssignment } from '../../../scheduler/TimetableAssignment';
+import { Constraint } from '../../../types/constraints';
+import { Period } from '../../../types/core';
+import { DEFAULT_WEIGHT } from '../../../utils/defaultWeight';
 
 export class PreferredStartingTimesForActivity implements Constraint {
   type = 'PreferredStartingTimesForActivity';

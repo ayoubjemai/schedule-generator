@@ -1,9 +1,9 @@
-import { StudentSet } from '../../models/StudentSet';
-import { TimetableAssignment } from '../../scheduler/TimetableAssignment';
-import { Constraint } from '../../types/constraints';
-import { Period } from '../../types/core';
-import { convertMinutesToHoursAndMinutes } from '../../utils/convertMinutesToHoursAndMinutes';
-import { DEFAULT_WEIGHT } from '../../utils/defaultWeight';
+import { StudentSet } from '../../../models/StudentSet';
+import { TimetableAssignment } from '../../../scheduler/TimetableAssignment';
+import { Constraint } from '../../../types/constraints';
+import { Period } from '../../../types/core';
+import { convertMinutesToHoursAndMinutes } from '../../../utils/convertMinutesToHoursAndMinutes';
+import { DEFAULT_WEIGHT } from '../../../utils/defaultWeight';
 
 export class StudentSetNotAvailablePeriods implements Constraint {
   type = 'StudentSetNotAvailablePeriods';
