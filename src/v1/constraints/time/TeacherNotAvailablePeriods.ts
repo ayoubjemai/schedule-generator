@@ -2,7 +2,7 @@ import { Teacher } from '../../models/Teacher';
 import { TimetableAssignment } from '../../scheduler/TimetableAssignment';
 import { Constraint } from '../../types/constraints';
 import { Period } from '../../types/core';
-import { convertMinutesToHoursAndMinutes } from '../../utils/helper';
+import { convertMinutesToHoursAndMinutes } from '../../utils/convertMinutesToHoursAndMinutes';
 
 class TeacherNotAvailablePeriods implements Constraint {
   type = 'TeacherNotAvailablePeriods';

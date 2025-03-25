@@ -3,7 +3,7 @@ import { writeFileSync, mkdirSync } from 'fs';
 import * as path from 'path';
 import { logToFile } from './logToFile';
 import { Activity } from '../models/Activity';
-import { convertMinutesToHoursAndMinutes } from './helper';
+import { convertMinutesToHoursAndMinutes } from './convertMinutesToHoursAndMinutes';
 
 export function renderConsoleTimetable(
   assignment: TimetableAssignment,
@@ -21,6 +21,7 @@ export function renderConsoleTimetable(
         activity: string;
         room: string | null;
         totalDurationInMinutes: number;
+        activityId: string;
       }[],
     };
 
@@ -40,6 +41,7 @@ export function renderConsoleTimetable(
           room: roomId || null,
           minute: minutes,
           totalDurationInMinutes: activity.totalDurationInMinutes,
+          activityId: activity.id,
         });
       } else {
         // daySchedule.periods.push({

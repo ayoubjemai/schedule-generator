@@ -13,7 +13,7 @@ import { Teacher } from '../models/Teacher';
 import { StudentSet } from '../models/StudentSet';
 import { Constraint } from '../types/constraints';
 import { Period } from '../types/core';
-import { convertMinutesToHoursAndMinutes } from '../utils/helper';
+import { convertMinutesToHoursAndMinutes } from '../utils/convertMinutesToHoursAndMinutes';
 
 class TimetableScheduler {
   private activities: Activity[] = [];

@@ -2,7 +2,7 @@ import { StudentSet } from '../../models/StudentSet';
 import { TimetableAssignment } from '../../scheduler/TimetableAssignment';
 import { Constraint } from '../../types/constraints';
 import { Period } from '../../types/core';
-import { convertMinutesToHoursAndMinutes } from '../../utils/helper';
+import { convertMinutesToHoursAndMinutes } from '../../utils/convertMinutesToHoursAndMinutes';
 
 export class StudentSetNotAvailablePeriods implements Constraint {
   type = 'StudentSetNotAvailablePeriods';

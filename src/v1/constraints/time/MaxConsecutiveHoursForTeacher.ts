@@ -2,7 +2,7 @@
 import { TimetableAssignment } from '../../scheduler/TimetableAssignment';
 import { Teacher } from '../../models/Teacher';
 import { Constraint } from '../../types/constraints';
-import { convertMinutesToHoursAndMinutes } from '../../utils/helper';
+import { convertMinutesToHoursAndMinutes } from '../../utils/convertMinutesToHoursAndMinutes';
 
 class MaxConsecutiveHoursForTeacher implements Constraint {
   type = 'MaxConsecutiveHoursForTeacher';
