@@ -49,14 +49,14 @@ export class ActivitiesNotOverlapping implements Constraint {
       .add(slotA.hour, 'hours')
       .add(slotA.minute, 'minutes');
 
-    const endA = moment(startA).add(activityA.totalDurationInMinutes, 'minutes');
+    const endA = startA.add(activityA.totalDurationInMinutes, 'minutes');
 
     const startB = moment(baseDate)
       .add(slotB.day, 'days')
       .add(slotB.hour, 'hours')
       .add(slotB.minute, 'minutes');
 
-    const endB = moment(startB).add(activityB.totalDurationInMinutes, 'minutes');
+    const endB = startB.add(activityB.totalDurationInMinutes, 'minutes');
 
     return startA.isBefore(endB) && startB.isBefore(endA);
   }
