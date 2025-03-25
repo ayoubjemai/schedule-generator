@@ -120,8 +120,7 @@ scheduler.addTimeConstraint(new TeacherMaxDaysPerWeek(teacher1, teacher1.maxDays
 scheduler.addTimeConstraint(new MaxConsecutiveHoursForTeacher(teacher1, teacher1.maxHoursContinuously || 4));
 scheduler.addTimeConstraint(new StudentSetNotAvailablePeriods(class1A));
 scheduler.addTimeConstraint(new StudentSetNotAvailablePeriods(class1B));
-//TODO this constraint need to be fixed
-//scheduler.addTimeConstraint(new MinGapsBetweenActivities(60));
+scheduler.addTimeConstraint(new MinGapsBetweenActivities(0));
 scheduler.addTimeConstraint(
   new PreferredStartingTimesForActivity(mathLecture, mathLecture.preferredStartingTimes, 50)
 );
