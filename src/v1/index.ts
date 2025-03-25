@@ -19,6 +19,7 @@ import { Teacher } from './models/Teacher';
 import { TimetableScheduler } from './scheduler/TimetableScheduler';
 import { renderConsoleTimetable } from './utils/renderConsoleTimetable';
 import { logToFile } from './utils/logToFile';
+import { TeacherMinDaysPerWeek } from './constraints/time/teacher/TeacherMinDaysPerWeek';
 
 // Initialize the scheduler
 const daysCount = 5;
@@ -115,6 +116,7 @@ scheduler.addActivity(chemistryLecture);
 // Add time constraints
 scheduler.addTimeConstraint(new ActivitiesNotOverlapping());
 scheduler.addTimeConstraint(new TeacherNotAvailablePeriods(teacher1));
+scheduler.addTimeConstraint(new TeacherMinDaysPerWeek(teacher1, teacher1.minDaysPerWeek || 2));
 scheduler.addTimeConstraint(new TeacherNotAvailablePeriods(teacher2));
 scheduler.addTimeConstraint(new TeacherMaxDaysPerWeek(teacher1, teacher1.maxDaysPerWeek || 5));
 scheduler.addTimeConstraint(new MaxConsecutiveHoursForTeacher(teacher1, teacher1.maxHoursContinuously || 4));

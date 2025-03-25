@@ -11,6 +11,7 @@ export const ConstraintType = {
     teacher: {
       MaxConsecutiveHoursForTeacher: 'MaxConsecutiveHoursForTeacher',
       TeacherMaxDaysPerWeek: 'TeacherMaxDaysPerWeek',
+      TeacherMinDaysPerWeek: 'TeacherMinDaysPerWeek',
       TeacherNotAvailablePeriods: 'TeacherNotAvailablePeriods',
     },
   },
