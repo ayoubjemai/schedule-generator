@@ -1,6 +1,7 @@
 import { Teacher } from '../../models/Teacher';
 import { TimetableAssignment } from '../../scheduler/TimetableAssignment';
 import { Constraint } from '../../types/constraints';
+import { DEFAULT_WEIGHT } from '../../utils/defaultWeight';
 
 export class TeacherMaxDaysPerWeek implements Constraint {
   type = 'TeacherMaxDaysPerWeek';
@@ -9,7 +10,7 @@ export class TeacherMaxDaysPerWeek implements Constraint {
   teacher: Teacher;
   maxDays: number;
 
-  constructor(teacher: Teacher, maxDays: number, weight = 100, active = true) {
+  constructor(teacher: Teacher, maxDays: number, weight = DEFAULT_WEIGHT, active = true) {
     this.teacher = teacher;
     this.maxDays = maxDays;
     this.weight = weight;

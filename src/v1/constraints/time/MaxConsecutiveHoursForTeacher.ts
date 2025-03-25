@@ -3,6 +3,7 @@ import { TimetableAssignment } from '../../scheduler/TimetableAssignment';
 import { Teacher } from '../../models/Teacher';
 import { Constraint } from '../../types/constraints';
 import { convertMinutesToHoursAndMinutes } from '../../utils/convertMinutesToHoursAndMinutes';
+import { DEFAULT_WEIGHT } from '../../utils/defaultWeight';
 
 class MaxConsecutiveHoursForTeacher implements Constraint {
   type = 'MaxConsecutiveHoursForTeacher';
@@ -11,7 +12,7 @@ class MaxConsecutiveHoursForTeacher implements Constraint {
   teacher: Teacher;
   maxHours: number;
 
-  constructor(teacher: Teacher, maxHours: number, weight = 100, active = true) {
+  constructor(teacher: Teacher, maxHours: number, weight = DEFAULT_WEIGHT, active = true) {
     this.teacher = teacher;
     this.maxHours = maxHours;
     this.weight = weight;

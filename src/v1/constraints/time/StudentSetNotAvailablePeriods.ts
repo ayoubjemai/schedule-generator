@@ -3,6 +3,7 @@ import { TimetableAssignment } from '../../scheduler/TimetableAssignment';
 import { Constraint } from '../../types/constraints';
 import { Period } from '../../types/core';
 import { convertMinutesToHoursAndMinutes } from '../../utils/convertMinutesToHoursAndMinutes';
+import { DEFAULT_WEIGHT } from '../../utils/defaultWeight';
 
 export class StudentSetNotAvailablePeriods implements Constraint {
   type = 'StudentSetNotAvailablePeriods';
@@ -11,7 +12,7 @@ export class StudentSetNotAvailablePeriods implements Constraint {
   studentSet: StudentSet;
   periods: Period[];
 
-  constructor(studentSet: StudentSet, weight = 100, active = true) {
+  constructor(studentSet: StudentSet, weight = DEFAULT_WEIGHT, active = true) {
     this.studentSet = studentSet;
     this.weight = weight;
     this.active = active;

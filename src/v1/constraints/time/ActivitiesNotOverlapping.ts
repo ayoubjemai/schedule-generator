@@ -2,13 +2,14 @@ import moment from 'moment';
 import { Activity } from '../../models/Activity';
 import { TimetableAssignment } from '../../scheduler/TimetableAssignment';
 import { Constraint } from '../../types/constraints';
+import { DEFAULT_WEIGHT } from '../../utils/defaultWeight';
 
 export class ActivitiesNotOverlapping implements Constraint {
   type = 'ActivitiesNotOverlapping';
   weight: number;
   active: boolean;
 
-  constructor(weight = 100, active = true) {
+  constructor(weight = DEFAULT_WEIGHT, active = true) {
     this.weight = weight;
     this.active = active;
   }

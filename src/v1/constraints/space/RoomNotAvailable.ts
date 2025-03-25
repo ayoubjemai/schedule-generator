@@ -3,6 +3,7 @@ import { TimetableAssignment } from '../../scheduler/TimetableAssignment';
 import { Constraint } from '../../types/constraints';
 import { Period } from '../../types/core';
 import { convertMinutesToHoursAndMinutes } from '../../utils/convertMinutesToHoursAndMinutes';
+import { DEFAULT_WEIGHT } from '../../utils/defaultWeight';
 
 export class RoomNotAvailable implements Constraint {
   type = 'RoomNotAvailable';
@@ -11,7 +12,7 @@ export class RoomNotAvailable implements Constraint {
   room: Room;
   periods: Period[];
 
-  constructor(room: Room, weight = 100, active = true) {
+  constructor(room: Room, weight = DEFAULT_WEIGHT, active = true) {
     this.room = room;
     this.weight = weight;
     this.active = active;

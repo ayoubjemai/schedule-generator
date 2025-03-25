@@ -2,6 +2,7 @@ import { Activity } from '../../models/Activity';
 import { TimetableAssignment } from '../../scheduler/TimetableAssignment';
 import { Constraint } from '../../types/constraints';
 import { Period } from '../../types/core';
+import { DEFAULT_WEIGHT } from '../../utils/defaultWeight';
 
 export class PreferredStartingTimesForActivity implements Constraint {
   type = 'PreferredStartingTimesForActivity';
@@ -10,7 +11,7 @@ export class PreferredStartingTimesForActivity implements Constraint {
   activity: Activity;
   preferredTimes: Period[];
 
-  constructor(activity: Activity, preferredTimes: Period[], weight = 50, active = true) {
+  constructor(activity: Activity, preferredTimes: Period[], weight = DEFAULT_WEIGHT * 0.5, active = true) {
     this.activity = activity;
     this.preferredTimes = preferredTimes;
     this.weight = weight;
