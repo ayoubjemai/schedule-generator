@@ -2,9 +2,10 @@ import { Teacher } from '../../../models/Teacher';
 import { TimetableAssignment } from '../../../scheduler/TimetableAssignment';
 import { Constraint } from '../../../types/constraints';
 import { DEFAULT_WEIGHT } from '../../../utils/defaultWeight';
+import { ConstraintType } from '../../constraintType.enum';
 
 export class TeacherMaxDaysPerWeek implements Constraint {
-  type = 'TeacherMaxDaysPerWeek';
+  type = ConstraintType.time.teacher.TeacherMaxDaysPerWeek;
   weight: number;
   active: boolean;
   teacher: Teacher;

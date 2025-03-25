@@ -4,9 +4,10 @@ import { Constraint } from '../../../types/constraints';
 import { Period } from '../../../types/core';
 import { convertMinutesToHoursAndMinutes } from '../../../utils/convertMinutesToHoursAndMinutes';
 import { DEFAULT_WEIGHT } from '../../../utils/defaultWeight';
+import { ConstraintType } from '../../constraintType.enum';
 
 class TeacherNotAvailablePeriods implements Constraint {
-  type = 'TeacherNotAvailablePeriods';
+  type = ConstraintType.time.teacher.TeacherNotAvailablePeriods;
   weight: number;
   active: boolean;
   teacher: Teacher;

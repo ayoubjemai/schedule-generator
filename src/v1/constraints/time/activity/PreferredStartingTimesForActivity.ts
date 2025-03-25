@@ -3,9 +3,10 @@ import { TimetableAssignment } from '../../../scheduler/TimetableAssignment';
 import { Constraint } from '../../../types/constraints';
 import { Period } from '../../../types/core';
 import { DEFAULT_WEIGHT } from '../../../utils/defaultWeight';
+import { ConstraintType } from '../../constraintType.enum';
 
 export class PreferredStartingTimesForActivity implements Constraint {
-  type = 'PreferredStartingTimesForActivity';
+  type = ConstraintType.time.activity.PreferredStartingTimesForActivity;
   weight: number;
   active: boolean;
   activity: Activity;

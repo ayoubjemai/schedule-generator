@@ -2,9 +2,10 @@ import { Activity } from '../../../models/Activity';
 import { TimetableAssignment } from '../../../scheduler/TimetableAssignment';
 import { Constraint } from '../../../types/constraints';
 import { DEFAULT_WEIGHT } from '../../../utils/defaultWeight';
+import { ConstraintType } from '../../constraintType.enum';
 
 export class PreferredRoomsForActivity implements Constraint {
-  type = 'PreferredRoomsForActivity';
+  type = ConstraintType.space.activity.PreferredRoomsForActivity;
   weight: number;
   active: boolean;
   activity: Activity;
