@@ -1,6 +1,7 @@
 // filepath: /generate-schedule/generate-schedule/src/scheduler/TimetableAssignment.ts
 import { Activity } from '../models/Activity';
-import { Period } from '../models/interfaces';
+import { Period } from '../types/core';
+//import { convertMinutesToHoursAndMinutes } from '../utils/helper';
 
 class TimetableAssignment {
   private activitySlots: Map<string, Period> = new Map(); // activityId -> Period
@@ -12,16 +13,13 @@ class TimetableAssignment {
 
   assignActivity(activity: Activity, period: Period, roomId: string): boolean {
     // Check if the slot is available
-    for (let i = 0; i < activity.totalDuration; i++) {
-      const slotKey = `${period.day}_${period.hour + i}`;
-      if (this.timeMatrix.has(slotKey)) {
-        return false; // Time slot already occupied
-      }
 
-      const roomSlotKey = `${roomId}_${period.day}_${period.hour + i}`;
-      if (this.roomTimeMatrix.has(roomSlotKey)) {
-        return false; // Room already occupied at this time
-      }
+    for (let i = 0; i < activity.totalDurationInMinutes; i++) {
+      const slotKey = `${period.day}_${period.hour * 60 + i}`;
+      if (this.timeMatrix.has(slotKey)) return false;
+
+      const roomSlotKey = `${roomId}_${period.day}_${period.hour * 60 + i}`;
+      if (this.roomTimeMatrix.has(roomSlotKey)) return false;
     }
 
     // Assign the activity
@@ -29,11 +27,11 @@ class TimetableAssignment {
     this.activityRooms.set(activity.id, roomId);
 
     // Update the matrices
-    for (let i = 0; i < activity.totalDuration; i++) {
-      const slotKey = `${period.day}_${period.hour + i}`;
+    for (let i = 0; i < activity.totalDurationInMinutes; i++) {
+      const slotKey = `${period.day}_${period.hour * 60 + i}`;
       this.timeMatrix.set(slotKey, activity);
 
-      const roomSlotKey = `${roomId}_${period.day}_${period.hour + i}`;
+      const roomSlotKey = `${roomId}_${period.day}_${period.hour * 60 + i}`;
       this.roomTimeMatrix.set(roomSlotKey, activity);
     }
 
@@ -47,12 +45,16 @@ class TimetableAssignment {
     if (!period || !roomId) return;
 
     // Remove from matrices
-    for (let i = 0; i < activity.totalDuration; i++) {
-      const slotKey = `${period.day}_${period.hour + i}`;
+
+    //const { hours, minutes } = convertMinutesToHoursAndMinutes(activity.totalDurationInMinutes);
+    for (let i = 0; i < activity.totalDurationInMinutes; i++) {
+      //for (let min = 0; min < minutes; min++) {
+      const slotKey = `${period.day}_${period.hour * 60 + i}`;
       this.timeMatrix.delete(slotKey);
 
-      const roomSlotKey = `${roomId}_${period.day}_${period.hour + i}`;
+      const roomSlotKey = `${roomId}_${period.day}_${period.hour * 60 + i}`;
       this.roomTimeMatrix.delete(roomSlotKey);
+      //}
     }
 
     // Remove from maps
@@ -68,13 +70,17 @@ class TimetableAssignment {
     return this.activityRooms.get(activityId);
   }
 
-  getActivityAtSlot(day: number, hour: number): Activity | undefined {
-    const slotKey = `${day}_${hour}`;
+  getActivityAtSlot(slot: Period): Activity | undefined {
+    const { day, hour, minute } = slot;
+    const timeStamp = hour * 60 + minute;
+    const slotKey = `${day}_${timeStamp}`;
     return this.timeMatrix.get(slotKey);
   }
 
-  getActivityInRoomAtSlot(roomId: string, day: number, hour: number): Activity | undefined {
-    const roomSlotKey = `${roomId}_${day}_${hour}`;
+  getActivityInRoomAtSlot(roomId: string, day: number, hour: number, minute: number): Activity | undefined {
+    const timeStamp = hour * 60 + minute;
+    const roomSlotKey = `${roomId}_${day}_${timeStamp}`;
+
     return this.roomTimeMatrix.get(roomSlotKey);
   }
 
@@ -82,7 +88,7 @@ class TimetableAssignment {
     const activities: Activity[] = [];
 
     // For each assigned activity, check if the teacher is involved
-    for (const [activityId, _] of this.activitySlots) {
+    for (const [activityId] of this.activitySlots) {
       const activity = this.getActivityById(activityId);
       if (activity && activity.teachers.some(t => t.id === teacherId)) {
         activities.push(activity);
@@ -96,7 +102,7 @@ class TimetableAssignment {
     const activities: Activity[] = [];
 
     // For each assigned activity, check if the student set is involved
-    for (const [activityId, _] of this.activitySlots) {
+    for (const [activityId] of this.activitySlots) {
       const activity = this.getActivityById(activityId);
       if (activity && activity.studentSets.some(s => s.id === studentSetId)) {
         activities.push(activity);
@@ -107,10 +113,14 @@ class TimetableAssignment {
   }
 
   getAllActivityAssignments(): Activity[] {
-    return Array.from(this.activitySlots.keys()).map(activityId => this.getActivityById(activityId)!);
+    const activities: Activity[] = [];
+    for (const activity of this.timeMatrix.values()) {
+      activities.push(activity);
+    }
+    return activities;
   }
 
-  getActivitiesInRoom(roomId: string): Activity[] {
+  getAllActivitiesInRoom(roomId: string): Activity[] {
     const activities: Set<Activity> = new Set();
 
     // Collect all activities assigned to this room
@@ -132,6 +142,10 @@ class TimetableAssignment {
       }
     }
     return undefined;
+  }
+
+  public clone(): TimetableAssignment {
+    return new TimetableAssignment(this.daysCount, this.periodsPerDay);
   }
 }
 

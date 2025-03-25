@@ -1,4 +1,9 @@
 import { TimetableAssignment } from '../scheduler/TimetableAssignment';
+import { writeFileSync, mkdirSync } from 'fs';
+import * as path from 'path';
+import { logToFile } from './logToFile';
+import { Activity } from '../models/Activity';
+import { convertMinutesToHoursAndMinutes } from './convertMinutesToHoursAndMinutes';
 
 export function renderConsoleTimetable(
   assignment: TimetableAssignment,
@@ -8,28 +13,48 @@ export function renderConsoleTimetable(
   const timetable = [];
 
   for (let day = 0; day < daysCount; day++) {
-    const daySchedule = { day: day + 1, periods: [] as any[] };
+    const daySchedule = {
+      day: day + 1,
+      periods: [] as {
+        hour: number;
+        minute: number;
+        activity: string;
+        room: string | null;
+        totalDurationInMinutes: number;
+        activityId: string;
+      }[],
+    };
 
+    let activity: Activity | undefined;
     for (let hour = 0; hour < periodsPerDay; hour++) {
-      const activity = assignment.getActivityAtSlot(day, hour);
+      for (let min = 0; min < 60; min++) {
+        activity = assignment.getActivityAtSlot({ day, hour, minute: min });
+        if (activity) break;
+      }
+
       if (activity) {
+        const { hours, minutes } = convertMinutesToHoursAndMinutes(activity.totalDurationInMinutes);
         const roomId = assignment.getRoomForActivity(activity.id);
         daySchedule.periods.push({
-          hour,
+          hour: hours,
           activity: activity.name,
-          room: roomId,
+          room: roomId || null,
+          minute: minutes,
+          totalDurationInMinutes: activity.totalDurationInMinutes,
+          activityId: activity.id,
         });
       } else {
-        daySchedule.periods.push({
-          hour,
-          activity: 'Free',
-          room: null,
-        });
+        // daySchedule.periods.push({
+        //   hour,
+        //   activity: 'Free',
+        //   room: null,
+        //   minute: min,
+        // });
       }
     }
-
     timetable.push(daySchedule);
   }
+  //  console.log(JSON.stringify(timetable, null, 2)); // Log the JSON object to the terminal
 
-  console.log(JSON.stringify(timetable, null, 2)); // Log the JSON object to the terminal
+  logToFile('timetable', timetable);
 }
