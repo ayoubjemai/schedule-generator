@@ -53,7 +53,7 @@ class TimetableScheduler {
     return result;
   }
 
-  private evaluateConstraint(constraint: Constraint, assignment: TimetableAssignment): 100 | 0 {
+  private evaluateConstraint(constraint: Constraint, assignment: TimetableAssignment): number {
     if (!constraint.active) return 100;
     return constraint.isSatisfied(assignment) ? 100 : 0;
   }
@@ -252,6 +252,7 @@ class TimetableScheduler {
     let satisfiesHardConstraints = true;
 
     for (const constraint of this.timeConstraints) {
+      console.log(constraint.type);
       if (constraint.weight === 100 && !constraint.isSatisfied(assignment)) {
         satisfiesHardConstraints = false;
         break;

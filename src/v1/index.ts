@@ -20,6 +20,7 @@ import { TimetableScheduler } from './scheduler/TimetableScheduler';
 import { renderConsoleTimetable } from './utils/renderConsoleTimetable';
 import { logToFile } from './utils/logToFile';
 import { TeacherMinDaysPerWeek } from './constraints/time/teacher/TeacherMinDaysPerWeek';
+import { TeacherMaxGapPerDayBetweenActivities } from './constraints/time/teacher/TeacherMaxGapPerDay';
 
 // Initialize the scheduler
 const daysCount = 5;
@@ -35,11 +36,12 @@ teacher1.notAvailablePeriods.push({ day: 0, hour: 0, minute: 50 }, { day: 4, hou
 teacher2.notAvailablePeriods.push({ day: 1, hour: 0, minute: 30 }, { day: 1, hour: 1, minute: 30 });
 
 // Set teacher preferences/constraints
-teacher1.maxDaysPerWeek = 4;
-teacher1.minDaysPerWeek = 2;
+teacher1.maxDaysPerWeek = 1;
+teacher1.minDaysPerWeek = 1;
+teacher1.maxGapsPerDay = 0;
 teacher1.maxHoursDaily = 6;
 teacher1.maxHoursContinuously = 3;
-teacher2.maxGapsPerDay = 2;
+teacher2.maxGapsPerDay = 60;
 teacher2.minRestingHours = 1;
 
 // Create student sets
@@ -117,6 +119,7 @@ scheduler.addActivity(chemistryLecture);
 scheduler.addTimeConstraint(new ActivitiesNotOverlapping());
 scheduler.addTimeConstraint(new TeacherNotAvailablePeriods(teacher1));
 scheduler.addTimeConstraint(new TeacherMinDaysPerWeek(teacher1, teacher1.minDaysPerWeek || 2));
+scheduler.addTimeConstraint(new TeacherMaxGapPerDayBetweenActivities(teacher1, teacher1.maxGapsPerDay ?? 60));
 scheduler.addTimeConstraint(new TeacherNotAvailablePeriods(teacher2));
 scheduler.addTimeConstraint(new TeacherMaxDaysPerWeek(teacher1, teacher1.maxDaysPerWeek || 5));
 scheduler.addTimeConstraint(new MaxConsecutiveHoursForTeacher(teacher1, teacher1.maxHoursContinuously || 4));

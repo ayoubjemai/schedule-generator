@@ -8,8 +8,9 @@
 
 - Not available periods ✅
 - Max days per week ✅
-- Min days per week
-- Max gaps per day/week
+- Min days per week ✅
+- Max gaps per day ✅
+- Min gaps per week
 - Max hours daily
 - Max hours continuously ✅
 - Min hours continuously
