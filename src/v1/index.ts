@@ -22,6 +22,7 @@ import { logToFile } from './utils/logToFile';
 import { TeacherMinDaysPerWeek } from './constraints/time/teacher/TeacherMinDaysPerWeek';
 import { TeacherMaxGapPerDayBetweenActivities } from './constraints/time/teacher/TeacherMaxGapPerDayBetweenActivities';
 import { TeacherMinGapPerDayBetweenActivities } from './constraints/time/teacher/TeacherMinGapPerDayBetweenActivities';
+import { TeacherMaxHoursPerDay } from './constraints/time/teacher/TeacherMaxHoursPerDay';
 
 // Initialize the scheduler
 const daysCount = 5;
@@ -37,7 +38,7 @@ teacher1.notAvailablePeriods.push({ day: 0, hour: 0, minute: 50 }, { day: 4, hou
 teacher2.notAvailablePeriods.push({ day: 1, hour: 0, minute: 30 }, { day: 1, hour: 1, minute: 30 });
 
 // Set teacher preferences/constraints
-teacher1.maxDaysPerWeek = 1;
+teacher1.maxDaysPerWeek = 6;
 teacher1.minDaysPerWeek = 1;
 teacher1.maxGapsPerDay = 0;
 teacher1.maxHoursDaily = 6;
@@ -120,6 +121,7 @@ scheduler.addActivity(chemistryLecture);
 scheduler.addTimeConstraint(new ActivitiesNotOverlapping());
 scheduler.addTimeConstraint(new TeacherNotAvailablePeriods(teacher1));
 scheduler.addTimeConstraint(new TeacherMinDaysPerWeek(teacher1, teacher1.minDaysPerWeek || 2));
+scheduler.addTimeConstraint(new TeacherMaxHoursPerDay(teacher1, /* teacher1.maxHoursDaily * 60  ||*/ 2 * 60));
 //? info : this constraint only for testing purposes , the two together too hard to generate with two of them
 // scheduler.addTimeConstraint(new TeacherMinGapPerDayBetweenActivities(teacher1, teacher1.minGapsPerDay ?? 10));
 // scheduler.addTimeConstraint(new TeacherMaxGapPerDayBetweenActivities(teacher1, 30, 100));

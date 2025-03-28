@@ -15,6 +15,7 @@ export const ConstraintType = {
       TeacherNotAvailablePeriods: 'TeacherNotAvailablePeriods',
       TeacherMaxGapPerDayBetweenActivities: 'TeacherMaxGapPerDayBetweenActivities',
       TeacherMinGapPerDayBetweenActivities: 'TeacherMinGapPerDayBetweenActivities',
+      TeacherMaxHoursPerDay: 'TeacherMaxHoursPerDay',
     },
   },
   space: {
