@@ -120,7 +120,7 @@ scheduler.addActivity(chemistryLecture);
 scheduler.addTimeConstraint(new ActivitiesNotOverlapping());
 scheduler.addTimeConstraint(new TeacherNotAvailablePeriods(teacher1));
 scheduler.addTimeConstraint(new TeacherMinDaysPerWeek(teacher1, teacher1.minDaysPerWeek || 2));
-//? info : this constraint only for testing purposes , it two hard to generate with two of them
+//? info : this constraint only for testing purposes , the two together too hard to generate with two of them
 // scheduler.addTimeConstraint(new TeacherMinGapPerDayBetweenActivities(teacher1, teacher1.minGapsPerDay ?? 10));
 // scheduler.addTimeConstraint(new TeacherMaxGapPerDayBetweenActivities(teacher1, 30, 100));
 scheduler.addTimeConstraint(new TeacherNotAvailablePeriods(teacher2));
