@@ -252,7 +252,6 @@ class TimetableScheduler {
     let satisfiesHardConstraints = true;
 
     for (const constraint of this.timeConstraints) {
-      console.log(constraint.type);
       if (constraint.weight === 100 && !constraint.isSatisfied(assignment)) {
         satisfiesHardConstraints = false;
         break;
