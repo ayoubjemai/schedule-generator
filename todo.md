@@ -10,7 +10,7 @@
 - Max days per week ✅
 - Min days per week ✅
 - Max gaps per day ✅
-- Min gaps per week
+- Min gap per day ✅
 - Max hours daily
 - Max hours continuously ✅
 - Min hours continuously

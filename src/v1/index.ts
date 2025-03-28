@@ -20,7 +20,8 @@ import { TimetableScheduler } from './scheduler/TimetableScheduler';
 import { renderConsoleTimetable } from './utils/renderConsoleTimetable';
 import { logToFile } from './utils/logToFile';
 import { TeacherMinDaysPerWeek } from './constraints/time/teacher/TeacherMinDaysPerWeek';
-import { TeacherMaxGapPerDayBetweenActivities } from './constraints/time/teacher/TeacherMaxGapPerDay';
+import { TeacherMaxGapPerDayBetweenActivities } from './constraints/time/teacher/TeacherMaxGapPerDayBetweenActivities';
+import { TeacherMinGapPerDayBetweenActivities } from './constraints/time/teacher/TeacherMinGapPerDayBetweenActivities';
 
 // Initialize the scheduler
 const daysCount = 5;
@@ -119,7 +120,9 @@ scheduler.addActivity(chemistryLecture);
 scheduler.addTimeConstraint(new ActivitiesNotOverlapping());
 scheduler.addTimeConstraint(new TeacherNotAvailablePeriods(teacher1));
 scheduler.addTimeConstraint(new TeacherMinDaysPerWeek(teacher1, teacher1.minDaysPerWeek || 2));
-scheduler.addTimeConstraint(new TeacherMaxGapPerDayBetweenActivities(teacher1, teacher1.maxGapsPerDay ?? 60));
+//? info : this constraint only for testing purposes , it two hard to generate with two of them
+// scheduler.addTimeConstraint(new TeacherMinGapPerDayBetweenActivities(teacher1, teacher1.minGapsPerDay ?? 10));
+// scheduler.addTimeConstraint(new TeacherMaxGapPerDayBetweenActivities(teacher1, 30, 100));
 scheduler.addTimeConstraint(new TeacherNotAvailablePeriods(teacher2));
 scheduler.addTimeConstraint(new TeacherMaxDaysPerWeek(teacher1, teacher1.maxDaysPerWeek || 5));
 scheduler.addTimeConstraint(new MaxConsecutiveHoursForTeacher(teacher1, teacher1.maxHoursContinuously || 4));

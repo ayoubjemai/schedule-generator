@@ -7,6 +7,7 @@ export class Teacher {
   maxDaysPerWeek?: number;
   minDaysPerWeek?: number;
   maxGapsPerDay?: number;
+  minGapsPerDay?: number;
   maxGapsPerWeek?: number;
   maxHoursDaily?: number;
   maxHoursContinuously?: number;
