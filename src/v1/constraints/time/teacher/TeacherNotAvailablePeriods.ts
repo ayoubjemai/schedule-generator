@@ -19,7 +19,7 @@ class TeacherNotAvailablePeriods implements Constraint {
     this.teacher = teacher;
     this.weight = weight;
     this.active = active;
-    this.periods = [...teacher.notAvailablePeriods];
+    this.periods = [...(teacher.get('notAvailablePeriods') || [])];
   }
   addActivity(activity: Activity): void {
     if (this.activities.includes(activity)) return;
