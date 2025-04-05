@@ -13,7 +13,7 @@
 - Min gap per day ✅
 - Max hours daily ✅
 - Max hours continuously ✅ (MaxConsecutiveHoursForTeacher)
-- Min hours continuously
+- Min hours continuously ✅
 - Max span per day
 - Min hours daily
 - Max hours daily/continuously with an activity tag
