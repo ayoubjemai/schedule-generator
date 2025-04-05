@@ -1,3 +1,4 @@
+import { Activity } from '../../../models/Activity';
 import { Teacher } from '../../../models/Teacher';
 import { TimetableAssignment } from '../../../scheduler/TimetableAssignment';
 import { Constraint } from '../../../types/constraints';
@@ -10,12 +11,18 @@ export class TeacherMaxDaysPerWeek implements Constraint {
   active: boolean;
   teacher: Teacher;
   maxDays: number;
+  activities: Activity[] = [];
 
   constructor(teacher: Teacher, maxDays: number, weight = DEFAULT_WEIGHT, active = true) {
     this.teacher = teacher;
     this.maxDays = maxDays;
     this.weight = weight;
     this.active = active;
+  }
+
+  addActivity(activity: Activity): void {
+    if (this.activities.includes(activity)) return;
+    this.activities.push(activity);
   }
 
   isSatisfied(assignment: TimetableAssignment): boolean {
@@ -25,6 +32,7 @@ export class TeacherMaxDaysPerWeek implements Constraint {
     const workingDays = new Set<number>();
 
     for (const activity of teacherActivities) {
+      this.addActivity(activity);
       const slot = assignment.getSlotForActivity(activity.id);
       if (slot) {
         workingDays.add(slot.day);

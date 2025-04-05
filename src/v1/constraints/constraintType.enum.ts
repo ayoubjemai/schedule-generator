@@ -10,12 +10,13 @@ export const ConstraintType = {
     },
     teacher: {
       MaxConsecutiveHoursForTeacher: 'MaxConsecutiveHoursForTeacher',
+      MinConsecutiveHoursForTeacher: 'MinConsecutiveHoursForTeacher',
       TeacherMaxDaysPerWeek: 'TeacherMaxDaysPerWeek',
       TeacherMinDaysPerWeek: 'TeacherMinDaysPerWeek',
       TeacherNotAvailablePeriods: 'TeacherNotAvailablePeriods',
       TeacherMaxGapPerDayBetweenActivities: 'TeacherMaxGapPerDayBetweenActivities',
       TeacherMinGapPerDayBetweenActivities: 'TeacherMinGapPerDayBetweenActivities',
-      TeacherMaxHoursPerDay: 'TeacherMaxHoursPerDay',
+      TeacherMaxMinutesPerDay: 'TeacherMaxHoursPerDay',
     },
   },
   space: {

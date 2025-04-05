@@ -1,3 +1,4 @@
+import { Activity } from '../../../models/Activity';
 import { Room } from '../../../models/Room';
 import { TimetableAssignment } from '../../../scheduler/TimetableAssignment';
 import { Constraint } from '../../../types/constraints';
@@ -8,7 +9,7 @@ import { ConstraintType } from '../../constraintType.enum';
 
 export class RoomNotAvailable implements Constraint {
   type = ConstraintType.space.room.RoomNotAvailable;
-
+  activities: Activity[] = [];
   weight: number;
   active: boolean;
   room: Room;
@@ -20,6 +21,10 @@ export class RoomNotAvailable implements Constraint {
     this.active = active;
     this.periods = [...room.notAvailablePeriods];
   }
+  addActivity(activity: Activity): void {
+    if (this.activities.includes(activity)) return;
+    this.activities.push(activity);
+  }
 
   isSatisfied(assignment: TimetableAssignment): boolean {
     if (!this.active) return true;
@@ -27,6 +32,7 @@ export class RoomNotAvailable implements Constraint {
     const roomActivities = assignment.getAllActivitiesInRoom(this.room.id);
 
     for (const activity of roomActivities) {
+      this.addActivity(activity);
       const slot = assignment.getSlotForActivity(activity.id);
       if (!slot) continue;
 

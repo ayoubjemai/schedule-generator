@@ -11,6 +11,7 @@ export class Teacher {
   maxGapsPerWeek?: number;
   maxHoursDaily?: number;
   maxHoursContinuously?: number;
+  minHoursContinuously?: number;
   maxSpanPerDay?: number;
   minHoursDaily?: number;
   activityTagMaxHoursDaily: Map<string, number> = new Map();

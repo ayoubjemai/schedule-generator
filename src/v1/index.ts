@@ -1,15 +1,15 @@
-import { log } from 'console';
 import {
   ActivitiesNotOverlapping,
   MaxConsecutiveHoursForTeacher,
   MinGapsBetweenActivities,
+  PreferredRoomsForActivity,
   PreferredStartingTimesForActivity,
+  RoomNotAvailable,
   StudentSetNotAvailablePeriods,
   TeacherMaxDaysPerWeek,
   TeacherNotAvailablePeriods,
-  PreferredRoomsForActivity,
-  RoomNotAvailable,
 } from './constraints';
+import { TeacherMinDaysPerWeek } from './constraints/time/teacher/TeacherMinDaysPerWeek';
 import { Activity } from './models/Activity';
 import { ActivityTag } from './models/ActivityTag';
 import { Room } from './models/Room';
@@ -17,12 +17,12 @@ import { StudentSet } from './models/StudentSet';
 import Subject from './models/Subject';
 import { Teacher } from './models/Teacher';
 import { TimetableScheduler } from './scheduler/TimetableScheduler';
-import { renderConsoleTimetable } from './utils/renderConsoleTimetable';
 import { logToFile } from './utils/logToFile';
-import { TeacherMinDaysPerWeek } from './constraints/time/teacher/TeacherMinDaysPerWeek';
+import { renderConsoleTimetable } from './utils/renderConsoleTimetable';
 import { TeacherMaxGapPerDayBetweenActivities } from './constraints/time/teacher/TeacherMaxGapPerDayBetweenActivities';
 import { TeacherMinGapPerDayBetweenActivities } from './constraints/time/teacher/TeacherMinGapPerDayBetweenActivities';
-import { TeacherMaxHoursPerDay } from './constraints/time/teacher/TeacherMaxHoursPerDay';
+import { TeacherMaxMinutesPerDay } from './constraints/time/teacher/TeacherMaxHoursPerDay';
+import { MinConsecutiveHoursForTeacher } from './constraints/time/teacher/MinConsecutiveHoursForTeacher';
 
 // Initialize the scheduler
 const daysCount = 5;
@@ -43,6 +43,7 @@ teacher1.minDaysPerWeek = 1;
 teacher1.maxGapsPerDay = 0;
 teacher1.maxHoursDaily = 6;
 teacher1.maxHoursContinuously = 3;
+teacher1.minHoursContinuously = 3;
 teacher2.maxGapsPerDay = 60;
 teacher2.minRestingHours = 1;
 
@@ -92,20 +93,21 @@ mathLecture.teachers.push(teacher1);
 mathLecture.studentSets.push(class1A, class1B);
 mathLecture.activityTags.push(lectureTags);
 mathLecture.preferredStartingTimes.push({ day: 0, hour: 1, minute: 10 }, { day: 2, hour: 3, minute: 30 });
+mathLecture.preferredStartingTime = { day: 0, hour: 1, minute: 10 };
 
-const physicsLab = new Activity('a2', 'Physics Lab', physics, 3 * 60);
+const physicsLab = new Activity('a2', 'Physics Lab', physics, 2 * 60);
 physicsLab.teachers.push(teacher2);
 physicsLab.studentSets.push(class1A);
 physicsLab.activityTags.push(labTag);
 physicsLab.preferredRooms = ['r3'];
-physicsLab.minDaysBetween = 1;
+mathLecture.preferredStartingTimes.push({ day: 0, hour: 5, minute: 10 });
+physicsLab.preferredStartingTime = { day: 0, hour: 3, minute: 10 };
 
 const chemistryLecture = new Activity('a3', 'Chemistry Lecture', chemistry, 1 * 60);
 chemistryLecture.teachers.push(teacher1);
 chemistryLecture.studentSets.push(class1B);
 chemistryLecture.activityTags.push(lectureTags);
-chemistryLecture.preferredStartingTime = { day: 3, hour: 2, minute: 10 };
-chemistryLecture.endsStudentsDay = true;
+chemistryLecture.preferredStartingTime = { day: 0, hour: 3, minute: 10 };
 
 // Add rooms and activities to scheduler
 scheduler.addRoom(room1);
@@ -120,14 +122,17 @@ scheduler.addActivity(chemistryLecture);
 // Add time constraints
 scheduler.addTimeConstraint(new ActivitiesNotOverlapping());
 scheduler.addTimeConstraint(new TeacherNotAvailablePeriods(teacher1));
-scheduler.addTimeConstraint(new TeacherMinDaysPerWeek(teacher1, teacher1.minDaysPerWeek || 2));
-scheduler.addTimeConstraint(new TeacherMaxHoursPerDay(teacher1, /* teacher1.maxHoursDaily * 60  ||*/ 2 * 60));
-//? info : this constraint only for testing purposes , the two together too hard to generate with two of them
-// scheduler.addTimeConstraint(new TeacherMinGapPerDayBetweenActivities(teacher1, teacher1.minGapsPerDay ?? 10));
-// scheduler.addTimeConstraint(new TeacherMaxGapPerDayBetweenActivities(teacher1, 30, 100));
-scheduler.addTimeConstraint(new TeacherNotAvailablePeriods(teacher2));
-scheduler.addTimeConstraint(new TeacherMaxDaysPerWeek(teacher1, teacher1.maxDaysPerWeek || 5));
+// scheduler.addTimeConstraint(new TeacherMinDaysPerWeek(teacher1, teacher1.minDaysPerWeek));
+scheduler.addTimeConstraint(new TeacherMaxMinutesPerDay(teacher1, teacher1.maxHoursDaily * 60));
+//scheduler.addTimeConstraint(new MinConsecutiveHoursForTeacher(teacher1, teacher1.minHoursContinuously));
 scheduler.addTimeConstraint(new MaxConsecutiveHoursForTeacher(teacher1, teacher1.maxHoursContinuously || 4));
+//? info : this constraint only for testing purposes , the two together too hard to generate with two of them
+//scheduler.addTimeConstraint(new TeacherMaxDaysPerWeek(teacher1, teacher1.maxDaysPerWeek || 5));
+//scheduler.addTimeConstraint(new TeacherMinGapPerDayBetweenActivities(teacher1, teacher1.minGapsPerDay ?? 10));
+scheduler.addTimeConstraint(new TeacherMaxDaysPerWeek(teacher1, teacher1.maxDaysPerWeek || 5));
+scheduler.addTimeConstraint(new TeacherMaxGapPerDayBetweenActivities(teacher1, 0, 100));
+scheduler.addTimeConstraint(new TeacherNotAvailablePeriods(teacher2));
+
 scheduler.addTimeConstraint(new StudentSetNotAvailablePeriods(class1A));
 scheduler.addTimeConstraint(new StudentSetNotAvailablePeriods(class1B));
 scheduler.addTimeConstraint(new MinGapsBetweenActivities(0));
@@ -143,6 +148,7 @@ scheduler.addSpaceConstraint(new PreferredRoomsForActivity(physicsLab, physicsLa
 
 // Generate the schedule
 console.log('Generating timetable...');
+
 const assignment = scheduler.generateSchedule();
 
 // Output the schedule

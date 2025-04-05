@@ -9,6 +9,7 @@ import { Activity } from '../../../models/Activity';
 
 export class TeacherMinGapPerDayBetweenActivities implements Constraint {
   type = ConstraintType.time.teacher.TeacherMinGapPerDayBetweenActivities;
+  activities: Activity[] = [];
 
   constructor(
     private teacher: Teacher,
@@ -16,6 +17,10 @@ export class TeacherMinGapPerDayBetweenActivities implements Constraint {
     public weight = DEFAULT_WEIGHT * 0.1,
     public active = true
   ) {}
+  addActivity(activity: Activity): void {
+    if (this.activities.includes(activity)) return;
+    this.activities.push(activity);
+  }
 
   isSatisfied(assignment: TimetableAssignment): boolean {
     if (!this.active) return true;
@@ -23,7 +28,9 @@ export class TeacherMinGapPerDayBetweenActivities implements Constraint {
     const teacherActivities = assignment.getActivitiesForTeacher(this.teacher.id);
     const teacherDailySchedules = new Map<number, { period: Period; totalDurationInMinutes: number }[]>();
 
-    for (const { id, totalDurationInMinutes } of teacherActivities) {
+    for (const activity of teacherActivities) {
+      const { id, totalDurationInMinutes } = activity;
+      this.addActivity(activity);
       const slot = assignment.getSlotForActivity(id);
       if (!slot) {
         console.log('Cannot find period with activityId' + id);

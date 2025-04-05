@@ -12,7 +12,7 @@
 - Max gaps per day ✅
 - Min gap per day ✅
 - Max hours daily ✅
-- Max hours continuously ✅
+- Max hours continuously ✅ (MaxConsecutiveHoursForTeacher)
 - Min hours continuously
 - Max span per day
 - Min hours daily
@@ -85,3 +85,7 @@
 
 - Have the same room if they are consecutive
 - Occupy a maximum number of different rooms
+
+# TODO
+
+validate the day Count with the other period

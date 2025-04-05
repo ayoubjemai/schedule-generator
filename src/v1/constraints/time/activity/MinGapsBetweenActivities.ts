@@ -3,12 +3,17 @@ import { TimetableAssignment } from '../../../scheduler/TimetableAssignment';
 import { Constraint } from '../../../types/constraints';
 import { Period } from '../../../types/core';
 import { ConstraintType } from '../../constraintType.enum';
+import { Activity } from '../../../models/Activity';
 
 export class MinGapsBetweenActivities implements Constraint {
   type = ConstraintType.time.activity.MinGapsBetweenActivities;
+  activities: Activity[] = [];
 
   constructor(private minGapInMinutes: number, public weight = 100, public active = true) {}
-
+  addActivity(activity: Activity): void {
+    if (this.activities.includes(activity)) return;
+    this.activities.push(activity);
+  }
   isSatisfied(assignment: TimetableAssignment): boolean {
     if (!this.active) return true;
 
@@ -16,16 +21,17 @@ export class MinGapsBetweenActivities implements Constraint {
 
     for (let i = 0; i < activities.length; i++) {
       const activityA = activities[i];
+      this.addActivity(activityA);
       const slotA = assignment.getSlotForActivity(activityA.id);
-
-      if (!slotA) continue;
 
       for (let j = i + 1; j < activities.length; j++) {
         const activityB = activities[j];
         if (activityB.id === activityA.id) continue;
+
         const slotB = assignment.getSlotForActivity(activityB.id);
 
-        if (!slotB) continue;
+        if (!slotB || !slotA) continue;
+        if (slotB.day != slotA.day) continue;
         const gap = this.getGapBetweenPeriods(
           { ...slotA, totalDurationInMinutes: activityA.totalDurationInMinutes },
           { ...slotB, totalDurationInMinutes: activityB.totalDurationInMinutes }

@@ -1,6 +1,7 @@
 // filepath: /generate-schedule/generate-schedule/src/scheduler/TimetableAssignment.ts
 import { Activity } from '../models/Activity';
 import { Period } from '../types/core';
+import { convertMinutesToHoursAndMinutes } from '../utils/convertMinutesToHoursAndMinutes';
 //import { convertMinutesToHoursAndMinutes } from '../utils/helper';
 
 class TimetableAssignment {
@@ -9,16 +10,33 @@ class TimetableAssignment {
   private timeMatrix: Map<string, Activity> = new Map(); // dayHour -> Activity mapping
   private roomTimeMatrix: Map<string, Activity> = new Map(); // roomDayHour -> Activity mapping
 
-  constructor(private daysCount: number, private periodsPerDay: number) {}
+  constructor(
+    private daysCount: number,
+    private periodsPerDay: number,
+    data?: {
+      activitySlots: Map<string, Period>;
+      activityRooms: Map<string, string>;
+      timeMatrix: Map<string, Activity>;
+      roomTimeMatrix: Map<string, Activity>;
+    }
+  ) {
+    if (data) {
+      this.activitySlots = data.activitySlots;
+      this.activityRooms = data.activityRooms;
+      this.timeMatrix = data.timeMatrix;
+      this.roomTimeMatrix = data.roomTimeMatrix;
+    }
+  }
 
   assignActivity(activity: Activity, period: Period, roomId: string): boolean {
     // Check if the slot is available
 
     for (let i = 0; i < activity.totalDurationInMinutes; i++) {
-      const slotKey = `${period.day}_${period.hour * 60 + i}`;
+      const { hours, minutes } = convertMinutesToHoursAndMinutes(i);
+      const slotKey = `${period.day}_${(period.hour + hours) * 60 + minutes}`;
       if (this.timeMatrix.has(slotKey)) return false;
 
-      const roomSlotKey = `${roomId}_${period.day}_${period.hour * 60 + i}`;
+      const roomSlotKey = `${roomId}_${slotKey}`;
       if (this.roomTimeMatrix.has(roomSlotKey)) return false;
     }
 
@@ -28,13 +46,13 @@ class TimetableAssignment {
 
     // Update the matrices
     for (let i = 0; i < activity.totalDurationInMinutes; i++) {
-      const slotKey = `${period.day}_${period.hour * 60 + i}`;
+      const { hours, minutes } = convertMinutesToHoursAndMinutes(i);
+      const slotKey = `${period.day}_${(period.hour + hours) * 60 + minutes}`;
       this.timeMatrix.set(slotKey, activity);
 
-      const roomSlotKey = `${roomId}_${period.day}_${period.hour * 60 + i}`;
+      const roomSlotKey = `${roomId}_${slotKey}`;
       this.roomTimeMatrix.set(roomSlotKey, activity);
     }
-
     return true;
   }
 
@@ -46,15 +64,13 @@ class TimetableAssignment {
 
     // Remove from matrices
 
-    //const { hours, minutes } = convertMinutesToHoursAndMinutes(activity.totalDurationInMinutes);
     for (let i = 0; i < activity.totalDurationInMinutes; i++) {
-      //for (let min = 0; min < minutes; min++) {
-      const slotKey = `${period.day}_${period.hour * 60 + i}`;
+      const { hours, minutes } = convertMinutesToHoursAndMinutes(i);
+      const slotKey = `${period.day}_${(period.hour + hours) * 60 + minutes}`;
       this.timeMatrix.delete(slotKey);
 
-      const roomSlotKey = `${roomId}_${period.day}_${period.hour * 60 + i}`;
+      const roomSlotKey = `${roomId}_${slotKey}`;
       this.roomTimeMatrix.delete(roomSlotKey);
-      //}
     }
 
     // Remove from maps
@@ -145,7 +161,12 @@ class TimetableAssignment {
   }
 
   public clone(): TimetableAssignment {
-    return new TimetableAssignment(this.daysCount, this.periodsPerDay);
+    return new TimetableAssignment(this.daysCount, this.periodsPerDay, {
+      activityRooms: this.activityRooms,
+      activitySlots: this.activitySlots,
+      timeMatrix: this.timeMatrix,
+      roomTimeMatrix: this.roomTimeMatrix,
+    });
   }
 }
 

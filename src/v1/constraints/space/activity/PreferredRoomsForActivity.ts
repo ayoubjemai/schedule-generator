@@ -10,12 +10,19 @@ export class PreferredRoomsForActivity implements Constraint {
   active: boolean;
   activity: Activity;
   preferredRooms: string[];
+  activities: Activity[] = [];
 
   constructor(activity: Activity, preferredRooms: string[], weight = DEFAULT_WEIGHT, active = true) {
     this.activity = activity;
     this.preferredRooms = preferredRooms.length > 0 ? preferredRooms : activity.preferredRooms;
     this.weight = weight;
     this.active = active;
+    this.addActivity(activity);
+  }
+
+  addActivity(activity: Activity): void {
+    if (this.activities.includes(activity)) return;
+    this.activities.push(activity);
   }
 
   isSatisfied(assignment: TimetableAssignment): boolean {
