@@ -7,3 +7,9 @@ export { PreferredStartingTimesForActivity } from './time/activity/PreferredStar
 export { StudentSetNotAvailablePeriods } from './time/studentSet/StudentSetNotAvailablePeriods';
 export { TeacherMaxDaysPerWeek } from './time/teacher/TeacherMaxDaysPerWeek';
 export { TeacherNotAvailablePeriods } from './time/teacher/TeacherNotAvailablePeriods';
+export { MinConsecutiveHoursForTeacher } from './time/teacher/MinConsecutiveHoursForTeacher';
+export { TeacherMaxGapPerDayBetweenActivities } from './time/teacher/TeacherMaxGapPerDayBetweenActivities';
+export { TeacherMaxMinutesPerDay } from './time/teacher/TeacherMaxHoursPerDay';
+export { TeacherMaxSpanPerDay } from './time/teacher/TeacherMaxSpanPerDay';
+export { TeacherMinDaysPerWeek } from './time/teacher/TeacherMinDaysPerWeek';
+export { TeacherMinGapPerDayBetweenActivities } from './time/teacher/TeacherMinGapPerDayBetweenActivities';

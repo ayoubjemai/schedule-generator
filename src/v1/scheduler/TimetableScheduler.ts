@@ -262,7 +262,6 @@ class TimetableScheduler {
 
     let temperature = initialTemperature;
     let iteration = 0;
-
     while (iteration < maxIterations && temperature > 0.1) {
       const neighborSolution = this.generateNeighbor(currentSolution);
       const neighborScore = this.evaluateSchedule(neighborSolution);
@@ -272,7 +271,6 @@ class TimetableScheduler {
         neighborScore,
         temperature
       );
-
       if (currentScore === 100) {
         break;
       }
@@ -343,11 +341,9 @@ class TimetableScheduler {
 
     // Shuffle possible periods to try
     const shuffledPeriods = this.shuffle(this.possibleTimes);
-
     // Try to place activity in a new position
     let placed = false;
     for (const period of shuffledPeriods) {
-      //      console.log(`day: ${period.day} hour: ${period.hour}`);
       // Try current room first, then others if necessary
       if (this.canPlaceActivity(activity, period, currentRoomId, solution)) {
         solution.assignActivity(activity, period, currentRoomId);

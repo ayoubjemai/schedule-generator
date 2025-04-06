@@ -35,7 +35,7 @@ export function renderConsoleTimetable(
       if (activity) {
         const roomId = assignment.getRoomForActivity(activity.id);
         const slot = assignment.getSlotForActivity(activity.id);
-        if (!slot) throw new Error('Slot not found for activity');
+        if (!slot) throw new Error('Slot not found for activity ' + activity.name);
         if (daySchedule.periods.find(period => period.activityId === activity!.id)) continue;
         daySchedule.periods.push({
           hour: slot.hour,
