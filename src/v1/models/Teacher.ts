@@ -202,6 +202,26 @@ export class Teacher extends Model {
         `Teacher ${this.name}: minHoursContinuously (${this.minHoursContinuously}) cannot be greater than maxHoursContinuously (${this.maxHoursContinuously})`
       );
     }
+
+    if (
+      this.maxHoursContinuously !== undefined &&
+      this.maxHoursDaily != undefined &&
+      this.maxHoursContinuously > this.maxHoursDaily
+    ) {
+      throw new ValidationError(
+        `Teacher ${this.name}: maxHoursContinuously (${this.maxHoursContinuously}) cannot be greater than maxHoursDaily (${this.maxHoursDaily})`
+      );
+    }
+
+    if (
+      this.minHoursContinuously != undefined &&
+      this.minHoursDaily != undefined &&
+      this.minHoursContinuously > this.minHoursDaily
+    ) {
+      throw new ValidationError(
+        `Teacher ${this.name}: minHoursContinuously (${this.minHoursContinuously}) cannot be greater than minHoursDaily (${this.minHoursDaily})`
+      );
+    }
   }
 
   /**

@@ -15,6 +15,7 @@ import {
   TeacherMinDaysPerWeek,
   TeacherMinGapPerDayBetweenActivities,
   TeacherMinHoursDaily,
+  TeacherMaxHoursContinouslyInActivityTag,
 } from './constraints';
 
 import { Activity } from './models/Activity';
@@ -35,13 +36,13 @@ const scheduler = new TimetableScheduler(daysCount, periodsPerDay);
 // Create teachers
 const teacher1 = new Teacher('t1', 'John Doe', {
   maxSpanPerDay: 3,
-  minHoursContinuously: 3,
+  minHoursContinuously: 1,
   maxDaysPerWeek: 6,
   minDaysPerWeek: 1,
   maxGapsPerDay: 0,
   maxHoursDaily: 6,
-  maxHoursContinuously: 3,
-  minHoursDaily: 2,
+  maxHoursContinuously: 2,
+  minHoursDaily: 1,
   notAvailablePeriods: [
     { day: 0, hour: 0, minute: 50 },
     { day: 4, hour: 7, minute: 10 },
@@ -148,6 +149,13 @@ scheduler.addTimeConstraint(new TeacherMaxDaysPerWeek(teacher1, teacher1.get('ma
 //   new TeacherMinGapPerDayBetweenActivities(teacher1, teacher1.get('minGapsPerDay') ?? 10)
 // );
 scheduler.addTimeConstraint(new TeacherMaxDaysPerWeek(teacher1, teacher1.get('maxDaysPerWeek') || 5));
+scheduler.addTimeConstraint(
+  new TeacherMaxHoursContinouslyInActivityTag(
+    teacher1,
+    lectureTags.id,
+    teacher1.get('maxHoursContinuously') || 5
+  )
+);
 scheduler.addTimeConstraint(new TeacherMaxGapPerDayBetweenActivities(teacher1, 0, 100));
 scheduler.addTimeConstraint(new TeacherNotAvailablePeriods(teacher2));
 

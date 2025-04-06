@@ -19,7 +19,7 @@ export class MinConsecutiveHoursForTeacher implements Constraint {
     public active = true
   ) {
     this.teacher = teacher;
-    this.MIN_GAP_MINUTES = 0; //|| teacher.minGapsPerDay;
+    this.MIN_GAP_MINUTES = teacher.get('minGapsPerDay') || 0;
   }
   addActivity(activity: Activity): void {
     if (this.activities.includes(activity)) return;
