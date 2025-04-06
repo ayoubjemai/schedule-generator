@@ -4,6 +4,7 @@ import { TimetableAssignment } from '../../../scheduler/TimetableAssignment';
 import { Constraint } from '../../../types/constraints';
 import { Period } from '../../../types/core';
 import { DEFAULT_WEIGHT } from '../../../utils/defaultWeight';
+import { groupActivitiesByDay } from '../../../utils/groupActivitiesByDay';
 import { ValidationError } from '../../../utils/ValidationError';
 import { ConstraintType } from '../../constraintType.enum';
 
@@ -29,17 +30,11 @@ class TeacherMaxSpanPerDay implements Constraint {
 
     const teacherActivities = assignment.getActivitiesForTeacher(this.teacher.id);
 
+    teacherActivities.forEach(activity => {
+      this.addActivity(activity);
+    });
     const teacherActivitiesByDay: Record<number, { activity: Activity; slot: Period }[]> =
-      teacherActivities.reduce((acc, activity) => {
-        this.addActivity(activity);
-        const slot = assignment.getSlotForActivity(activity.id);
-        if (!slot) return acc;
-        if (!acc[slot.day]) {
-          acc[slot.day] = [];
-        }
-        acc[slot.day].push({ activity, slot });
-        return acc;
-      }, {} as Record<number, { activity: Activity; slot: Period }[]>);
+      groupActivitiesByDay(assignment, teacherActivities);
 
     let maxSpanReached = false;
 

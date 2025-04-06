@@ -14,6 +14,7 @@ import {
   TeacherMaxSpanPerDay,
   TeacherMinDaysPerWeek,
   TeacherMinGapPerDayBetweenActivities,
+  TeacherMinHoursDaily,
 } from './constraints';
 
 import { Activity } from './models/Activity';
@@ -40,6 +41,7 @@ const teacher1 = new Teacher('t1', 'John Doe', {
   maxGapsPerDay: 0,
   maxHoursDaily: 6,
   maxHoursContinuously: 3,
+  minHoursDaily: 2,
   notAvailablePeriods: [
     { day: 0, hour: 0, minute: 50 },
     { day: 4, hour: 7, minute: 10 },
@@ -130,12 +132,13 @@ scheduler.addActivity(chemistryLecture);
 scheduler.addTimeConstraint(new ActivitiesNotOverlapping());
 scheduler.addTimeConstraint(new TeacherNotAvailablePeriods(teacher1));
 scheduler.addTimeConstraint(new TeacherMinDaysPerWeek(teacher1, teacher1.get('minDaysPerWeek') || 1));
+scheduler.addTimeConstraint(new TeacherMinHoursDaily(teacher1, teacher1.get('minHoursDaily') || 1));
 scheduler.addTimeConstraint(new TeacherMaxMinutesPerDay(teacher1, (teacher1.get('maxHoursDaily') || 0) * 60));
 scheduler.addTimeConstraint(new TeacherMaxSpanPerDay(teacher1, teacher1.get('maxSpanPerDay') || 0));
 
-scheduler.addTimeConstraint(
-  new MinConsecutiveHoursForTeacher(teacher1, teacher1.get('minHoursContinuously') || 3)
-);
+// scheduler.addTimeConstraint(
+//   new MinConsecutiveHoursForTeacher(teacher1, teacher1.get('minHoursContinuously') || 3)
+// );
 scheduler.addTimeConstraint(
   new MaxConsecutiveHoursForTeacher(teacher1, teacher1.get('maxHoursContinuously') || 4)
 );
@@ -151,9 +154,9 @@ scheduler.addTimeConstraint(new TeacherNotAvailablePeriods(teacher2));
 scheduler.addTimeConstraint(new StudentSetNotAvailablePeriods(class1A));
 scheduler.addTimeConstraint(new StudentSetNotAvailablePeriods(class1B));
 scheduler.addTimeConstraint(new MinGapsBetweenActivities(0));
-scheduler.addTimeConstraint(
-  new PreferredStartingTimesForActivity(mathLecture, mathLecture.preferredStartingTimes, 50)
-);
+// scheduler.addTimeConstraint(
+//   new PreferredStartingTimesForActivity(mathLecture, mathLecture.preferredStartingTimes, 50)
+// );
 
 // Add space constraints
 scheduler.addSpaceConstraint(new RoomNotAvailable(room1));

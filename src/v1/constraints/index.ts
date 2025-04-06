@@ -13,3 +13,4 @@ export { TeacherMaxMinutesPerDay } from './time/teacher/TeacherMaxHoursPerDay';
 export { TeacherMaxSpanPerDay } from './time/teacher/TeacherMaxSpanPerDay';
 export { TeacherMinDaysPerWeek } from './time/teacher/TeacherMinDaysPerWeek';
 export { TeacherMinGapPerDayBetweenActivities } from './time/teacher/TeacherMinGapPerDayBetweenActivities';
+export { TeacherMinHoursDaily } from './time/teacher/TeacherMinHoursDaily';
