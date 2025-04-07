@@ -31,6 +31,7 @@ interface ITeacher {
   maxBuildingChangesPerWeek?: number;
   minGapsBetweenRoomChanges?: number;
   minGapsBetweenBuildingChanges?: number;
+  minHoursDailyByActivityTag?: Map<string, number>;
 }
 
 export class Teacher extends Model {
@@ -72,10 +73,11 @@ export class Teacher extends Model {
       minGapsPerDay: number;
       maxGapsPerWeek: number;
       maxHoursDaily: number;
+      minHoursDaily: number;
+      minHoursDailyByActivityTag: Map<string, number>;
       maxHoursContinuously: number;
       minHoursContinuously: number;
       maxSpanPerDay: number;
-      minHoursDaily: number;
       minRestingHours: number;
       maxRoomChangesPerDay: number;
       maxRoomChangesPerWeek: number;

@@ -16,6 +16,7 @@ import {
   TeacherMinGapPerDayBetweenActivities,
   TeacherMinHoursDaily,
   TeacherMaxHoursContinouslyInActivityTag,
+  TeacherMinHoursDailyInActivityTag,
 } from './constraints';
 
 import { Activity } from './models/Activity';
@@ -47,6 +48,7 @@ const teacher1 = new Teacher('t1', 'John Doe', {
     { day: 0, hour: 0, minute: 50 },
     { day: 4, hour: 7, minute: 10 },
   ],
+  minHoursDailyByActivityTag: new Map<string, number>().set('tag1', 2),
 });
 const teacher2 = new Teacher('t2', 'Jane Smith', {
   notAvailablePeriods: [
@@ -149,19 +151,28 @@ scheduler.addTimeConstraint(new TeacherMaxDaysPerWeek(teacher1, teacher1.get('ma
 //   new TeacherMinGapPerDayBetweenActivities(teacher1, teacher1.get('minGapsPerDay') ?? 10)
 // );
 scheduler.addTimeConstraint(new TeacherMaxDaysPerWeek(teacher1, teacher1.get('maxDaysPerWeek') || 5));
+// scheduler.addTimeConstraint(
+//   new TeacherMaxHoursContinouslyInActivityTag(
+//     teacher1,
+//     lectureTags.id,
+//     teacher1.get('maxHoursContinuously') || 5
+//   )
+// );
+
 scheduler.addTimeConstraint(
-  new TeacherMaxHoursContinouslyInActivityTag(
+  new TeacherMinHoursDailyInActivityTag(
     teacher1,
     lectureTags.id,
-    teacher1.get('maxHoursContinuously') || 5
+    teacher1.get('minHoursDailyByActivityTag')?.get(lectureTags.id) || 2
   )
 );
+
 scheduler.addTimeConstraint(new TeacherMaxGapPerDayBetweenActivities(teacher1, 0, 100));
 scheduler.addTimeConstraint(new TeacherNotAvailablePeriods(teacher2));
 
 scheduler.addTimeConstraint(new StudentSetNotAvailablePeriods(class1A));
 scheduler.addTimeConstraint(new StudentSetNotAvailablePeriods(class1B));
-scheduler.addTimeConstraint(new MinGapsBetweenActivities(0));
+//scheduler.addTimeConstraint(new MinGapsBetweenActivities(0));
 // scheduler.addTimeConstraint(
 //   new PreferredStartingTimesForActivity(mathLecture, mathLecture.preferredStartingTimes, 50)
 // );
