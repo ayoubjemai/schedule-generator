@@ -17,6 +17,7 @@ import {
   TeacherMinHoursDaily,
   TeacherMaxHoursContinouslyInActivityTag,
   TeacherMinHoursDailyInActivityTag,
+  TeacherMinGapBetweenActivityTags,
 } from './constraints';
 
 import { Activity } from './models/Activity';
@@ -34,13 +35,19 @@ const daysCount = 5;
 const periodsPerDay = 8;
 const scheduler = new TimetableScheduler(daysCount, periodsPerDay);
 
+// Create tags
+const lectureTags = new ActivityTag('tag1', 'Lecture');
+const labTag = new ActivityTag('tag2', 'Lab');
+const tutorialTag = new ActivityTag('tag3', 'Tutorial');
+
 // Create teachers
 const teacher1 = new Teacher('t1', 'John Doe', {
   maxSpanPerDay: 3,
   minHoursContinuously: 1,
   maxDaysPerWeek: 6,
   minDaysPerWeek: 1,
-  maxGapsPerDay: 0,
+  maxGapsPerDay: 120,
+  minGapsPerDay: 2,
   maxHoursDaily: 6,
   maxHoursContinuously: 2,
   minHoursDaily: 1,
@@ -48,7 +55,10 @@ const teacher1 = new Teacher('t1', 'John Doe', {
     { day: 0, hour: 0, minute: 50 },
     { day: 4, hour: 7, minute: 10 },
   ],
-  minHoursDailyByActivityTag: new Map<string, number>().set('tag1', 2),
+  minHoursDailyActivityTagPerMinutes: new Map<`${string}_${string}`, number>().set(
+    `${lectureTags.id}_${tutorialTag.id}`,
+    2
+  ),
 });
 const teacher2 = new Teacher('t2', 'Jane Smith', {
   notAvailablePeriods: [
@@ -82,10 +92,6 @@ const chemistry = new Subject('sub3', 'Chemistry');
 math.preferredRooms = ['r1', 'r2'];
 physics.preferredRooms = ['r3'];
 
-// Create tags
-const lectureTags = new ActivityTag('tag1', 'Lecture');
-const labTag = new ActivityTag('tag2', 'Lab');
-
 // Assign preferred rooms to tags
 labTag.preferredRooms = ['r3', 'r4'];
 
@@ -107,7 +113,7 @@ mathLecture.activityTags.push(lectureTags);
 mathLecture.preferredStartingTimes.push({ day: 0, hour: 1, minute: 10 }, { day: 2, hour: 3, minute: 30 });
 mathLecture.preferredStartingTime = { day: 0, hour: 1, minute: 10 };
 
-const physicsLab = new Activity('a2', 'Physics Lab', physics, 2 * 60);
+const physicsLab = new Activity('a2', 'Physics lab', physics, 2 * 60);
 physicsLab.teachers.push(teacher2);
 physicsLab.studentSets.push(class1A);
 physicsLab.activityTags.push(labTag);
@@ -115,10 +121,10 @@ physicsLab.preferredRooms = ['r3'];
 mathLecture.preferredStartingTimes.push({ day: 0, hour: 5, minute: 10 });
 physicsLab.preferredStartingTime = { day: 0, hour: 3, minute: 10 };
 
-const chemistryLecture = new Activity('a3', 'Chemistry Lecture', chemistry, 1 * 60);
+const chemistryLecture = new Activity('a3', 'Chemistry Tutorial', chemistry, 1 * 60);
 chemistryLecture.teachers.push(teacher1);
 chemistryLecture.studentSets.push(class1B);
-chemistryLecture.activityTags.push(lectureTags);
+chemistryLecture.activityTags.push(tutorialTag);
 //chemistryLecture.preferredStartingTime = { day: 0, hour: 3, minute: 10 };
 
 // Add rooms and activities to scheduler
@@ -151,6 +157,8 @@ scheduler.addTimeConstraint(new TeacherMaxDaysPerWeek(teacher1, teacher1.get('ma
 //   new TeacherMinGapPerDayBetweenActivities(teacher1, teacher1.get('minGapsPerDay') ?? 10)
 // );
 scheduler.addTimeConstraint(new TeacherMaxDaysPerWeek(teacher1, teacher1.get('maxDaysPerWeek') || 5));
+scheduler.addTimeConstraint(new TeacherMinGapBetweenActivityTags(teacher1, lectureTags.id, tutorialTag.id));
+
 // scheduler.addTimeConstraint(
 //   new TeacherMaxHoursContinouslyInActivityTag(
 //     teacher1,

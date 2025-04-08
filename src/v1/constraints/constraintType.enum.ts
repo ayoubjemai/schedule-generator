@@ -21,6 +21,7 @@ export const ConstraintType = {
       TeacherMinHoursDaily: 'TeacherMinHoursDaily',
       TeacherMaxHoursContinouslyInActivityTag: 'TeacherMaxHoursContinouslyInActivityTag',
       TeacherMinHoursDailyInActivityTag: 'TeacherMinHoursDailyInActivityTag',
+      TeacherMinGapBetweenActivityTags: 'TeacherMinGapBetweenActivityTags',
     },
   },
   space: {

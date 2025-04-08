@@ -32,6 +32,7 @@ interface ITeacher {
   minGapsBetweenRoomChanges?: number;
   minGapsBetweenBuildingChanges?: number;
   minHoursDailyByActivityTag?: Map<string, number>;
+  minHoursDailyActivityTagPerMinutes: Map<`${string}_${string}`, number>;
 }
 
 export class Teacher extends Model {
@@ -51,7 +52,6 @@ export class Teacher extends Model {
   protected activityTagMaxHoursDaily: Map<string, number> = new Map();
   protected activityTagMaxHoursContinuously: Map<string, number> = new Map();
   protected activityTagMinHoursDaily: Map<string, number> = new Map();
-  protected minGapsBetweenActivityTags: Map<[string, string], number> = new Map();
   protected maxDaysPerWeekForHourlyInterval: Map<[number, number], number> = new Map();
   protected minRestingHours?: number;
   protected homeRooms: ID[] = [];
@@ -61,6 +61,7 @@ export class Teacher extends Model {
   protected maxBuildingChangesPerWeek?: number;
   protected minGapsBetweenRoomChanges?: number;
   protected minGapsBetweenBuildingChanges?: number;
+  protected minHoursDailyActivityTagPerMinutes: Map<`${string}_${string}`, number> = new Map();
 
   constructor(
     id: ID,
@@ -74,7 +75,7 @@ export class Teacher extends Model {
       maxGapsPerWeek: number;
       maxHoursDaily: number;
       minHoursDaily: number;
-      minHoursDailyByActivityTag: Map<string, number>;
+      minHoursDailyActivityTagPerMinutes: Map<`${string}_${string}`, number>;
       maxHoursContinuously: number;
       minHoursContinuously: number;
       maxSpanPerDay: number;
@@ -126,13 +127,12 @@ export class Teacher extends Model {
 
       if (payload.activityTagMinHoursDaily) this.activityTagMinHoursDaily = payload.activityTagMinHoursDaily;
 
-      if (payload.minGapsBetweenActivityTags)
-        this.minGapsBetweenActivityTags = payload.minGapsBetweenActivityTags;
-
       if (payload.maxDaysPerWeekForHourlyInterval)
         this.maxDaysPerWeekForHourlyInterval = payload.maxDaysPerWeekForHourlyInterval;
 
       if (payload.homeRooms) this.homeRooms = payload.homeRooms;
+
+      this.minHoursDailyActivityTagPerMinutes = payload.minHoursDailyActivityTagPerMinutes || new Map();
 
       // Validate all constraints
       this.validate();
@@ -223,6 +223,18 @@ export class Teacher extends Model {
       throw new ValidationError(
         `Teacher ${this.name}: minHoursContinuously (${this.minHoursContinuously}) cannot be greater than minHoursDaily (${this.minHoursDaily})`
       );
+    }
+
+    if (this.minGapsPerDay) {
+      for (const [activityTag, minGap] of this.minHoursDailyActivityTagPerMinutes.entries()) {
+        const activityTag1 = activityTag.split('_')[0];
+        const activityTag2 = activityTag.split('_')[1];
+        if (minGap < this.minGapsPerDay) {
+          throw new ValidationError(
+            `Teacher ${this.name}: minGapsBetweenActivityTags (${minGap}) of ${activityTag1} and ${activityTag2} cannot be less than minGapsPerDay (${this.minGapsPerDay})`
+          );
+        }
+      }
     }
   }
 
