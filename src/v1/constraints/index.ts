@@ -17,3 +17,4 @@ export { TeacherMinHoursDaily } from './time/teacher/TeacherMinHoursDaily';
 export { TeacherMaxHoursContinouslyInActivityTag } from './time/teacher/TeacherMaxHoursContinouslyInActivityTag';
 export { TeacherMinHoursDailyInActivityTag } from './time/teacher/TeacherMinHoursDailyInActivityTag';
 export { TeacherMinGapBetweenActivityTags } from './time/teacher/TeacherMinGapBetweenActivityTags';
+export { TeacherMaxDayInIntervalHours } from './time/teacher/TeacherMaxDayInIntervalHours';

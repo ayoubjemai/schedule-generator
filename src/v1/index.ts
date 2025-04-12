@@ -18,6 +18,7 @@ import {
   TeacherMaxHoursContinouslyInActivityTag,
   TeacherMinHoursDailyInActivityTag,
   TeacherMinGapBetweenActivityTags,
+  TeacherMaxDayInIntervalHours,
 } from './constraints';
 
 import { Activity } from './models/Activity';
