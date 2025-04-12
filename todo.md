@@ -20,7 +20,7 @@
 - Min hours daily with an activity tag ✅
 - Min gaps between an ordered pair of activity tags ✅
 - Respect working in an hourly interval a max number of days per week ✅
-- Min resting hours
+- Min resting hours ✅
 
 ## For Students (Sets)
 
