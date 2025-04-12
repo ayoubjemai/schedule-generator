@@ -5,21 +5,15 @@ import { Constraint } from '../../../types/constraints';
 import { DEFAULT_WEIGHT } from '../../../utils/defaultWeight';
 import { ConstraintType } from '../../constraintType.enum';
 
-export class TeacherMaxDaysPerWeek implements Constraint {
-  type = ConstraintType.time.teacher.TeacherMaxDaysPerWeek;
-  weight: number;
-  active: boolean;
-  teacher: Teacher;
-  maxDays: number;
+export class TeacherMinDaysPerWeek implements Constraint {
+  type = ConstraintType.time.teacher.TeacherMinDaysPerWeek;
   activities: Activity[] = [];
-
-  constructor(teacher: Teacher, maxDays: number, weight = DEFAULT_WEIGHT, active = true) {
-    this.teacher = teacher;
-    this.maxDays = maxDays;
-    this.weight = weight;
-    this.active = active;
-  }
-
+  constructor(
+    private teacher: Teacher,
+    private minDays: number,
+    public weight = DEFAULT_WEIGHT * 0.2,
+    public active = true
+  ) {}
   addActivity(activity: Activity): void {
     if (this.activities.includes(activity)) return;
     this.activities.push(activity);
@@ -39,6 +33,6 @@ export class TeacherMaxDaysPerWeek implements Constraint {
       }
     }
 
-    return workingDays.size <= this.maxDays;
+    return workingDays.size >= this.minDays;
   }
 }

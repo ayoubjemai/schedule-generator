@@ -11,12 +11,18 @@ export class PreferredStartingTimesForActivity implements Constraint {
   active: boolean;
   activity: Activity;
   preferredTimes: Period[];
+  activities: Activity[] = [];
 
-  constructor(activity: Activity, preferredTimes: Period[], weight = DEFAULT_WEIGHT * 0.5, active = true) {
+  constructor(activity: Activity, preferredTimes: Period[], weight = DEFAULT_WEIGHT * 0.2, active = true) {
     this.activity = activity;
     this.preferredTimes = preferredTimes;
     this.weight = weight;
     this.active = active;
+    this.addActivity(activity);
+  }
+  addActivity(activity: Activity): void {
+    if (this.activities.includes(activity)) return;
+    this.activities.push(activity);
   }
 
   isSatisfied(assignment: TimetableAssignment): boolean {

@@ -14,7 +14,7 @@ export function renderConsoleTimetable(
 
   for (let day = 0; day < daysCount; day++) {
     const daySchedule = {
-      day: day + 1,
+      day,
       periods: [] as {
         hour: number;
         minute: number;
@@ -26,20 +26,22 @@ export function renderConsoleTimetable(
     };
 
     let activity: Activity | undefined;
-    for (let hour = 0; hour < periodsPerDay; hour++) {
+    for (let hour = 0; hour <= periodsPerDay; hour++) {
       for (let min = 0; min < 60; min++) {
         activity = assignment.getActivityAtSlot({ day, hour, minute: min });
         if (activity) break;
       }
 
       if (activity) {
-        const { hours, minutes } = convertMinutesToHoursAndMinutes(activity.totalDurationInMinutes);
         const roomId = assignment.getRoomForActivity(activity.id);
+        const slot = assignment.getSlotForActivity(activity.id);
+        if (!slot) throw new Error('Slot not found for activity ' + activity.name);
+        if (daySchedule.periods.find(period => period.activityId === activity!.id)) continue;
         daySchedule.periods.push({
-          hour: hours,
+          hour: slot.hour,
           activity: activity.name,
           room: roomId || null,
-          minute: minutes,
+          minute: slot.minute,
           totalDurationInMinutes: activity.totalDurationInMinutes,
           activityId: activity.id,
         });
@@ -54,7 +56,6 @@ export function renderConsoleTimetable(
     }
     timetable.push(daySchedule);
   }
-  //  console.log(JSON.stringify(timetable, null, 2)); // Log the JSON object to the terminal
 
   logToFile('timetable', timetable);
 }

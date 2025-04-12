@@ -8,18 +8,19 @@
 
 - Not available periods ✅
 - Max days per week ✅
-- Min days per week
-- Max gaps per day/week
-- Max hours daily
-- Max hours continuously ✅
-- Min hours continuously
-- Max span per day
-- Min hours daily
-- Max hours daily/continuously with an activity tag
-- Min hours daily with an activity tag
-- Min gaps between an ordered pair of activity tags
-- Respect working in an hourly interval a max number of days per week
-- Min resting hours
+- Min days per week ✅
+- Max gaps per day ✅
+- Min gap per day ✅
+- Max hours daily ✅
+- Max hours continuously ✅ (MaxConsecutiveHoursForTeacher)
+- Min hours continuously ✅
+- Max span per day ✅
+- Min hours daily ✅
+- Max hours continuously with an activity tag ✅
+- Min hours daily with an activity tag ✅
+- Min gaps between an ordered pair of activity tags ✅
+- Respect working in an hourly interval a max number of days per week ✅
+- Min resting hours ✅
 
 ## For Students (Sets)
 
@@ -84,3 +85,7 @@
 
 - Have the same room if they are consecutive
 - Occupy a maximum number of different rooms
+
+# TODO
+
+validate the day Count with the other period
