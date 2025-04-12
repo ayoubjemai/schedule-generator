@@ -19,6 +19,7 @@ import {
   TeacherMinHoursDailyInActivityTag,
   TeacherMinGapBetweenActivityTags,
   TeacherMaxDayInIntervalHours,
+  TeacherMinRestinHours,
 } from './constraints';
 
 import { Activity } from './models/Activity';
@@ -60,6 +61,7 @@ const teacher1 = new Teacher('t1', 'John Doe', {
     `${lectureTags.id}_${tutorialTag.id}`,
     2
   ),
+  minRestingHours: 24,
 });
 const teacher2 = new Teacher('t2', 'Jane Smith', {
   notAvailablePeriods: [
@@ -145,6 +147,7 @@ scheduler.addTimeConstraint(new TeacherMinDaysPerWeek(teacher1, teacher1.get('mi
 scheduler.addTimeConstraint(new TeacherMinHoursDaily(teacher1, teacher1.get('minHoursDaily') || 1));
 scheduler.addTimeConstraint(new TeacherMaxMinutesPerDay(teacher1, (teacher1.get('maxHoursDaily') || 0) * 60));
 scheduler.addTimeConstraint(new TeacherMaxSpanPerDay(teacher1, teacher1.get('maxSpanPerDay') || 0));
+scheduler.addTimeConstraint(new TeacherMinRestinHours(teacher1, teacher1.get('minRestingHours') || 12));
 
 // scheduler.addTimeConstraint(
 //   new MinConsecutiveHoursForTeacher(teacher1, teacher1.get('minHoursContinuously') || 3)
