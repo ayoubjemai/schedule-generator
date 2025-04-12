@@ -1,9 +1,6 @@
-import { TimetableAssignment } from '../scheduler/TimetableAssignment';
-import { writeFileSync, mkdirSync } from 'fs';
-import * as path from 'path';
-import { logToFile } from './logToFile';
 import { Activity } from '../models/Activity';
-import { convertMinutesToHoursAndMinutes } from './convertMinutesToHoursAndMinutes';
+import { TimetableAssignment } from '../scheduler/TimetableAssignment';
+import { logToFile } from './logToFile';
 
 export function renderConsoleTimetable(
   assignment: TimetableAssignment,
