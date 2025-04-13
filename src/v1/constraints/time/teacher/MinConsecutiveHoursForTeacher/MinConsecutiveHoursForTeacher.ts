@@ -27,6 +27,7 @@ export class MinConsecutiveHoursForTeacher implements Constraint {
   }
 
   isSatisfied(assignment: TimetableAssignment): boolean {
+    if (!this.active) return true;
     const teacherActivities = assignment.getActivitiesForTeacher(this.teacher.id);
 
     const teacherActivitiesByDay: Record<number, { activity: Activity; slot: Period }[]> =
