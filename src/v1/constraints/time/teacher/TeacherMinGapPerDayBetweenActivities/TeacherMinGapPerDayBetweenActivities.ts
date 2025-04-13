@@ -6,6 +6,7 @@ import { Period } from '../../../../types/core';
 import { DEFAULT_WEIGHT } from '../../../../utils/defaultWeight';
 import { ConstraintType } from '../../../constraintType.enum';
 import { Activity } from '../../../../models/Activity';
+import { ActivityHelper } from '../../../../../helpers/activity.helper';
 
 export class TeacherMinGapPerDayBetweenActivities implements Constraint {
   type = ConstraintType.time.teacher.TeacherMinGapPerDayBetweenActivities;
@@ -27,15 +28,11 @@ export class TeacherMinGapPerDayBetweenActivities implements Constraint {
 
     const teacherActivities = assignment.getActivitiesForTeacher(this.teacher.id);
     const teacherDailySchedules = new Map<number, { period: Period; totalDurationInMinutes: number }[]>();
-
     for (const activity of teacherActivities) {
       const { id, totalDurationInMinutes } = activity;
       this.addActivity(activity);
-      const slot = assignment.getSlotForActivity(id);
-      if (!slot) {
-        console.log('Cannot find period with activityId' + id);
-        continue;
-      }
+      const slot = assignment.getSlotForActivity(id)!;
+
       const periodPerDay = teacherDailySchedules.get(slot.day);
       if (periodPerDay) {
         teacherDailySchedules.get(slot.day)?.push({ period: slot, totalDurationInMinutes });
@@ -54,6 +51,16 @@ export class TeacherMinGapPerDayBetweenActivities implements Constraint {
             { ...periodA.period, totalDurationInMinutes: periodA.totalDurationInMinutes },
             { ...periodB.period, totalDurationInMinutes: periodB.totalDurationInMinutes }
           );
+          console.log(
+            `🚀 ~ TeacherMinGapPerDayBetweenActivities ~ isSatisfied ~  { ...periodA.period, totalDurationInMinutes: periodA.totalDurationInMinutes }:`,
+            { ...periodA.period, totalDurationInMinutes: periodA.totalDurationInMinutes }
+          );
+          console.log(
+            `🚀 ~ TeacherMinGapPerDayBetweenActivities ~ isSatisfied ~    { ...periodB.period, totalDurationInMinutes: periodB.totalDurationInMinutes }:`,
+            { ...periodB.period, totalDurationInMinutes: periodB.totalDurationInMinutes }
+          );
+
+          console.log({ gapInMinutes, minGapInMinutes: this.minGapInMinutes });
 
           if (gapInMinutes < this.minGapInMinutes) {
             isSatisfied = false;
@@ -69,25 +76,24 @@ export class TeacherMinGapPerDayBetweenActivities implements Constraint {
     period1: Period & { totalDurationInMinutes: number },
     period2: Period & { totalDurationInMinutes: number }
   ): number {
-    const start1 = moment().day(period1.day).hour(period1.hour).minute(period1.minute).second(0);
-    const end1 = start1.clone().add(period1.totalDurationInMinutes, 'minutes');
+    const start1 = ActivityHelper.getStartTimeInMinutes({ slot: period1 });
 
-    const start2 = moment().day(period2.day).hour(period2.hour).minute(period2.minute).second(0);
-    const end2 = start2.clone().add(period2.totalDurationInMinutes, 'minutes');
+    const end1 = ActivityHelper.getEndTimeInMinutes({
+      activity: { totalDurationInMinutes: period1.totalDurationInMinutes },
+      slot: period1,
+    });
+
+    const start2 = ActivityHelper.getStartTimeInMinutes({ slot: period2 });
+    const end2 = ActivityHelper.getEndTimeInMinutes({
+      activity: { totalDurationInMinutes: period2.totalDurationInMinutes },
+      slot: period2,
+    });
 
     // Ensure we compare in order (earlier period first)
-    if (end1.isBefore(start2)) {
-      return start2.diff(end1, 'minutes');
-    } else if (end2.isBefore(start1)) {
-      return start1.diff(end2, 'minutes');
-    } else {
-      // Periods overlap, calculate the gap based on the overlap
-      const overlapEnd = moment.max(end1, end2); // The later end time
-      const overlapStart = moment.min(start1, start2); // The earlier start time
-      return Math.abs(
-        overlapEnd.diff(overlapStart, 'minutes') -
-          (period1.totalDurationInMinutes + period2.totalDurationInMinutes)
-      );
+
+    if (start1 < start2) {
+      return start2 - end1;
     }
+    return start1 - end2;
   }
 }

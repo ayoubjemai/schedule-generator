@@ -59,7 +59,7 @@ class TeacherMinRestinHours implements Constraint {
 
       const startTimeMinutes = ActivityHelper.getStartTimeInMinutes(firstActivityOfNextDay);
 
-      const restMinutes = (startTimeMinutes - endTimeMinutes) * 60 * 24;
+      const restMinutes = startTimeMinutes - endTimeMinutes;
       const restHours = restMinutes / 60;
 
       if (restHours < this.minRestHours) return false;

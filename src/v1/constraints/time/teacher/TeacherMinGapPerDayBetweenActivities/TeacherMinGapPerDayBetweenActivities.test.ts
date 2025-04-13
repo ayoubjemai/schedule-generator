@@ -1,11 +1,11 @@
-import { Activity } from "../../../../models/Activity";
-import { Room } from "../../../../models/Room";
-import { Teacher } from "../../../../models/Teacher";
-import { TimetableAssignment } from "../../../../scheduler/TimetableAssignment";
-import Subject from "../../../../models/Subject";
-import { TeacherMinGapPerDayBetweenActivities } from "./TeacherMinGapPerDayBetweenActivities";
+import { Activity } from '../../../../models/Activity';
+import { Room } from '../../../../models/Room';
+import { Teacher } from '../../../../models/Teacher';
+import { TimetableAssignment } from '../../../../scheduler/TimetableAssignment';
+import Subject from '../../../../models/Subject';
+import { TeacherMinGapPerDayBetweenActivities } from './TeacherMinGapPerDayBetweenActivities';
 
-describe("TeacherMinGapPerDayBetweenActivities", () => {
+describe('TeacherMinGapPerDayBetweenActivities', () => {
   const DAYS_COUNT = 5;
   const PERIODS_PER_DAY = 8;
   const MIN_GAP_MINUTES = 30; // 30 minutes minimum gap between activities
@@ -19,8 +19,8 @@ describe("TeacherMinGapPerDayBetweenActivities", () => {
 
   beforeEach(() => {
     assignment = new TimetableAssignment(DAYS_COUNT, PERIODS_PER_DAY);
-    subject = new Subject("sub1", "Mathematics");
-    teacher = new Teacher("t1", "John Doe");
+    subject = new Subject('sub1', 'Mathematics');
+    teacher = new Teacher('t1', 'John Doe');
 
     // Create activities for testing
     activities = [];
@@ -30,16 +30,16 @@ describe("TeacherMinGapPerDayBetweenActivities", () => {
       activities.push(activity);
     }
 
-    room = new Room("r1", "Classroom 101", 30);
+    room = new Room('r1', 'Classroom 101', 30);
 
     constraint = new TeacherMinGapPerDayBetweenActivities(teacher, MIN_GAP_MINUTES);
   });
 
-  it("should be satisfied when no activities are assigned to the teacher", () => {
+  it('should be satisfied when no activities are assigned to the teacher', () => {
     expect(constraint.isSatisfied(assignment)).toBe(true);
   });
 
-  it("should be satisfied when only one activity is assigned to the teacher per day", () => {
+  it('should be satisfied when only one activity is assigned to the teacher per day', () => {
     // Assign one activity per day for three days
     for (let day = 0; day < 3; day++) {
       assignment.assignActivity(activities[day], { day, hour: 9, minute: 0 }, room.id);
@@ -48,7 +48,7 @@ describe("TeacherMinGapPerDayBetweenActivities", () => {
     expect(constraint.isSatisfied(assignment)).toBe(true);
   });
 
-  it("should be satisfied when multiple activities with sufficient gap are assigned", () => {
+  it('should be satisfied when multiple activities with sufficient gap are assigned', () => {
     // Day 0: Two activities with 60 minutes gap (greater than MIN_GAP_MINUTES)
     // Activity 1: 8:00-9:00
     assignment.assignActivity(activities[0], { day: 0, hour: 8, minute: 0 }, room.id);
@@ -58,7 +58,7 @@ describe("TeacherMinGapPerDayBetweenActivities", () => {
     expect(constraint.isSatisfied(assignment)).toBe(true);
   });
 
-  it("should not be satisfied when activities have insufficient gap", () => {
+  it('should not be satisfied when activities have insufficient gap', () => {
     // Day 0: Two activities with only 20 minutes gap (less than MIN_GAP_MINUTES)
     // Activity 1: 8:00-9:00
     assignment.assignActivity(activities[0], { day: 0, hour: 8, minute: 0 }, room.id);
@@ -68,7 +68,7 @@ describe("TeacherMinGapPerDayBetweenActivities", () => {
     expect(constraint.isSatisfied(assignment)).toBe(false);
   });
 
-  it("should evaluate each day independently", () => {
+  it('should evaluate each day independently', () => {
     // Day 0: Activities with sufficient gap (60 minutes)
     assignment.assignActivity(activities[0], { day: 0, hour: 8, minute: 0 }, room.id);
     assignment.assignActivity(activities[1], { day: 0, hour: 10, minute: 0 }, room.id);
@@ -81,7 +81,7 @@ describe("TeacherMinGapPerDayBetweenActivities", () => {
     expect(constraint.isSatisfied(assignment)).toBe(false);
   });
 
-  it("should correctly handle overlapping activities", () => {
+  it('should correctly handle overlapping activities', () => {
     // Two overlapping activities
     // Activity 1: 8:00-9:00
     assignment.assignActivity(activities[0], { day: 0, hour: 8, minute: 0 }, room.id);
@@ -92,7 +92,7 @@ describe("TeacherMinGapPerDayBetweenActivities", () => {
     expect(constraint.isSatisfied(assignment)).toBe(false);
   });
 
-  it("should check all pairs of activities in a day", () => {
+  it('should check all pairs of activities in a day', () => {
     // Activity 1: 8:00-9:00
     assignment.assignActivity(activities[0], { day: 0, hour: 8, minute: 0 }, room.id);
     // Activity 2: 10:00-11:00 (60 minutes gap after Activity 1 - sufficient)
@@ -105,7 +105,7 @@ describe("TeacherMinGapPerDayBetweenActivities", () => {
     expect(constraint.isSatisfied(assignment)).toBe(false);
   });
 
-  it("should correctly calculate gap when activities are in different order", () => {
+  it('should correctly calculate gap when activities are in different order', () => {
     // Activities assigned out of chronological order
     // Activity 2: 10:00-11:00
     assignment.assignActivity(activities[1], { day: 0, hour: 10, minute: 0 }, room.id);
@@ -116,7 +116,7 @@ describe("TeacherMinGapPerDayBetweenActivities", () => {
     expect(constraint.isSatisfied(assignment)).toBe(true);
   });
 
-  it("should maintain a list of activities that the constraint applies to", () => {
+  it('should maintain a list of activities that the constraint applies to', () => {
     assignment.assignActivity(activities[0], { day: 0, hour: 8, minute: 0 }, room.id);
     assignment.assignActivity(activities[1], { day: 0, hour: 10, minute: 0 }, room.id);
 
@@ -128,14 +128,14 @@ describe("TeacherMinGapPerDayBetweenActivities", () => {
     expect(constraint.activities.length).toBe(2);
   });
 
-  it("should not add duplicate activities", () => {
+  it('should not add duplicate activities', () => {
     constraint.addActivity(activities[0]);
     constraint.addActivity(activities[0]);
 
     expect(constraint.activities.length).toBe(1);
   });
 
-  it("should always be satisfied when constraint is inactive", () => {
+  it('should always be satisfied when constraint is inactive', () => {
     constraint.active = false;
 
     // Assign activities with insufficient gap
@@ -146,10 +146,10 @@ describe("TeacherMinGapPerDayBetweenActivities", () => {
     expect(constraint.isSatisfied(assignment)).toBe(true);
   });
 
-  it("should ignore activities for other teachers", () => {
-    const otherTeacher = new Teacher("t2", "Jane Smith");
-    const otherTeacherActivity1 = new Activity("oa1", "Other Teacher Activity 1", subject, 60);
-    const otherTeacherActivity2 = new Activity("oa2", "Other Teacher Activity 2", subject, 60);
+  it('should ignore activities for other teachers', () => {
+    const otherTeacher = new Teacher('t2', 'Jane Smith');
+    const otherTeacherActivity1 = new Activity('oa1', 'Other Teacher Activity 1', subject, 60);
+    const otherTeacherActivity2 = new Activity('oa2', 'Other Teacher Activity 2', subject, 60);
 
     otherTeacherActivity1.teachers.push(otherTeacher);
     otherTeacherActivity2.teachers.push(otherTeacher);
@@ -166,10 +166,10 @@ describe("TeacherMinGapPerDayBetweenActivities", () => {
     expect(constraint.isSatisfied(assignment)).toBe(true);
   });
 
-  it("should handle activities with different durations", () => {
+  it('should handle activities with different durations', () => {
     // Create activities with different durations
-    const shortActivity = new Activity("short", "Short Activity", subject, 30); // 30 minutes
-    const longActivity = new Activity("long", "Long Activity", subject, 120); // 2 hours
+    const shortActivity = new Activity('short', 'Short Activity', subject, 30); // 30 minutes
+    const longActivity = new Activity('long', 'Long Activity', subject, 120); // 2 hours
 
     shortActivity.teachers.push(teacher);
     longActivity.teachers.push(teacher);
@@ -180,33 +180,5 @@ describe("TeacherMinGapPerDayBetweenActivities", () => {
     assignment.assignActivity(longActivity, { day: 0, hour: 9, minute: 20 }, room.id);
 
     expect(constraint.isSatisfied(assignment)).toBe(true);
-  });
-
-  it("should log a warning but continue when an activity has no assigned slot", () => {
-    // Mock console.log to capture warning messages
-    const originalConsoleLog = console.log;
-    const mockConsoleLog = jest.fn();
-    console.log = mockConsoleLog;
-
-    // Add activities to the teacher but don't assign slots for them
-    activities[0].teachers.push(teacher);
-    activities[1].teachers.push(teacher);
-
-    // Assign a slot for only one activity
-    assignment.assignActivity(activities[0], { day: 0, hour: 8, minute: 0 }, room.id);
-
-    // Force add the unassigned activity to the constraint
-    constraint.addActivity(activities[1]);
-
-    // TimetableAssignment.getActivitiesForTeacher will return activities[0] and activities[1],
-    // but activities[1] has no slot, so a warning should be logged
-
-    constraint.isSatisfied(assignment);
-
-    // Verify that a warning was logged for the activity without a slot
-    expect(mockConsoleLog).toHaveBeenCalled();
-
-    // Restore original console.log
-    console.log = originalConsoleLog;
   });
 });
