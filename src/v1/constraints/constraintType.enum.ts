@@ -7,7 +7,8 @@ export const ConstraintType = {
     },
     studentSet: {
       StudentSetNotAvailablePeriods: 'StudentSetNotAvailablePeriods',
-    },
+      StudentSetMaxDaysPerWeek: 'StudentSetMaxDaysPerWeek',
+},
     teacher: {
       MaxConsecutiveHoursForTeacher: 'MaxConsecutiveHoursForTeacher',
       MinConsecutiveHoursForTeacher: 'MinConsecutiveHoursForTeacher',
