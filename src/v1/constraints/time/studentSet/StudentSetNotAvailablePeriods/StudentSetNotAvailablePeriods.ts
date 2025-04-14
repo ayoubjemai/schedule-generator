@@ -1,3 +1,4 @@
+import { ActivityHelper } from '../../../../../helpers/activity.helper';
 import { Activity } from '../../../../models/Activity';
 import { StudentSet } from '../../../../models/StudentSet';
 import { TimetableAssignment } from '../../../../scheduler/TimetableAssignment';
@@ -36,21 +37,14 @@ export class StudentSetNotAvailablePeriods implements Constraint {
       const slot = assignment.getSlotForActivity(activity.id);
       if (!slot) continue;
 
-      const { totalDurationInMinutes } = activity;
-      for (let duration = 0; duration < totalDurationInMinutes; duration++) {
-        const { hours, minutes } = convertMinutesToHoursAndMinutes(duration);
-        const period: Period = {
-          day: slot.day,
-          hour: slot.hour + hours,
-          minute: slot.minute + minutes,
-        };
+      const startActivityInMinutes = ActivityHelper.getStartTimeInMinutes({ slot });
+      const endActivityInMinutes = ActivityHelper.getEndTimeInMinutes({ slot, activity });
+      const periodInMinuts = this.periods.map(p => ActivityHelper.getStartTimeInMinutes({ slot: p }));
 
-        if (
-          this.periods.some(p => p.day === period.day && p.hour === period.hour && p.minute === period.minute)
-        ) {
-          return false;
-        }
-      }
+      const isNotAvailable = periodInMinuts.some(period => {
+        return period >= startActivityInMinutes && period <= endActivityInMinutes;
+      });
+      if (isNotAvailable) return false;
     }
 
     return true;

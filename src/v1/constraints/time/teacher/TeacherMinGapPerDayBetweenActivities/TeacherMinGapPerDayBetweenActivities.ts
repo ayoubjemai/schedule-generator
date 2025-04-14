@@ -51,16 +51,6 @@ export class TeacherMinGapPerDayBetweenActivities implements Constraint {
             { ...periodA.period, totalDurationInMinutes: periodA.totalDurationInMinutes },
             { ...periodB.period, totalDurationInMinutes: periodB.totalDurationInMinutes }
           );
-          console.log(
-            `🚀 ~ TeacherMinGapPerDayBetweenActivities ~ isSatisfied ~  { ...periodA.period, totalDurationInMinutes: periodA.totalDurationInMinutes }:`,
-            { ...periodA.period, totalDurationInMinutes: periodA.totalDurationInMinutes }
-          );
-          console.log(
-            `🚀 ~ TeacherMinGapPerDayBetweenActivities ~ isSatisfied ~    { ...periodB.period, totalDurationInMinutes: periodB.totalDurationInMinutes }:`,
-            { ...periodB.period, totalDurationInMinutes: periodB.totalDurationInMinutes }
-          );
-
-          console.log({ gapInMinutes, minGapInMinutes: this.minGapInMinutes });
 
           if (gapInMinutes < this.minGapInMinutes) {
             isSatisfied = false;

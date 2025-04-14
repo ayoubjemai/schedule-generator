@@ -53,6 +53,9 @@ export class TeacherMinGapBetweenActivityTags implements Constraint {
     const teacherActivitiesByDay = ActivityHelper.groupActivitiesByDay(assignment, teacherActivities);
 
     for (const [_, teacherActivities] of Object.entries(teacherActivitiesByDay)) {
+      teacherActivities.forEach(activity => {
+        this.addActivity(activity.activity);
+      });
       if (!this.validateMinGapBetweenTags(teacherActivities)) {
         return false;
       }

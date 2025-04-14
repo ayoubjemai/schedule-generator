@@ -36,7 +36,6 @@ class TeacherNotAvailablePeriods implements Constraint {
       this.addActivity(activity);
       const slot = assignment.getSlotForActivity(activity.id);
       if (!slot) continue;
-      const { totalDurationInMinutes } = activity;
 
       const startActivityInMinutes = ActivityHelper.getStartTimeInMinutes({ slot });
       const endActivityInMinutes = ActivityHelper.getEndTimeInMinutes({ slot, activity });
