@@ -20,6 +20,9 @@ importers:
       moment:
         specifier: ^2.30.1
         version: 2.30.1
+      readline:
+        specifier: ^1.3.0
+        version: 1.3.0
       typescript:
         specifier: ^5.8.2
         version: 5.8.2
@@ -1461,6 +1464,9 @@ packages:
 
   react-is@18.3.1:
     resolution: {integrity: sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==}
+
+  readline@1.3.0:
+    resolution: {integrity: sha512-k2d6ACCkiNYz222Fs/iNze30rRJ1iIicW7JuX/7/cozvih6YCkFZH+J6mAFDVgv0dRBaAyr4jDqC95R2y4IADg==}
 
   regenerate-unicode-properties@10.2.0:
     resolution: {integrity: sha512-DqHn3DwbmmPVzeKj9woBadqmXxLvQoQIwu7nopMc72ztvxVmVk2SBhSnx67zuye5TP+lJsb/TBQsjLKhnDf3MA==}
@@ -3534,6 +3540,8 @@ snapshots:
   pure-rand@6.1.0: {}
 
   react-is@18.3.1: {}
+
+  readline@1.3.0: {}
 
   regenerate-unicode-properties@10.2.0:
     dependencies:
