@@ -27,7 +27,7 @@
 - Not available periods ✅
 - Max days per week ✅
 - Begins early (specify max allowed beginnings at second hour)
-- Max gaps per day/week
+- Max gaps per day/week ✅
 - Max hours daily/continuously
 - Max span per day
 - Min hours daily
