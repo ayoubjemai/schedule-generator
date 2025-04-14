@@ -112,15 +112,14 @@ class TimetableAssignment {
     const assignedActivityRooms = this.activityRooms;
 
     const activities: Activity[] = [];
-    assignedActivityRooms.forEach((activityId, room) => {
+    for (const [activityId, room] of assignedActivityRooms) {
       if (room === roomId) {
         const activity = this.getActivityById(activityId);
-        const foundActivity = activities.find(a => a.id === activityId);
-        if (activity && !foundActivity) {
+        if (activity) {
           activities.push(activity);
         }
       }
-    });
+    }
 
     return activities;
   }

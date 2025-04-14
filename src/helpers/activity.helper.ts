@@ -60,7 +60,10 @@ export class ActivityHelper {
     return activity.slot.day * 60 * 24 + activity.slot.hour * 60 + activity.slot.minute;
   }
 
-  static getEndTimeInMinutes(activity: { activity: Activity; slot: Period }): number {
+  static getEndTimeInMinutes(activity: {
+    activity: { totalDurationInMinutes: number };
+    slot: Period;
+  }): number {
     return this.getStartTimeInMinutes(activity) + activity.activity.totalDurationInMinutes;
   }
 
