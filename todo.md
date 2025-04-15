@@ -28,7 +28,8 @@
 - Max days per week ✅
 - Begins early (specify max allowed beginnings at second hour)
 - Max gaps per day/week ✅
-- Max hours daily/continuously
+- Max hours daily ✅
+- Max hours continuously
 - Max span per day
 - Min hours daily
 - Max hours daily/continuously with an activity tag

@@ -34,7 +34,8 @@ export const ConstraintType = {
     },
     room: {
       RoomNotAvailable: 'RoomNotAvailable',
-    },
+      StudentSetMaxHoursPerDay: 'StudentSetMaxHoursPerDay',
+},
   },
 } as const;
 

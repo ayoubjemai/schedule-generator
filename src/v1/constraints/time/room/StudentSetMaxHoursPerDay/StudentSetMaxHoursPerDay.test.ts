@@ -1,11 +1,11 @@
 import { Activity } from '../../../../models/Activity';
-import { Room } from '../../../../models/Room';
-import { Teacher } from '../../../../models/Teacher';
 import { TimetableAssignment } from '../../../../scheduler/TimetableAssignment';
 import Subject from '../../../../models/Subject';
-import { TeacherMaxMinutesPerDay } from './TeacherMaxHoursPerDay';
+import { StudentSetMaxHoursPerDay } from './StudentSetMaxHoursPerDay';
+import { Room } from '../../../../models/Room';
+import { StudentSet } from '../../../../models/StudentSet';
 
-describe('TeacherMaxMinutesPerDay', () => {
+describe('StudentSetMaxHoursPerDay', () => {
   const DAYS_COUNT = 5;
   const PERIODS_PER_DAY = 8;
   const MAX_MINUTES_PER_DAY = 180; // 3 hours max per day
@@ -15,32 +15,33 @@ describe('TeacherMaxMinutesPerDay', () => {
   let activity2: Activity;
   let activity3: Activity;
   let subject: Subject;
-  let teacher: Teacher;
-  let constraint: TeacherMaxMinutesPerDay;
+  let constraint: StudentSetMaxHoursPerDay;
   let room: Room;
+  let studentSet: StudentSet;
 
   beforeEach(() => {
     assignment = new TimetableAssignment(DAYS_COUNT, PERIODS_PER_DAY);
     subject = new Subject('sub1', 'Mathematics');
 
-    teacher = new Teacher('t1', 'John Doe');
+    // Create a student set
+    studentSet = new StudentSet('s1', 'Class 1A');
 
     // Create activities with different durations
     activity1 = new Activity('a1', 'Math Lecture 1', subject, 60); // 60 minutes
-    activity1.teachers.push(teacher);
+    activity1.studentSets.push(studentSet);
 
     activity2 = new Activity('a2', 'Math Lecture 2', subject, 90); // 90 minutes
-    activity2.teachers.push(teacher);
+    activity2.studentSets.push(studentSet);
 
     activity3 = new Activity('a3', 'Math Lecture 3', subject, 60); // 60 minutes
-    activity3.teachers.push(teacher);
+    activity3.studentSets.push(studentSet);
 
     room = new Room('r1', 'Classroom 101', 30);
 
-    constraint = new TeacherMaxMinutesPerDay(teacher, MAX_MINUTES_PER_DAY);
+    constraint = new StudentSetMaxHoursPerDay(studentSet, MAX_MINUTES_PER_DAY);
   });
 
-  it('should be satisfied when no activities are assigned to the teacher', () => {
+  it('should be satisfied when no activities are assigned to the student set', () => {
     expect(constraint.isSatisfied(assignment)).toBe(true);
   });
 
@@ -77,19 +78,38 @@ describe('TeacherMaxMinutesPerDay', () => {
     expect(constraint.activities.length).toBe(1);
   });
 
-  it('should ignore activities for other teachers', () => {
-    const otherTeacher = new Teacher('t2', 'Jane Smith');
+  it('should ignore activities for other student sets', () => {
+    const otherStudentSet = new StudentSet('s2', 'Class 1B');
     const otherActivity = new Activity('a4', 'Physics Lecture', subject, 120);
-    otherActivity.teachers.push(otherTeacher);
+    otherActivity.studentSets.push(otherStudentSet);
 
-    // Assign teacher's activities close to the limit
+    // Assign student set's activities close to the limit
     assignment.assignActivity(activity1, { day: 0, hour: 8, minute: 0 }, room.id);
     assignment.assignActivity(activity2, { day: 0, hour: 10, minute: 0 }, room.id);
 
-    // Assign other teacher's activity on the same day
+    // Assign other student set's activity on the same day
     assignment.assignActivity(otherActivity, { day: 0, hour: 12, minute: 0 }, room.id);
 
-    // Should still be satisfied as the other teacher's activity isn't counted
+    // Should still be satisfied as the other student set's activity isn't counted
     expect(constraint.isSatisfied(assignment)).toBe(true);
+  });
+
+  it('should correctly identify student set activities', () => {
+    // Add activities for our student set
+    assignment.assignActivity(activity1, { day: 0, hour: 8, minute: 0 }, room.id);
+
+    // Create activity for a different student set
+    const differentStudentSet = new StudentSet('s3', 'Class 2A');
+    const activityForDifferentSet = new Activity('adiff', 'Different Class Activity', subject, 60);
+    activityForDifferentSet.studentSets.push(differentStudentSet);
+    assignment.assignActivity(activityForDifferentSet, { day: 0, hour: 10, minute: 0 }, room.id);
+
+    // Check constraint
+    constraint.isSatisfied(assignment);
+
+    // Should only contain this student set's activities
+    expect(constraint.activities).toContain(activity1);
+    expect(constraint.activities).not.toContain(activityForDifferentSet);
+    expect(constraint.activities.length).toBe(1);
   });
 });
