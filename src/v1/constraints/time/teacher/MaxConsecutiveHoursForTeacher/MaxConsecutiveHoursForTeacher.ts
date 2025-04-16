@@ -5,8 +5,9 @@ import { DEFAULT_WEIGHT } from '../../../../utils/defaultWeight';
 import { ConstraintType } from '../../../constraintType.enum';
 import { Activity } from '../../../../models/Activity';
 import { ActivityHelper } from '../../../../../helpers/activity.helper';
+import { MaxConsecutiveHours } from '../../common/MaxConsectiveHours/MaxConsecutiveHours';
 
-class MaxConsecutiveHoursForTeacher implements Constraint {
+class MaxConsecutiveHoursForTeacher extends MaxConsecutiveHours implements Constraint {
   type = ConstraintType.time.teacher.MaxConsecutiveHoursForTeacher;
   weight: number;
   active: boolean;
@@ -15,6 +16,8 @@ class MaxConsecutiveHoursForTeacher implements Constraint {
   activities: Activity[] = [];
 
   constructor(teacher: Teacher, maxHours: number, weight = DEFAULT_WEIGHT, active = true) {
+    const minGapBetweenActivity = 0; // For MaxConsecutiveHoursForTeacher, use 0 gap minutes to consider activities "consecutive" only if they're back-to-back
+    super(maxHours, minGapBetweenActivity);
     this.teacher = teacher;
     this.maxHours = maxHours;
     this.weight = weight;
@@ -31,35 +34,9 @@ class MaxConsecutiveHoursForTeacher implements Constraint {
 
     const teacherActivities = assignment.getActivitiesForTeacher(this.teacher.id);
 
-    // Add activities to constraint's list
-    teacherActivities.forEach(activity => {
-      this.addActivity(activity);
-    });
+    teacherActivities.forEach(activity => this.addActivity(activity));
 
-    // Group activities by day
-    const teacherActivitiesByDay = ActivityHelper.groupActivitiesByDay(assignment, teacherActivities);
-
-    // Check each day's activities for consecutive hours exceeding maximum
-    for (const [_, dayActivities] of Object.entries(teacherActivitiesByDay)) {
-      // For MaxConsecutiveHoursForTeacher, use 0 gap minutes to consider activities "consecutive" only if they're back-to-back
-      const minGapMinutes = 0;
-
-      // Calculate durations of consecutive activity groups
-      const consecutiveDurations = ActivityHelper.calculateConsecutiveActivityDurations(
-        dayActivities,
-        minGapMinutes
-      );
-
-      // Convert minutes to hours and check if any exceed max hours
-      for (const durationInMinutes of consecutiveDurations) {
-        const durationInHours = durationInMinutes / 60;
-        if (durationInHours > this.maxHours) {
-          return false;
-        }
-      }
-    }
-
-    return true;
+    return this.isValid(assignment, this.activities);
   }
 }
 
