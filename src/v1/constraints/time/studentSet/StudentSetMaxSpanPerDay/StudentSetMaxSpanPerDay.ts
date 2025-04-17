@@ -1,27 +1,30 @@
 import { Activity } from '../../../../models/Activity';
-import { Teacher } from '../../../../models/Teacher';
+import { StudentSet } from '../../../../models/StudentSet';
 import { TimetableAssignment } from '../../../../scheduler/TimetableAssignment';
 import { Constraint } from '../../../../types/constraints';
-import { Period } from '../../../../types/core';
 import { DEFAULT_WEIGHT } from '../../../../utils/defaultWeight';
-import { groupActivitiesByDay } from '../../../../utils/groupActivitiesByDay';
-import { ValidationError } from '../../../../utils/ValidationError';
 import { ConstraintType } from '../../../constraintType.enum';
 import { MaxSpanPerDay } from '../../common/MaxSpanPerDay/MaxSpanPerDay';
 
-class TeacherMaxSpanPerDay extends MaxSpanPerDay implements Constraint {
-  type = ConstraintType.time.teacher.TeacherMaxSpanPerDay;
+export class StudentSetMaxSpanPerDay extends MaxSpanPerDay implements Constraint {
+  type = ConstraintType.time.studentSet.StudentSetMaxSpanPerDay;
   weight: number;
   active: boolean;
-  teacher: Teacher;
+  studentSet: StudentSet;
   activities: Activity[] = [];
 
-  constructor(teacher: Teacher, protected maxSpanHours: number, weight = DEFAULT_WEIGHT, active = true) {
+  constructor(
+    studentSet: StudentSet,
+    protected maxSpanHours: number,
+    weight = DEFAULT_WEIGHT,
+    active = true
+  ) {
     super(maxSpanHours);
-    this.teacher = teacher;
+    this.studentSet = studentSet;
     this.weight = weight;
     this.active = active;
   }
+
   addActivity(activity: Activity): void {
     if (this.activities.includes(activity)) return;
     this.activities.push(activity);
@@ -30,14 +33,10 @@ class TeacherMaxSpanPerDay extends MaxSpanPerDay implements Constraint {
   isSatisfied(assignment: TimetableAssignment): boolean {
     if (!this.active) return true;
 
-    const teacherActivities = assignment.getActivitiesForTeacher(this.teacher.id);
-
-    teacherActivities.forEach(activity => {
+    const studentSetActivities = assignment.getActivitiesForStudentSet(this.studentSet.id);
+    studentSetActivities.forEach(activity => {
       this.addActivity(activity);
     });
-
-    return this.isValid(assignment, teacherActivities);
+    return this.isValid(assignment, studentSetActivities);
   }
 }
-
-export { TeacherMaxSpanPerDay };
