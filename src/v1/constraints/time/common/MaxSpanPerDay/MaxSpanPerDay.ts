@@ -26,8 +26,6 @@ export class MaxSpanPerDay {
         { ...lastActivitySlot, totalDuraionInMinutes: lastActivity.activity.totalDurationInMinutes },
       ]);
 
-      console.log({ firstActivitySlot });
-      console.log({ lastActivitySlot });
       this.checkDurationValidity(duration, sortedActivities, firstActivitySlot, lastActivitySlot);
       const maxSpan = this.maxSpanHours * 60;
       if (duration > maxSpan) {
