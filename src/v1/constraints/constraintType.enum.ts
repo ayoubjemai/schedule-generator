@@ -12,6 +12,7 @@ export const ConstraintType = {
   StudentSetMaxConsecutiveHours: 'StudentSetMaxConsecutiveHours',
   StudentSetMaxSpanPerDay: 'StudentSetMaxSpanPerDay',
   StudentSetMinHoursDaily: 'StudentSetMinHoursDaily',
+  StudentSetMaxHoursContinouslyInActivityTag: 'StudentSetMaxHoursContinouslyInActivityTag',
 },
     teacher: {
       MaxConsecutiveHoursForTeacher: 'MaxConsecutiveHoursForTeacher',
