@@ -4,16 +4,19 @@ import { TimetableAssignment } from '../../../../scheduler/TimetableAssignment';
 import { Constraint } from '../../../../types/constraints';
 import { DEFAULT_WEIGHT } from '../../../../utils/defaultWeight';
 import { ConstraintType } from '../../../constraintType.enum';
+import { MinDaysPerWeek } from '../../common/MinDaysPerWeek/MinDaysPerWeek';
 
-export class TeacherMinDaysPerWeek implements Constraint {
+export class TeacherMinDaysPerWeek extends MinDaysPerWeek implements Constraint {
   type = ConstraintType.time.teacher.TeacherMinDaysPerWeek;
   activities: Activity[] = [];
   constructor(
     private teacher: Teacher,
-    private minDays: number,
+    protected minDays: number,
     public weight = DEFAULT_WEIGHT * 0.2,
     public active = true
-  ) {}
+  ) {
+    super(minDays);
+  }
   addActivity(activity: Activity): void {
     if (this.activities.includes(activity)) return;
     this.activities.push(activity);
@@ -23,16 +26,9 @@ export class TeacherMinDaysPerWeek implements Constraint {
     if (!this.active) return true;
 
     const teacherActivities = assignment.getActivitiesForTeacher(this.teacher.id);
-    const workingDays = new Set<number>();
 
-    for (const activity of teacherActivities) {
-      this.addActivity(activity);
-      const slot = assignment.getSlotForActivity(activity.id);
-      if (slot) {
-        workingDays.add(slot.day);
-      }
-    }
+    teacherActivities.forEach(activity => this.addActivity(activity));
 
-    return workingDays.size >= this.minDays;
+    return this.isValid(assignment, teacherActivities);
   }
 }
