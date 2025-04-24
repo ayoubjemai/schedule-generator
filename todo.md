@@ -17,6 +17,7 @@
 - Max span per day ✅
 - Min hours daily ✅
 - Max hours continuously with an activity tag ✅
+- Min hours continuously with an activity tag ✅
 - Min hours daily with an activity tag ✅
 - Min gaps between an ordered pair of activity tags ✅
 - Respect working in an hourly interval a max number of days per week ✅
