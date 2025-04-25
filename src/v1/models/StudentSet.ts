@@ -7,6 +7,7 @@ export class StudentSet {
   maxDaysPerWeek?: number;
   maxEarlyBeginnings?: number;
   maxGapsPerDay?: number;
+  minGapsPerDay?: number;
   maxGapsPerWeek?: number;
   maxHoursDaily?: number;
   maxHoursContinuously?: number;

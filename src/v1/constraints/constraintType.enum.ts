@@ -7,7 +7,14 @@ export const ConstraintType = {
     },
     studentSet: {
       StudentSetNotAvailablePeriods: 'StudentSetNotAvailablePeriods',
-    },
+      StudentSetMaxDaysPerWeek: 'StudentSetMaxDaysPerWeek',
+  StudentSetMaxGapPerDay: 'StudentSetMaxGapPerDay',
+  StudentSetMaxConsecutiveHours: 'StudentSetMaxConsecutiveHours',
+  StudentSetMaxSpanPerDay: 'StudentSetMaxSpanPerDay',
+  StudentSetMinHoursDaily: 'StudentSetMinHoursDaily',
+  StudentSetMaxHoursContinouslyInActivityTag: 'StudentSetMaxHoursContinouslyInActivityTag',
+  StudentSetMinDaysPerWeek: 'StudentSetMinDaysPerWeek',
+},
     teacher: {
       MaxConsecutiveHoursForTeacher: 'MaxConsecutiveHoursForTeacher',
       MinConsecutiveHoursForTeacher: 'MinConsecutiveHoursForTeacher',
@@ -24,7 +31,8 @@ export const ConstraintType = {
       TeacherMinGapBetweenActivityTags: 'TeacherMinGapBetweenActivityTags',
       TeacherMaxDayInIntervalHours: 'TeacherMaxDayInIntervalHours',
       TeacherMinRestinHours: 'TeacherMinRestinHours',
-    },
+      TeacherMinHourContinouslyInActivityTag: 'TeacherMinHourContinouslyInActivityTag',
+},
   },
   space: {
     activity: {
@@ -32,7 +40,8 @@ export const ConstraintType = {
     },
     room: {
       RoomNotAvailable: 'RoomNotAvailable',
-    },
+      StudentSetMaxHoursPerDay: 'StudentSetMaxHoursPerDay',
+},
   },
 } as const;
 

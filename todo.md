@@ -17,6 +17,7 @@
 - Max span per day ✅
 - Min hours daily ✅
 - Max hours continuously with an activity tag ✅
+- Min hours continuously with an activity tag ✅
 - Min hours daily with an activity tag ✅
 - Min gaps between an ordered pair of activity tags ✅
 - Respect working in an hourly interval a max number of days per week ✅
@@ -25,13 +26,20 @@
 ## For Students (Sets)
 
 - Not available periods ✅
-- Max days per week
+- Max days per week ✅
+- Min days per week ✅
 - Begins early (specify max allowed beginnings at second hour)
-- Max gaps per day/week
-- Max hours daily/continuously
-- Max span per day
-- Min hours daily
-- Max hours daily/continuously with an activity tag
+- Max gaps per day/week ✅
+- Min gaps per day/week ❗️
+- Max hours daily ✅
+- Max hours continuously ✅
+- Min hours continuously ❗️
+- Max span per day ✅
+- Min span per day ❗️
+- Min hours daily ✅
+- Max hours daily/continuously with an activity tag ✅
+- Min hours daily/continuously with an activity tag ❗
+- Max hours continuously with an activity tag
 - Min hours daily with an activity tag
 - Min gaps between an ordered pair of activity tags
 - Respect working in an hourly interval a max number of days per week
@@ -51,8 +59,10 @@
 - Not overlapping (activity) ✅
 - Not overlapping (for activity tags)
 - Max consecutive in selected time slots ✅
+- Min consecutive in selected time slots ❗
 - Min consecutive in selected time slots
 - Min gaps between a set of activities ✅
+- Max gaps between a set of activities ❗
 
 ---
 
