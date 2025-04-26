@@ -30,10 +30,10 @@
 - Min days per week ✅
 - Begins early (specify max allowed beginnings at second hour)
 - Max gaps per day/week ✅
-- Min gaps per day/week ❗️
+- Min gaps per day/week ✅
 - Max hours daily ✅
 - Max hours continuously ✅
-- Min hours continuously ❗️
+- Min hours continuously ✅
 - Max span per day ✅
 - Min span per day ❗️
 - Min hours daily ✅
