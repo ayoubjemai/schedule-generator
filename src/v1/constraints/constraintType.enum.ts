@@ -46,9 +46,7 @@ export const ConstraintType = {
 },
   },
 } as const;
-
 export type ExtractTypeFromObject<T extends Record<string, any>> = {
   [K in keyof T]: T[K] extends string ? T[K] : ExtractTypeFromObject<T[K]>;
 }[keyof T];
-
 export type TConstraintType = ExtractTypeFromObject<typeof ConstraintType>;

@@ -3,7 +3,6 @@ import { TimetableAssignment } from '../../../../scheduler/TimetableAssignment';
 import { Constraint } from '../../../../types/constraints';
 import { DEFAULT_WEIGHT } from '../../../../utils/defaultWeight';
 import { ConstraintType } from '../../../constraintType.enum';
-
 export class PreferredRoomsForActivity implements Constraint {
   type = ConstraintType.space.activity.PreferredRoomsForActivity;
   weight: number;
@@ -11,7 +10,6 @@ export class PreferredRoomsForActivity implements Constraint {
   activity: Activity;
   preferredRooms: string[];
   activities: Activity[] = [];
-
   constructor(activity: Activity, preferredRooms: string[], weight = DEFAULT_WEIGHT, active = true) {
     this.activity = activity;
     this.preferredRooms = preferredRooms.length > 0 ? preferredRooms : activity.preferredRooms;
@@ -19,18 +17,14 @@ export class PreferredRoomsForActivity implements Constraint {
     this.active = active;
     this.addActivity(activity);
   }
-
   addActivity(activity: Activity): void {
     if (this.activities.includes(activity)) return;
     this.activities.push(activity);
   }
-
   isSatisfied(assignment: TimetableAssignment): boolean {
     if (!this.active || this.preferredRooms.length === 0) return true;
-
     const roomId = assignment.getRoomForActivity(this.activity.id);
-    if (!roomId) return true; // Not yet assigned a room
-
+    if (!roomId) return true; 
     return this.preferredRooms.includes(roomId);
   }
 }

@@ -5,14 +5,12 @@ import { Constraint } from '../../../../types/constraints';
 import { DEFAULT_WEIGHT } from '../../../../utils/defaultWeight';
 import { ConstraintType } from '../../../constraintType.enum';
 import { MinHoursDaily } from '../../common/MinHoursDaily/MinHoursDaily';
-
 export class StudentSetMinHoursDaily extends MinHoursDaily implements Constraint {
   type = ConstraintType.time.studentSet.StudentSetMinHoursDaily;
   weight: number;
   active: boolean;
   studentSet: StudentSet;
   activities: Activity[] = [];
-
   constructor(
     studentSet: StudentSet,
     protected minHoursDaily: number,
@@ -24,28 +22,22 @@ export class StudentSetMinHoursDaily extends MinHoursDaily implements Constraint
     this.weight = weight;
     this.active = active;
   }
-
   addActivity(activity: Activity): void {
     if (this.activities.includes(activity)) return;
     this.activities.push(activity);
   }
-
   isSatisfied(assignment: TimetableAssignment): boolean {
     if (!this.active) return true;
-
     const studentSetActivities = assignment.getActivitiesForStudentSet(this.studentSet.id);
-
     const allStudentSetDurationInMinutes = studentSetActivities.reduce((acc, activity) => {
       return acc + activity.totalDurationInMinutes;
     }, 0);
-
     const minDuration = this.minHoursDaily * 60;
     if (allStudentSetDurationInMinutes < minDuration) {
       throw new Error(
         `Student set ${this.studentSet.name} has only ${allStudentSetDurationInMinutes} minutes of activities, but needs at least ${minDuration} minutes.`
       );
     }
-
     studentSetActivities.forEach(activity => {
       this.addActivity(activity);
     });

@@ -1,7 +1,6 @@
 import { Activity } from '../models/Activity';
 import { TimetableAssignment } from '../scheduler/TimetableAssignment';
 import { Period } from '../types/core';
-
 export const groupActivitiesByDay = (
   assignment: TimetableAssignment,
   activities: Activity[]
@@ -18,6 +17,5 @@ export const groupActivitiesByDay = (
     },
     {} as Record<number, { activity: Activity; slot: Period }[]>
   );
-
   return activitiesByDay;
 };

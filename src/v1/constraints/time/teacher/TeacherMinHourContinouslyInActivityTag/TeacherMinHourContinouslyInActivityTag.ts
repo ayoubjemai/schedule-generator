@@ -7,7 +7,6 @@ import { Teacher } from '../../../../models/Teacher';
 import { Period } from '../../../../types/core';
 import { ActivityHelper } from '../../../../../helpers/activity.helper';
 import { MinHoursContinouslyInActivityTag } from '../../common/MinHoursContinouslyInActivityTag/MinHoursContinouslyInActivityTag';
-
 export class TeacherMinHourContinouslyInActivityTag
   extends MinHoursContinouslyInActivityTag
   implements Constraint
@@ -17,7 +16,6 @@ export class TeacherMinHourContinouslyInActivityTag
   active: boolean;
   teacher: Teacher;
   activities: Activity[] = [];
-
   constructor(
     teacher: Teacher,
     protected minHoursDaily: number,
@@ -31,17 +29,13 @@ export class TeacherMinHourContinouslyInActivityTag
     this.weight = weight;
     this.active = active;
   }
-
   addActivity(activity: Activity): void {
     if (this.activities.includes(activity)) return;
     this.activities.push(activity);
   }
-
   isSatisfied(assignment: TimetableAssignment): boolean {
     if (!this.active) return true;
-
     const teacherActivities = assignment.getActivitiesForTeacher(this.teacher.id);
-
     return this.isValid(assignment, teacherActivities, this.addActivity.bind(this), this.MIN_GAP_MINUTES);
   }
 }

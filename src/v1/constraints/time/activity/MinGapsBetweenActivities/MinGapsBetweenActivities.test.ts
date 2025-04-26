@@ -4,12 +4,10 @@ import { Period } from "../../../../types/core";
 import Subject from "../../../../models/Subject";
 import { Room } from "../../../../models/Room";
 import { MinGapsBetweenActivities } from "./MinGapsBetweenActivities";
-
 describe("MinGapsBetweenActivities", () => {
   const DAYS_COUNT = 5;
   const PERIODS_PER_DAY = 8;
   const MIN_GAP_MINUTES = 30;
-
   let assignment: TimetableAssignment;
   let activity1: Activity;
   let activity2: Activity;
@@ -20,95 +18,62 @@ describe("MinGapsBetweenActivities", () => {
   let slot2WithSufficientGap: Period;
   let slot2WithInsufficientGap: Period;
   let slot2OnDifferentDay: Period;
-
   beforeEach(() => {
     assignment = new TimetableAssignment(DAYS_COUNT, PERIODS_PER_DAY);
     subject = new Subject("sub1", "Mathematics");
-
-    activity1 = new Activity("a1", "Math Lecture", subject, 60); // 60 min duration
+    activity1 = new Activity("a1", "Math Lecture", subject, 60); 
     activity2 = new Activity("a2", "Another Math Lecture", subject, 60);
-
     room = new Room("r1", "Classroom 101", 30);
-
-    // First activity starts at 9:00
     slot1 = { day: 0, hour: 9, minute: 0 };
-
-    // Second activity with sufficient gap (more than MIN_GAP_MINUTES after first activity ends)
-    // First activity ends at 10:00, so this starts at 10:45 (45 min gap)
     slot2WithSufficientGap = { day: 0, hour: 10, minute: 45 };
-
-    // Second activity with insufficient gap (less than MIN_GAP_MINUTES after first activity ends)
-    // First activity ends at 10:00, so this starts at 10:15 (15 min gap)
     slot2WithInsufficientGap = { day: 0, hour: 10, minute: 15 };
-
-    // Second activity on a different day (no gap constraint applies)
     slot2OnDifferentDay = { day: 1, hour: 9, minute: 0 };
-
     constraint = new MinGapsBetweenActivities(MIN_GAP_MINUTES);
   });
-
   it("should be satisfied when no activities are assigned", () => {
     expect(constraint.isSatisfied(assignment)).toBe(true);
   });
-
   it("should be satisfied when only one activity is assigned", () => {
     assignment.assignActivity(activity1, slot1, room.id);
-
     expect(constraint.isSatisfied(assignment)).toBe(true);
   });
-
   it("should be satisfied when activities have sufficient gap between them", () => {
     assignment.assignActivity(activity1, slot1, room.id);
     assignment.assignActivity(activity2, slot2WithSufficientGap, room.id);
-
     expect(constraint.isSatisfied(assignment)).toBe(true);
   });
-
   it("should not be satisfied when activities have insufficient gap between them", () => {
     assignment.assignActivity(activity1, slot1, room.id);
     assignment.assignActivity(activity2, slot2WithInsufficientGap, room.id);
-
     expect(constraint.isSatisfied(assignment)).toBe(false);
   });
-
   it("should be satisfied when activities are on different days", () => {
     assignment.assignActivity(activity1, slot1, room.id);
     assignment.assignActivity(activity2, slot2OnDifferentDay, room.id);
-
     expect(constraint.isSatisfied(assignment)).toBe(true);
   });
-
   it("should always be satisfied when constraint is inactive", () => {
     constraint.active = false;
-
     assignment.assignActivity(activity1, slot1, room.id);
     assignment.assignActivity(activity2, slot2WithInsufficientGap, room.id);
-
     expect(constraint.isSatisfied(assignment)).toBe(true);
   });
-
   it("should maintain a list of activities that the constraint applies to", () => {
     constraint.addActivity(activity1);
     constraint.addActivity(activity2);
-
     expect(constraint.activities).toContain(activity1);
     expect(constraint.activities).toContain(activity2);
     expect(constraint.activities.length).toBe(2);
   });
-
   it("should not add duplicate activities", () => {
     constraint.addActivity(activity1);
     constraint.addActivity(activity1);
-
     expect(constraint.activities.length).toBe(1);
   });
-
   it("should automatically add activities from assignments during satisfaction check", () => {
     assignment.assignActivity(activity1, slot1, room.id);
     assignment.assignActivity(activity2, slot2WithSufficientGap, room.id);
-
     constraint.isSatisfied(assignment);
-
     expect(constraint.activities).toContain(activity1);
     expect(constraint.activities.length).toBe(2);
   });

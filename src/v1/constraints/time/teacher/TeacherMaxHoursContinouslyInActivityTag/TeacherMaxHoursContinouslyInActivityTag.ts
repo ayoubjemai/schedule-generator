@@ -7,7 +7,6 @@ import { DEFAULT_WEIGHT } from '../../../../utils/defaultWeight';
 import { groupActivitiesByDay } from '../../../../utils/groupActivitiesByDay';
 import { ConstraintType } from '../../../constraintType.enum';
 import { MaxHoursContinouslyInActivityTag } from '../../common/MaxHoursContinouslyInActivityTag/MaxHoursContinouslyInActivityTag';
-
 class TeacherMaxHoursContinouslyInActivityTag extends MaxHoursContinouslyInActivityTag implements Constraint {
   type = ConstraintType.time.teacher.TeacherMaxHoursContinouslyInActivityTag;
   weight: number;
@@ -15,7 +14,6 @@ class TeacherMaxHoursContinouslyInActivityTag extends MaxHoursContinouslyInActiv
   teacher: Teacher;
   activities: Activity[] = [];
   protected MIN_GAP_MINUTES: number;
-
   constructor(
     teacher: Teacher,
     protected activityTagId: string,
@@ -29,18 +27,14 @@ class TeacherMaxHoursContinouslyInActivityTag extends MaxHoursContinouslyInActiv
     this.active = active;
     this.MIN_GAP_MINUTES = teacher.get('minGapsPerDay') || 0;
   }
-
   addActivity(activity: Activity): void {
     if (this.activities.includes(activity)) return;
     this.activities.push(activity);
   }
-
   isSatisfied(assignment: TimetableAssignment): boolean {
     if (!this.active) return true;
     const teacherActivities = assignment.getActivitiesForTeacher(this.teacher.id);
-
     return this.isValid(assignment, teacherActivities, this.addActivity.bind(this), this.MIN_GAP_MINUTES);
   }
 }
-
 export { TeacherMaxHoursContinouslyInActivityTag };

@@ -4,7 +4,6 @@ import { Constraint } from '../../../../types/constraints';
 import { Period } from '../../../../types/core';
 import { DEFAULT_WEIGHT } from '../../../../utils/defaultWeight';
 import { ConstraintType } from '../../../constraintType.enum';
-
 export class PreferredStartingTimesForActivity implements Constraint {
   type = ConstraintType.time.activity.PreferredStartingTimesForActivity;
   weight: number;
@@ -12,7 +11,6 @@ export class PreferredStartingTimesForActivity implements Constraint {
   activity: Activity;
   preferredTimes: Period[];
   activities: Activity[] = [];
-
   constructor(activity: Activity, preferredTimes: Period[], weight = DEFAULT_WEIGHT * 0.2, active = true) {
     this.activity = activity;
     this.preferredTimes = preferredTimes;
@@ -24,13 +22,10 @@ export class PreferredStartingTimesForActivity implements Constraint {
     if (this.activities.includes(activity)) return;
     this.activities.push(activity);
   }
-
   isSatisfied(assignment: TimetableAssignment): boolean {
     if (!this.active || this.preferredTimes.length === 0) return true;
-
     const assignedSlot = assignment.getSlotForActivity(this.activity.id);
-    if (!assignedSlot) return true; // Not yet assigned
-
+    if (!assignedSlot) return true; 
     return this.preferredTimes.some(
       preferredTime =>
         preferredTime.day === assignedSlot.day &&

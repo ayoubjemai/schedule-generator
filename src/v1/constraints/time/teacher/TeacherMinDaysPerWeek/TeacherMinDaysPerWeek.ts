@@ -5,7 +5,6 @@ import { Constraint } from '../../../../types/constraints';
 import { DEFAULT_WEIGHT } from '../../../../utils/defaultWeight';
 import { ConstraintType } from '../../../constraintType.enum';
 import { MinDaysPerWeek } from '../../common/MinDaysPerWeek/MinDaysPerWeek';
-
 export class TeacherMinDaysPerWeek extends MinDaysPerWeek implements Constraint {
   type = ConstraintType.time.teacher.TeacherMinDaysPerWeek;
   activities: Activity[] = [];
@@ -21,14 +20,10 @@ export class TeacherMinDaysPerWeek extends MinDaysPerWeek implements Constraint 
     if (this.activities.includes(activity)) return;
     this.activities.push(activity);
   }
-
   isSatisfied(assignment: TimetableAssignment): boolean {
     if (!this.active) return true;
-
     const teacherActivities = assignment.getActivitiesForTeacher(this.teacher.id);
-
     teacherActivities.forEach(activity => this.addActivity(activity));
-
     return this.isValid(assignment, teacherActivities);
   }
 }

@@ -1,14 +1,12 @@
 import { Activity } from '../models/Activity';
 import { TimetableAssignment } from '../scheduler/TimetableAssignment';
 import { logToFile } from './logToFile';
-
 export function renderConsoleTimetable(
   assignment: TimetableAssignment,
   daysCount: number,
   periodsPerDay: number
 ): void {
   const timetable = [];
-
   for (let day = 0; day < daysCount; day++) {
     const daySchedule = {
       day,
@@ -21,14 +19,12 @@ export function renderConsoleTimetable(
         activityId: string;
       }[],
     };
-
     let activity: Activity | undefined;
     for (let hour = 0; hour <= periodsPerDay; hour++) {
       for (let min = 0; min < 60; min++) {
         activity = assignment.getActivityAtSlot({ day, hour, minute: min });
         if (activity) break;
       }
-
       if (activity) {
         const roomId = assignment.getRoomForActivity(activity.id);
         const slot = assignment.getSlotForActivity(activity.id);
@@ -43,16 +39,9 @@ export function renderConsoleTimetable(
           activityId: activity.id,
         });
       } else {
-        // daySchedule.periods.push({
-        //   hour,
-        //   activity: 'Free',
-        //   room: null,
-        //   minute: min,
-        // });
       }
     }
     timetable.push(daySchedule);
   }
-
   logToFile('timetable', timetable);
 }

@@ -3,20 +3,15 @@ import { Activity } from '../../../../models/Activity';
 import { TimetableAssignment } from '../../../../scheduler/TimetableAssignment';
 import { Period } from '../../../../types/core';
 import { ValidationError } from '../../../../utils/ValidationError';
-
 export class MaxSpanPerDay {
   constructor(protected maxSpanHours: number) {}
-
   isValid(assignment: TimetableAssignment, activities: Activity[]): boolean {
     const activitiesByDay: Record<number, { activity: Activity; slot: Period }[]> =
       ActivityHelper.groupActivitiesByDay(assignment, activities);
-
     let maxSpanReached = false;
-
     for (const activitieByDay of Object.entries(activitiesByDay)) {
       const [_, activities] = activitieByDay;
       if (activities.length === 0) continue;
-
       const sortedActivities = this.sortActivitiesByTime(activities);
       const firstActivitySlot = sortedActivities[0].slot;
       const lastActivity = sortedActivities[sortedActivities.length - 1];
@@ -25,7 +20,6 @@ export class MaxSpanPerDay {
         firstActivitySlot,
         { ...lastActivitySlot, totalDuraionInMinutes: lastActivity.activity.totalDurationInMinutes },
       ]);
-
       this.checkDurationValidity(duration, sortedActivities, firstActivitySlot, lastActivitySlot);
       const maxSpan = this.maxSpanHours * 60;
       if (duration > maxSpan) {
@@ -35,7 +29,6 @@ export class MaxSpanPerDay {
     }
     return !maxSpanReached;
   }
-
   private checkDurationValidity(
     duration: number,
     sortedActivities: { activity: Activity; slot: Period }[],
@@ -48,7 +41,6 @@ export class MaxSpanPerDay {
       );
     }
   }
-
   private sortActivitiesByTime(activities: { activity: Activity; slot: Period }[]): {
     activity: Activity;
     slot: Period;
@@ -59,16 +51,13 @@ export class MaxSpanPerDay {
       return aTime - bTime;
     });
   }
-
   private getStartTimeInMinutes(activity: { activity: Activity; slot: Period }): number {
     return activity.slot.hour * 60 + activity.slot.minute;
   }
-
   private getDurationInMinutes(periods: [Period, Period & { totalDuraionInMinutes: number }]): number {
     const [start, end] = periods;
     return this.toMinutes(end) + end.totalDuraionInMinutes - this.toMinutes(start);
   }
-
   private toMinutes(p: Period): number {
     return p.day * 24 * 60 + p.hour * 60 + p.minute;
   }

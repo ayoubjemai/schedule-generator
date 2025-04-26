@@ -8,11 +8,9 @@ import { ConstraintType } from '../../../constraintType.enum';
 import { Activity } from '../../../../models/Activity';
 import { ActivityHelper } from '../../../../../helpers/activity.helper';
 import { MinGapPerDay } from '../../common/MinGapPerDay/MinGapPerDay';
-
 export class TeacherMinGapPerDayBetweenActivities extends MinGapPerDay implements Constraint {
   type = ConstraintType.time.teacher.TeacherMinGapPerDayBetweenActivities;
   activities: Activity[] = [];
-
   constructor(
     private teacher: Teacher,
     protected minGapInMinutes: number,
@@ -25,10 +23,8 @@ export class TeacherMinGapPerDayBetweenActivities extends MinGapPerDay implement
     if (this.activities.includes(activity)) return;
     this.activities.push(activity);
   }
-
   isSatisfied(assignment: TimetableAssignment): boolean {
     if (!this.active) return true;
-
     const teacherActivities = assignment.getActivitiesForTeacher(this.teacher.id);
     teacherActivities.forEach(activity => {
       this.addActivity(activity);

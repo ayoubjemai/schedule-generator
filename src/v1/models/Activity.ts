@@ -3,7 +3,6 @@ import { ActivityTag } from './ActivityTag';
 import { StudentSet } from './StudentSet';
 import Subject from './Subject';
 import { Teacher } from './Teacher';
-
 export class Activity {
   id: string;
   name: string;
@@ -20,7 +19,6 @@ export class Activity {
   endsStudentsDay: boolean = false;
   preferredRooms: string[] = [];
   subActivities: Activity[] = [];
-
   constructor(id: string, name: string, subject: Subject, totalDurationInMinutes: number) {
     this.id = id;
     this.name = name;
