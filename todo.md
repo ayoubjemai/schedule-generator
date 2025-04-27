@@ -35,7 +35,7 @@
 - Max hours continuously ✅
 - Min hours continuously ✅
 - Max span per day ✅
-- Min span per day ❗️
+- Min span per day ✅
 - Min hours daily ✅
 - Max hours daily/continuously with an activity tag ✅
 - Min hours daily/continuously with an activity tag ❗
