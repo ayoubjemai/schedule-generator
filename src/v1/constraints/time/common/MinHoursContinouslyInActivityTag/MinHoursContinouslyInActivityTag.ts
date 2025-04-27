@@ -6,7 +6,7 @@ import { groupActivitiesByDay } from '../../../../utils/groupActivitiesByDay';
 class MinHoursContinouslyInActivityTag {
   constructor(protected minHourContinously: number, protected activityTagId: string) {}
 
-  protected isValid(
+  public isValid(
     assignment: TimetableAssignment,
     activities: Activity[],
     addActivity: { (activity: Activity): void },

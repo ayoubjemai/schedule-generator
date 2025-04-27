@@ -16,6 +16,7 @@ export const ConstraintType = {
   StudentSetMinDaysPerWeek: 'StudentSetMinDaysPerWeek',
   StudentSetMinGap: 'StudentSetMinGap',
   StudentSetMinSpanPerDay: 'StudentSetMinSpanPerDay',
+  StudentSetMinHoursContinouslyInActivityTag: 'StudentSetMinHoursContinouslyInActivityTag',
 },
     teacher: {
       MaxConsecutiveHoursForTeacher: 'MaxConsecutiveHoursForTeacher',
