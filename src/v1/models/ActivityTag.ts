@@ -3,9 +3,9 @@ export class ActivityTag {
   name: string;
   preferredRooms: string[] = [];
 
-  constructor(id: string, name: string, data: Partial<{ preferredRooms: string[] }>) {
+  constructor(id: string, name: string, data?: Partial<{ preferredRooms: string[] }>) {
     this.id = id;
     this.name = name;
-    this.preferredRooms = data.preferredRooms || [];
+    this.preferredRooms = data?.preferredRooms || [];
   }
 }

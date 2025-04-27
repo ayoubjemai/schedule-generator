@@ -1,25 +1,19 @@
 import {
   ActivitiesNotOverlapping,
   MaxConsecutiveHoursForTeacher,
-  MinGapsBetweenActivities,
   PreferredRoomsForActivity,
-  PreferredStartingTimesForActivity,
   RoomNotAvailable,
   StudentSetNotAvailablePeriods,
   TeacherMaxDaysPerWeek,
-  TeacherNotAvailablePeriods,
-  MinConsecutiveHoursForTeacher,
   TeacherMaxGapPerDayBetweenActivities,
   TeacherMaxMinutesPerDay,
   TeacherMaxSpanPerDay,
   TeacherMinDaysPerWeek,
-  TeacherMinGapPerDayBetweenActivities,
-  TeacherMinHoursDaily,
-  TeacherMaxHoursContinouslyInActivityTag,
-  TeacherMinHoursDailyInActivityTag,
   TeacherMinGapBetweenActivityTags,
-  TeacherMaxDayInIntervalHours,
+  TeacherMinHoursDaily,
+  TeacherMinHoursDailyInActivityTag,
   TeacherMinRestinHours,
+  TeacherNotAvailablePeriods,
 } from './constraints';
 
 import { Activity } from './models/Activity';
