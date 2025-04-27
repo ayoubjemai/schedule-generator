@@ -24,7 +24,7 @@ describe('StudentSetMaxConsecutiveHours', () => {
     subject = new Subject('sub1', 'Mathematics');
 
     // Create a student set
-    studentSet = new StudentSet('s1', 'Class 1A');
+    studentSet = new StudentSet('s1', { name: 'Class 1A' });
 
     // Create three activities with different durations
     activity1 = new Activity('a1', 'Math Lecture 1', subject, 120); // 2 hours
@@ -114,7 +114,7 @@ describe('StudentSetMaxConsecutiveHours', () => {
   });
 
   it('should ignore activities for other student sets', () => {
-    const otherStudentSet = new StudentSet('s2', 'Class 1B');
+    const otherStudentSet = new StudentSet('s2', { name: 'Class 1B' });
     const otherActivity = new Activity('a4', 'Physics Lecture', subject, 120);
     otherActivity.studentSets.push(otherStudentSet);
 

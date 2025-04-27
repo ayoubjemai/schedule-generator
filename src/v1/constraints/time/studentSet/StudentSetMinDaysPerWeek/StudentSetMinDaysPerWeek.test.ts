@@ -34,8 +34,8 @@ describe('StudentSetMinDaysPerWeek', () => {
     room = new Room('r1', 'Classroom 101', 30);
 
     // Create student sets
-    studentSet = new StudentSet('s1', 'Class 1A');
-    anotherStudentSet = new StudentSet('s2', 'Class 1B');
+    studentSet = new StudentSet('s1', { name: 'Class 1A' });
+    anotherStudentSet = new StudentSet('s2', { name: 'Class 1B' });
 
     // Add student set to activities
     activity.studentSets.push(studentSet);

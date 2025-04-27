@@ -73,18 +73,34 @@ const teacher2 = new Teacher('t2', 'Jane Smith', {
 });
 
 // Create student sets
-const class1A = new StudentSet('s1', 'Class 1A');
-const class1B = new StudentSet('s2', 'Class 1B');
+const class1A = new StudentSet('s1', {
+  name: 'Class 1A',
+  notAvailablePeriods: [
+    { day: 4, hour: 6, minute: 20 },
+    { day: 4, hour: 7, minute: 0 },
+  ],
+  maxHoursDaily: 6,
+  minHoursDaily: 4,
+});
+const class1B = new StudentSet('s2', {
+  name: 'Class 1B',
+  notAvailablePeriods: [
+    { day: 0, hour: 0, minute: 20 },
+    { day: 0, hour: 1, minute: 30 },
+  ],
+  maxDaysPerWeek: 4,
+  maxGapsPerDay: 1,
+});
 
 // Define student availability
-class1A.notAvailablePeriods.push({ day: 4, hour: 6, minute: 20 }, { day: 4, hour: 7, minute: 0 });
-class1B.notAvailablePeriods.push({ day: 0, hour: 0, minute: 20 }, { day: 0, hour: 1, minute: 30 });
+// class1A.notAvailablePeriods.push({ day: 4, hour: 6, minute: 20 }, { day: 4, hour: 7, minute: 0 });
+// class1B.notAvailablePeriods.push({ day: 0, hour: 0, minute: 20 }, { day: 0, hour: 1, minute: 30 });
 
 // Set student set constraints
-class1A.maxHoursDaily = 6;
-class1A.minHoursDaily = 4;
-class1B.maxDaysPerWeek = 4;
-class1B.maxGapsPerDay = 1;
+// class1A.maxHoursDaily = 6;
+// class1A.minHoursDaily = 4;
+// class1B.maxDaysPerWeek = 4;
+// class1B.maxGapsPerDay = 1;
 
 // Create subjects
 const math = new Subject('sub1', 'Mathematics');

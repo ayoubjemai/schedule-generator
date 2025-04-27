@@ -6,31 +6,30 @@ import { ConstraintType } from '../../../constraintType.enum';
 import { StudentSet } from '../../../../models/StudentSet';
 import { Period } from '../../../../types/core';
 import { ActivityHelper } from '../../../../../helpers/activity.helper';
-import { MaxHoursContinouslyInActivityTag } from '../../common/MaxHoursContinouslyInActivityTag/MaxHoursContinouslyInActivityTag';
+import { MinHoursContinouslyInActivityTag } from '../../common/MinHoursContinouslyInActivityTag/MinHoursContinouslyInActivityTag';
 
-export class StudentSetMaxHoursContinouslyInActivityTag
-  extends MaxHoursContinouslyInActivityTag
+export class StudentSetMinHoursContinouslyInActivityTag
+  extends MinHoursContinouslyInActivityTag
   implements Constraint
 {
-  type = ConstraintType.time.studentSet.StudentSetMaxHoursContinouslyInActivityTag;
+  type = ConstraintType.time.studentSet.StudentSetMinHoursContinouslyInActivityTag;
   weight: number;
   active: boolean;
   studentSet: StudentSet;
   activities: Activity[] = [];
-  minGapPerDay: number;
 
   constructor(
     studentSet: StudentSet,
-    protected MaxHoursContinously: number,
+    protected minHours: number,
     protected activityTagId: string,
+    protected MIN_GAP_MINUTES: number,
     weight = DEFAULT_WEIGHT,
     active = true
   ) {
-    super(MaxHoursContinously, activityTagId);
+    super(minHours, activityTagId);
     this.studentSet = studentSet;
     this.weight = weight;
     this.active = active;
-    this.minGapPerDay = studentSet.get('minGapsPerDay') || 0;
   }
 
   addActivity(activity: Activity): void {
@@ -43,6 +42,6 @@ export class StudentSetMaxHoursContinouslyInActivityTag
 
     const studentSetActivities = assignment.getActivitiesForStudentSet(this.studentSet.id);
 
-    return this.isValid(assignment, studentSetActivities, this.addActivity.bind(this), this.minGapPerDay);
+    return this.isValid(assignment, studentSetActivities, this.addActivity.bind(this), this.MIN_GAP_MINUTES);
   }
 }

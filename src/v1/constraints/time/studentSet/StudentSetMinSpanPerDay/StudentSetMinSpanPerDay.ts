@@ -1,23 +1,20 @@
 import { Activity } from '../../../../models/Activity';
+import { StudentSet } from '../../../../models/StudentSet';
 import { TimetableAssignment } from '../../../../scheduler/TimetableAssignment';
 import { Constraint } from '../../../../types/constraints';
 import { DEFAULT_WEIGHT } from '../../../../utils/defaultWeight';
 import { ConstraintType } from '../../../constraintType.enum';
-import { Room } from '../../../../models/Room';
-import { Period } from '../../../../types/core';
-import { ActivityHelper } from '../../../../../helpers/activity.helper';
-import { MaxHoursPerDay } from '../../common/MaxHoursPerDay/MaxHoursPerDay';
-import { StudentSet } from '../../../../models/StudentSet';
+import { MinSpanPerDay } from '../../common/MinSpanPerDay/MinSpanPerDay';
 
-export class StudentSetMaxHoursPerDay extends MaxHoursPerDay implements Constraint {
-  type = ConstraintType.time.studentSet.StudentSetMaxGapPerDay;
+export class StudentSetMinSpanPerDay extends MinSpanPerDay implements Constraint {
+  type = ConstraintType.time.studentSet.StudentSetMinSpanPerDay;
   weight: number;
   active: boolean;
   studentSet: StudentSet;
   activities: Activity[] = [];
 
-  constructor(studentSet: StudentSet, maxHourPerDay: number, weight = DEFAULT_WEIGHT, active = true) {
-    super(maxHourPerDay);
+  constructor(studentSet: StudentSet, protected minHourSpan: number, weight = DEFAULT_WEIGHT, active = true) {
+    super(minHourSpan);
     this.studentSet = studentSet;
     this.weight = weight;
     this.active = active;
@@ -32,10 +29,10 @@ export class StudentSetMaxHoursPerDay extends MaxHoursPerDay implements Constrai
     if (!this.active) return true;
 
     const studentSetActivities = assignment.getActivitiesForStudentSet(this.studentSet.id);
+
     studentSetActivities.forEach(activity => {
       this.addActivity(activity);
     });
-
     return this.isValid(assignment, studentSetActivities);
   }
 }
