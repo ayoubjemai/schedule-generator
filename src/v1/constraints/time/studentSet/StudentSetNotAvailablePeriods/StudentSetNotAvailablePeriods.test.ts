@@ -25,8 +25,7 @@ describe('StudentSetNotAvailablePeriods', () => {
 
     // Create a student set with a not available period
     notAvailableSlot = { day: 0, hour: 14, minute: 0 };
-    studentSet = new StudentSet('s1', 'Class 1A');
-    studentSet.notAvailablePeriods = [notAvailableSlot];
+    studentSet = new StudentSet('s1', { name: 'Class 1A', notAvailablePeriods: [notAvailableSlot] });
 
     // Create activity for the student set
     activity = new Activity('a1', 'Math Lecture', subject, 60);
@@ -110,7 +109,7 @@ describe('StudentSetNotAvailablePeriods', () => {
   });
 
   it('should ignore activities for other student sets', () => {
-    const otherStudentSet = new StudentSet('s2', 'Class 1B');
+    const otherStudentSet = new StudentSet('s2', { name: 'Class 1B' });
     const otherActivity = new Activity('a4', 'Physics Lecture', subject, 60);
     otherActivity.studentSets.push(otherStudentSet);
 

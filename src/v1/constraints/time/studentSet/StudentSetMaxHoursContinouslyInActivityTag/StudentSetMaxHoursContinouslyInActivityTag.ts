@@ -30,7 +30,7 @@ export class StudentSetMaxHoursContinouslyInActivityTag
     this.studentSet = studentSet;
     this.weight = weight;
     this.active = active;
-    this.minGapPerDay = studentSet.minGapsPerDay || 0;
+    this.minGapPerDay = studentSet.get('minGapsPerDay') || 0;
   }
 
   addActivity(activity: Activity): void {

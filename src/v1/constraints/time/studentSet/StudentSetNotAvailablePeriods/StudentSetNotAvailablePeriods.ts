@@ -20,7 +20,7 @@ export class StudentSetNotAvailablePeriods implements Constraint {
     this.studentSet = studentSet;
     this.weight = weight;
     this.active = active;
-    this.periods = [...studentSet.notAvailablePeriods];
+    this.periods = [...studentSet.get('notAvailablePeriods')];
   }
   addActivity(activity: Activity): void {
     if (this.activities.includes(activity)) return;

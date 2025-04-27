@@ -25,8 +25,7 @@ describe('StudentSetMaxHoursContinouslyInActivityTag', () => {
     assignment = new TimetableAssignment(DAYS_COUNT, PERIODS_PER_DAY);
     subject = new Subject('sub1', 'Chemistry');
 
-    studentSet = new StudentSet('s1', 'Class 1A');
-    studentSet.minGapsPerDay = 30; // 30 minutes gap considered as break
+    studentSet = new StudentSet('s1', { name: 'Class 1A', minGapsPerDay: 30 }); // 30 minutes gap considered as break
 
     labTag = new ActivityTag(ACTIVITY_TAG_ID, 'Laboratory');
     otherTag = new ActivityTag('lecture', 'Lecture');
@@ -79,7 +78,7 @@ describe('StudentSetMaxHoursContinouslyInActivityTag', () => {
   });
 
   it('should use studentSet minGapsPerDay value for determining gaps', () => {
-    studentSet.minGapsPerDay = 40; // Override default value
+    studentSet.set('minGapsPerDay', 40); // Override default value
     constraint = new StudentSetMaxHoursContinouslyInActivityTag(
       studentSet,
       MAX_HOURS_CONTINUOUSLY,
@@ -135,7 +134,7 @@ describe('StudentSetMaxHoursContinouslyInActivityTag', () => {
   });
 
   it('should ignore activities for other student sets', () => {
-    const otherStudentSet = new StudentSet('s2', 'Class 1B');
+    const otherStudentSet = new StudentSet('s2', { name: 'Class 1B' });
 
     // Assign 3 consecutive lab activities for other student set (exceeds limit)
     for (let i = 0; i < 3; i++) {

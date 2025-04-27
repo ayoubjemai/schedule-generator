@@ -21,8 +21,8 @@ describe('StudentSetMinGap', () => {
   beforeEach(() => {
     assignment = new TimetableAssignment(DAYS_COUNT, PERIODS_PER_DAY);
     subject = new Subject('sub1', 'Mathematics');
-    studentSet = new StudentSet('s1', 'Class 1A');
-    anotherStudentSet = new StudentSet('s2', 'Class 1B');
+    studentSet = new StudentSet('s1', { name: 'Class 1A' });
+    anotherStudentSet = new StudentSet('s2', { name: 'Class 1B' });
 
     // Create activities for testing
     activities = [];

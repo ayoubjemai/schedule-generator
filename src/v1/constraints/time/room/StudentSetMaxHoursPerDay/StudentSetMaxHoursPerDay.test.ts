@@ -24,7 +24,7 @@ describe('StudentSetMaxHoursPerDay', () => {
     subject = new Subject('sub1', 'Mathematics');
 
     // Create a student set
-    studentSet = new StudentSet('s1', 'Class 1A');
+    studentSet = new StudentSet('s1', { name: 'Class 1A' });
 
     // Create activities with different durations
     activity1 = new Activity('a1', 'Math Lecture 1', subject, 60); // 60 minutes
@@ -79,7 +79,7 @@ describe('StudentSetMaxHoursPerDay', () => {
   });
 
   it('should ignore activities for other student sets', () => {
-    const otherStudentSet = new StudentSet('s2', 'Class 1B');
+    const otherStudentSet = new StudentSet('s2', { name: 'Class 1B' });
     const otherActivity = new Activity('a4', 'Physics Lecture', subject, 120);
     otherActivity.studentSets.push(otherStudentSet);
 
@@ -99,7 +99,7 @@ describe('StudentSetMaxHoursPerDay', () => {
     assignment.assignActivity(activity1, { day: 0, hour: 8, minute: 0 }, room.id);
 
     // Create activity for a different student set
-    const differentStudentSet = new StudentSet('s3', 'Class 2A');
+    const differentStudentSet = new StudentSet('s3', { name: 'Class 2A' });
     const activityForDifferentSet = new Activity('adiff', 'Different Class Activity', subject, 60);
     activityForDifferentSet.studentSets.push(differentStudentSet);
     assignment.assignActivity(activityForDifferentSet, { day: 0, hour: 10, minute: 0 }, room.id);

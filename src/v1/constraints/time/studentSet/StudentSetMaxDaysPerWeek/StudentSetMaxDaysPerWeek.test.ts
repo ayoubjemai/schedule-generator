@@ -22,7 +22,7 @@ describe('StudentSetMaxDaysPerWeek', () => {
     assignment = new TimetableAssignment(DAYS_COUNT, PERIODS_PER_DAY);
 
     // Create a student set
-    studentSet = new StudentSet('s1', 'Class 1A');
+    studentSet = new StudentSet('s1', { name: 'Class 1A' });
 
     // Create a subject
     subject = new Subject('sub1', 'Mathematics');

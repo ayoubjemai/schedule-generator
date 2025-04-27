@@ -25,7 +25,7 @@ describe('StudentSetMaxSpanPerDay', () => {
     subject = new Subject('sub1', 'Mathematics');
 
     // Create a student set
-    studentSet = new StudentSet('s1', 'Class 1A');
+    studentSet = new StudentSet('s1', { name: 'Class 1A' });
 
     // Create activities with 1-hour duration
     activity1 = new Activity('a1', 'Math Lecture 1', subject, 60);
@@ -143,7 +143,7 @@ describe('StudentSetMaxSpanPerDay', () => {
 
   it('should ignore activities for other student sets', () => {
     // Create another student set
-    const otherStudentSet = new StudentSet('s2', 'Class 1B');
+    const otherStudentSet = new StudentSet('s2', { name: 'Class 1B' });
 
     // Create activities for the other student set
     const otherActivity1 = new Activity('oa1', 'Other Class Lecture 1', subject, 60);

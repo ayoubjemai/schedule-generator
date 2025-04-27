@@ -6,8 +6,8 @@ import { ConstraintType } from '../../../constraintType.enum';
 import { Room } from '../../../../models/Room';
 import { Period } from '../../../../types/core';
 import { ActivityHelper } from '../../../../../helpers/activity.helper';
-import { StudentSet } from '../../../../../v0/main';
 import { MaxHoursPerDay } from '../../common/MaxHoursPerDay/MaxHoursPerDay';
+import { StudentSet } from '../../../../models/StudentSet';
 
 export class StudentSetMaxHoursPerDay extends MaxHoursPerDay implements Constraint {
   type = ConstraintType.time.studentSet.StudentSetMaxGapPerDay;
