@@ -114,6 +114,16 @@ export class StudentSet extends Model {
     this.maxBuildingChangesPerWeek = maxBuildingChangesPerWeek;
     this.minGapsBetweenRoomChanges = minGapsBetweenRoomChanges;
     this.minGapsBetweenBuildingChanges = minGapsBetweenBuildingChanges;
+
+    try {
+      this.validate();
+    } catch (error) {
+      if (error instanceof ValidationError) {
+        throw error;
+      } else if (error instanceof Error) {
+        throw new Error(`Error initializing StudentSet ${name}: ${error.message}`);
+      }
+    }
   }
 
   get<T extends keyof IStudnetSet>(fieldName: T): IStudnetSet[T] {
