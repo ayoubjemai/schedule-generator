@@ -24,10 +24,12 @@ export class ActivitiesNotOverlapping implements Constraint {
     if (!this.active) return true;
 
     const activityAssignments = assignment.getAllActivityAssignments();
+    activityAssignments.forEach(activityAssignment => {
+      this.addActivity(activityAssignment);
+    });
 
     for (let i = 0; i < activityAssignments.length; i++) {
       const activityA = activityAssignments[i];
-      this.addActivity(activityA);
       for (let j = i + 1; j < activityAssignments.length; j++) {
         const activityB = activityAssignments[j];
         if (activityA.id === activityB.id) continue;

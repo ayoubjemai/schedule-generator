@@ -1,0 +1,201 @@
+{
+  "dayCount": 5,
+  "periodsPerDay": 8,
+  "teachers": [
+    {
+      "id": "T1",
+      "name": "John Doe"
+    },
+    {
+      "id": "T2",
+      "name": "Jane Smith"
+    },
+    {
+      "id": "T3",
+      "name": "Jane Smith"
+    },
+    {
+      "id": "T4",
+      "name": "Jane Smith"
+    },
+    {
+      "id": "T5",
+      "name": "Jane Smith"
+    }
+  ],
+  "subjects": [
+    {
+      "id": "S1",
+      "name": "Math"
+    },
+    {
+      "id": "S2",
+      "name": "Physics"
+    },
+    {
+      "id": "S3",
+      "name": "Chemistry"
+    },
+    {
+      "id": "S4",
+      "name": "Biology"
+    },
+    {
+      "id": "S5",
+      "name": "History"
+    },
+    {
+      "id": "S6",
+      "name": "Geography"
+    },
+    {
+      "id": "S7",
+      "name": "English"
+    },
+    {
+      "id": "S8",
+      "name": "PE"
+    },
+    {
+      "id": "S9",
+      "name": "Art"
+    },
+    {
+      "id": "S10",
+      "name": "Computer Science"
+    }
+  ],
+  "classes": [
+    {
+      "id": "C1",
+      "name": "Class 9A"
+    },
+    {
+      "id": "C2",
+      "name": "Class 9B"
+    }
+  ],
+  "rooms": [
+    {
+      "name": "Room A",
+      "id": "R1"
+    },
+    {
+      "name": "Room B",
+      "id": "R2"
+    },
+    {
+      "name": "Lab C",
+      "id": "R3"
+    },
+    {
+      "name": "Field 1",
+      "id": "R4"
+    },
+    {
+      "name": "Lab L",
+      "id": "R5"
+    }
+  ],
+  "activities": [
+    {
+      "id": "A1",
+      "name": "Mat Activity",
+      "subject": "S1",
+      "classes": ["C1"],
+      "teachers": ["T1"],
+      "totalDurationInMinutes": 120,
+      "preferredStartingTimes": [
+        { "day": 0, "hour": 1, "minute": 0 },
+        { "day": 1, "hour": 1, "minute": 0 },
+        { "day": 2, "hour": 1, "minute": 0 },
+        { "day": 3, "hour": 1, "minute": 0 },
+        { "day": 4, "hour": 1, "minute": 0 },
+        { "day": 4, "hour": 1, "minute": 0 }
+      ]
+    },
+    {
+      "id": "A2",
+      "name": "Physics Activity",
+      "subject": "S2",
+      "classes": ["C1"],
+      "teachers": ["T2"],
+      "totalDurationInMinutes": 60
+    },
+    {
+      "id": "A3",
+      "name": "English Activity",
+      "subject": "S7",
+      "classes": ["C1"],
+      "teachers": ["T3"],
+      "totalDurationInMinutes": 60
+    },
+    {
+      "id": "A4",
+      "name": "PE Activity",
+      "subject": "S8",
+      "classes": ["C1"],
+      "teachers": ["T5"],
+      "totalDurationInMinutes": 60,
+      "preferredRooms": ["R4"]
+    },
+    {
+      "id": "A5",
+      "name": "Biology Activity",
+      "subject": "S4",
+      "classes": ["C1"],
+      "teachers": ["T4"],
+      "totalDurationInMinutes": 60,
+      "preferredRooms": ["R5"]
+    },
+    {
+      "id": "A6",
+      "name": "Math Activity",
+      "subject": "S1",
+      "classes": ["C2"],
+      "teachers": ["T1"],
+      "totalDurationInMinutes": 60,
+      "preferredStartingTimes": [
+        { "day": 0, "hour": 1, "minute": 0 },
+        { "day": 1, "hour": 1, "minute": 0 },
+        { "day": 2, "hour": 1, "minute": 0 },
+        { "day": 3, "hour": 1, "minute": 0 },
+        { "day": 4, "hour": 1, "minute": 0 },
+        { "day": 4, "hour": 1, "minute": 0 }
+      ]
+    },
+    {
+      "id": "A7",
+      "name": "Chemistry Activity",
+      "subject": "S3",
+      "classes": ["C2"],
+      "teachers": ["T2"],
+      "totalDurationInMinutes": 60
+    },
+    {
+      "id": "A8",
+      "name": "History Activity",
+      "subject": "S5",
+      "classes": ["C2"],
+      "teachers": ["T3"],
+      "totalDurationInMinutes": 60
+    },
+    {
+      "id": "A9",
+      "name": "Art Activity",
+      "subject": "S9",
+      "classes": ["C2"],
+      "teachers": ["T5"],
+      "totalDurationInMinutes": 60
+    },
+    {
+      "id": "A10",
+      "name": "Computer Science Activity",
+      "subject": "S10",
+      "classes": ["C2"],
+      "teachers": ["T4"],
+      "totalDurationInMinutes": 60,
+      "preferredRooms": ["R3"]
+    }
+  ]
+}
