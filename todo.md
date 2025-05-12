@@ -99,3 +99,6 @@
 # TODO
 
 validate the day Count with the other period
+
+- handle the use case where it put activity in the last hour with totalDuration that
+  exceeds the period of the day

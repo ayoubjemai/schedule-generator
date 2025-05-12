@@ -3,6 +3,7 @@ import { Teacher } from '../../../../models/Teacher';
 import { TimetableAssignment } from '../../../../scheduler/TimetableAssignment';
 import { Constraint } from '../../../../types/constraints';
 import { DEFAULT_WEIGHT } from '../../../../utils/defaultWeight';
+import { ValidationError } from '../../../../utils/ValidationError';
 import { ConstraintType } from '../../../constraintType.enum';
 import { MinHoursDaily } from '../../common/MinHoursDaily/MinHoursDaily';
 
@@ -39,9 +40,7 @@ class TeacherMinHoursDaily extends MinHoursDaily implements Constraint {
 
     const minDuration = this.minHoursDaily * 60;
     if (allTeacherDurationInMinutes < minDuration) {
-      throw new Error(
-        `Teacher ${this.teacher.name} has only ${allTeacherDurationInMinutes} minutes of activities, but needs at least ${minDuration} minutes.`
-      );
+      return false;
     }
     teacherActivities.forEach(activity => {
       this.addActivity(activity);

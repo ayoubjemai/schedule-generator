@@ -15,7 +15,12 @@ export class StudentSetMaxGapPerDay extends MaxGapPerDay implements Constraint {
   studentSet: StudentSet;
   activities: Activity[] = [];
 
-  constructor(studentSet: StudentSet, maxGapPerMinutes: number, weight = DEFAULT_WEIGHT, active = true) {
+  constructor(
+    studentSet: StudentSet,
+    maxGapPerMinutes: number,
+    weight = DEFAULT_WEIGHT * 0.5,
+    active = true
+  ) {
     super(maxGapPerMinutes);
     this.studentSet = studentSet;
     this.weight = weight;

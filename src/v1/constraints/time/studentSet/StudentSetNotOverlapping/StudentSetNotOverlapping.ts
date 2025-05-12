@@ -1,20 +1,24 @@
 import moment from 'moment';
 import { Activity } from '../../../../models/Activity';
+import { StudentSet } from '../../../../models/StudentSet';
 import { TimetableAssignment } from '../../../../scheduler/TimetableAssignment';
 import { Constraint } from '../../../../types/constraints';
 import { DEFAULT_WEIGHT } from '../../../../utils/defaultWeight';
 import { ConstraintType } from '../../../constraintType.enum';
 
-export class ActivitiesNotOverlapping implements Constraint {
-  type = ConstraintType.time.activity.ActivitiesNotOverlapping;
+export class StudentSetNotOverlapping implements Constraint {
+  type = ConstraintType.time.studentSet.StudentSetNotOverlapping;
   weight: number;
   active: boolean;
+  studentSet: StudentSet;
   activities: Activity[] = [];
 
-  constructor(weight = DEFAULT_WEIGHT, active = true) {
+  constructor(studentSet: StudentSet, weight = DEFAULT_WEIGHT, active = true) {
+    this.studentSet = studentSet;
     this.weight = weight;
     this.active = active;
   }
+
   addActivity(activity: Activity): void {
     if (this.activities.includes(activity)) return;
     this.activities.push(activity);
@@ -23,15 +27,15 @@ export class ActivitiesNotOverlapping implements Constraint {
   isSatisfied(assignment: TimetableAssignment): boolean {
     if (!this.active) return true;
 
-    const activityAssignments = assignment.getAllActivityAssignments();
-    activityAssignments.forEach(activityAssignment => {
-      this.addActivity(activityAssignment);
+    const studentSetActivities = assignment.getActivitiesForStudentSet(this.studentSet.id);
+    studentSetActivities.forEach(activity => {
+      this.addActivity(activity);
     });
 
-    for (let i = 0; i < activityAssignments.length; i++) {
-      const activityA = activityAssignments[i];
-      for (let j = i + 1; j < activityAssignments.length; j++) {
-        const activityB = activityAssignments[j];
+    for (let i = 0; i < studentSetActivities.length; i++) {
+      const activityA = studentSetActivities[i];
+      for (let j = i + 1; j < studentSetActivities.length; j++) {
+        const activityB = studentSetActivities[j];
         if (activityA.id === activityB.id) continue;
         if (this.checkActivityOverlap(assignment, activityA, activityB)) {
           return false;
@@ -39,9 +43,8 @@ export class ActivitiesNotOverlapping implements Constraint {
       }
     }
 
-    return true;
+    return true; // Return true if constraint is satisfied
   }
-
   private checkActivityOverlap(
     assignment: TimetableAssignment,
     activityA: Activity,

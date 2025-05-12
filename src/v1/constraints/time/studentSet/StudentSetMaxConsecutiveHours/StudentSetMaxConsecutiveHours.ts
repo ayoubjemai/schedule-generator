@@ -17,12 +17,12 @@ export class StudentSetMaxConsecutiveHours extends MaxConsecutiveHours implement
 
   constructor(
     studentSet: StudentSet,
-    protected maxConsectiveHours: number,
-    weight = DEFAULT_WEIGHT,
+    protected maxConsecutiveHours: number,
+    weight = DEFAULT_WEIGHT * 0.5,
     active = true
   ) {
     const minGapBetweenActivity = 0; // For StudentSetMaxConsecutiveHours, use 0 gap minutes to consider activities "consecutive" only if they're back-to-back
-    super(maxConsectiveHours, minGapBetweenActivity);
+    super(maxConsecutiveHours, minGapBetweenActivity);
     this.studentSet = studentSet;
     this.weight = weight;
     this.active = active;

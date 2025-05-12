@@ -4,12 +4,13 @@ import { Constraint } from '../../../../types/constraints';
 import { Period } from '../../../../types/core';
 import { ConstraintType } from '../../../constraintType.enum';
 import { Activity } from '../../../../models/Activity';
+import { DEFAULT_WEIGHT } from '../../../../utils/defaultWeight';
 
 export class MinGapsBetweenActivities implements Constraint {
   type = ConstraintType.time.activity.MinGapsBetweenActivities;
   activities: Activity[] = [];
 
-  constructor(private minGapInMinutes: number, public weight = 100, public active = true) {}
+  constructor(private minGapInMinutes: number, public weight = DEFAULT_WEIGHT, public active = true) {}
   addActivity(activity: Activity): void {
     if (this.activities.includes(activity)) return;
     this.activities.push(activity);

@@ -1,4 +1,3 @@
-// filepath: /generate-schedule/generate-schedule/src/scheduler/TimetableScheduler.ts
 import { Activity } from '../models/Activity';
 import { Room } from '../models/Room';
 import { StudentSet } from '../models/StudentSet';
@@ -22,10 +21,15 @@ class TimetableScheduler {
   private rooms: Room[] = [];
   private possibleTimes: Period[] = [];
 
-  constructor(private daysCount: number, private periodsPerDay: number, private randomSeed = 123456) {
+  constructor(
+    private daysCount: number,
+    private periodsPerDay: number,
+    private randomSeed = 123456,
+    minuteIncrement: number = 5
+  ) {
     for (let day = 0; day < this.daysCount; day++) {
       for (let hour = 0; hour <= this.periodsPerDay; hour++) {
-        for (let min = 0; min < 60; min++) {
+        for (let min = 0; min < 60; min += minuteIncrement) {
           this.possibleTimes.push({ day, hour, minute: min });
         }
       }
@@ -305,7 +309,6 @@ class TimetableScheduler {
 
     const modification = Math.floor(this.random() * 3);
 
-    //    this.moveRandomActivity(neighbor);
     switch (modification) {
       case 0:
         this.swapRandomActivities(neighbor);
@@ -316,6 +319,8 @@ class TimetableScheduler {
       case 2:
         this.moveRandomActivity(neighbor);
         break;
+      default:
+        throw new Error('Invalid modification type');
     }
 
     return neighbor;
@@ -377,7 +382,10 @@ class TimetableScheduler {
   private swapRandomActivities(solution: TimetableAssignment): void {
     // Get all activities currently in the solution
     const allActivities = solution.getAllActivityAssignments();
-    if (allActivities.length < 2) return; // Need at least two activities to swap
+    if (allActivities.length < 2) {
+      console.log('no activities to swap');
+      return;
+    } // Need at least two activities to swap
 
     // Pick two different random activities
     const indexA = Math.floor(this.random() * allActivities.length);
@@ -419,7 +427,10 @@ class TimetableScheduler {
   private changeRandomRoom(solution: TimetableAssignment): void {
     // Get all activities currently in the solution
     const allActivities = solution.getAllActivityAssignments();
-    if (allActivities.length === 0) return;
+    if (allActivities.length === 0) {
+      console.log('no activities to change room');
+      return;
+    }
 
     // Pick a random activity
     const randomIndex = Math.floor(this.random() * allActivities.length);

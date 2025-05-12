@@ -17,7 +17,7 @@ export class TeacherMaxMinutesPerDay extends MaxHoursPerDay implements Constrain
     public weight = DEFAULT_WEIGHT,
     public active = true
   ) {
-    super(maxMinutesPerDay);
+    super(maxMinutesPerDay * 60);
   }
   addActivity(activity: Activity): void {
     if (this.activities.includes(activity)) return;

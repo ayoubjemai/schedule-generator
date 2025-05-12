@@ -10,14 +10,14 @@ import { MaxHoursPerDay } from '../../common/MaxHoursPerDay/MaxHoursPerDay';
 import { StudentSet } from '../../../../models/StudentSet';
 
 export class StudentSetMaxHoursPerDay extends MaxHoursPerDay implements Constraint {
-  type = ConstraintType.time.studentSet.StudentSetMaxGapPerDay;
+  type = ConstraintType.time.studentSet.StudentSetMaxHoursPerDay;
   weight: number;
   active: boolean;
   studentSet: StudentSet;
   activities: Activity[] = [];
 
   constructor(studentSet: StudentSet, maxHourPerDay: number, weight = DEFAULT_WEIGHT, active = true) {
-    super(maxHourPerDay);
+    super(maxHourPerDay * 60);
     this.studentSet = studentSet;
     this.weight = weight;
     this.active = active;

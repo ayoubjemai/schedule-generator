@@ -1,11 +1,11 @@
-import { Activity } from "../../../../models/Activity";
-import { Room } from "../../../../models/Room";
-import { Teacher } from "../../../../models/Teacher";
-import { TimetableAssignment } from "../../../../scheduler/TimetableAssignment";
-import Subject from "../../../../models/Subject";
-import { TeacherMinHoursDaily } from "./TeacherMinHoursDaily";
+import { Activity } from '../../../../models/Activity';
+import { Room } from '../../../../models/Room';
+import { Teacher } from '../../../../models/Teacher';
+import { TimetableAssignment } from '../../../../scheduler/TimetableAssignment';
+import Subject from '../../../../models/Subject';
+import { TeacherMinHoursDaily } from './TeacherMinHoursDaily';
 
-describe("TeacherMinHoursDaily", () => {
+describe('TeacherMinHoursDaily', () => {
   const DAYS_COUNT = 5;
   const PERIODS_PER_DAY = 8;
   const MIN_HOURS_DAILY = 3; // 3 hours (180 minutes) minimum per day
@@ -19,8 +19,8 @@ describe("TeacherMinHoursDaily", () => {
 
   beforeEach(() => {
     assignment = new TimetableAssignment(DAYS_COUNT, PERIODS_PER_DAY);
-    subject = new Subject("sub1", "History");
-    teacher = new Teacher("t1", "John Doe");
+    subject = new Subject('sub1', 'History');
+    teacher = new Teacher('t1', 'John Doe');
 
     // Create activities of various durations for testing
     activities = [];
@@ -46,7 +46,7 @@ describe("TeacherMinHoursDaily", () => {
       activities.push(activity);
     }
 
-    room = new Room("r1", "History Classroom", 30);
+    room = new Room('r1', 'History Classroom', 30);
 
     constraint = new TeacherMinHoursDaily(teacher, MIN_HOURS_DAILY);
   });
@@ -56,10 +56,10 @@ describe("TeacherMinHoursDaily", () => {
     assignment.assignActivity(activities[0], { day: 0, hour: 8, minute: 0 }, room.id); // 60 min
     assignment.assignActivity(activities[1], { day: 1, hour: 8, minute: 0 }, room.id); // 60 min
 
-    expect(() => constraint.isSatisfied(assignment)).toThrow();
+    expect(constraint.isSatisfied(assignment)).toBe(false);
   });
 
-  it("should be satisfied when each day meets the minimum hours requirement", () => {
+  it('should be satisfied when each day meets the minimum hours requirement', () => {
     // Day 0: 3 hours (180 minutes)
     assignment.assignActivity(activities[0], { day: 0, hour: 8, minute: 0 }, room.id); // 60 min
     assignment.assignActivity(activities[5], { day: 0, hour: 10, minute: 0 }, room.id); // 90 min
@@ -73,7 +73,7 @@ describe("TeacherMinHoursDaily", () => {
     expect(constraint.isSatisfied(assignment)).toBe(true);
   });
 
-  it("should not be satisfied when any day has less than the minimum hours", () => {
+  it('should not be satisfied when any day has less than the minimum hours', () => {
     // Day 0: 3 hours (180 minutes) - meets requirement
     assignment.assignActivity(activities[0], { day: 0, hour: 8, minute: 0 }, room.id); // 60 min
     assignment.assignActivity(activities[5], { day: 0, hour: 10, minute: 0 }, room.id); // 90 min
@@ -87,7 +87,7 @@ describe("TeacherMinHoursDaily", () => {
     expect(constraint.isSatisfied(assignment)).toBe(false);
   });
 
-  it("should ignore days with no activities", () => {
+  it('should ignore days with no activities', () => {
     // Day 0: 3 hours (180 minutes)
     assignment.assignActivity(activities[0], { day: 0, hour: 8, minute: 0 }, room.id); // 60 min
     assignment.assignActivity(activities[5], { day: 0, hour: 10, minute: 0 }, room.id); // 90 min
@@ -105,7 +105,7 @@ describe("TeacherMinHoursDaily", () => {
     expect(constraint.isSatisfied(assignment)).toBe(true);
   });
 
-  it("should be satisfied when a day has exactly the minimum hours required", () => {
+  it('should be satisfied when a day has exactly the minimum hours required', () => {
     // Day 0: Exactly 3 hours (180 minutes)
     assignment.assignActivity(activities[0], { day: 0, hour: 8, minute: 0 }, room.id); // 60 min
     assignment.assignActivity(activities[1], { day: 0, hour: 9, minute: 0 }, room.id); // 60 min
@@ -119,7 +119,7 @@ describe("TeacherMinHoursDaily", () => {
     expect(constraint.isSatisfied(assignment)).toBe(true);
   });
 
-  it("should maintain a list of activities that the constraint applies to", () => {
+  it('should maintain a list of activities that the constraint applies to', () => {
     // Assign activities across different days
     assignment.assignActivity(activities[0], { day: 0, hour: 8, minute: 0 }, room.id);
     assignment.assignActivity(activities[1], { day: 0, hour: 9, minute: 0 }, room.id);
@@ -142,14 +142,14 @@ describe("TeacherMinHoursDaily", () => {
     expect(constraint.activities.length).toBe(6);
   });
 
-  it("should not add duplicate activities", () => {
+  it('should not add duplicate activities', () => {
     constraint.addActivity(activities[0]);
     constraint.addActivity(activities[0]);
 
     expect(constraint.activities.length).toBe(1);
   });
 
-  it("should always be satisfied when constraint is inactive", () => {
+  it('should always be satisfied when constraint is inactive', () => {
     constraint.active = false;
 
     // Assign only 1 hour per day (below minimum)
@@ -161,8 +161,8 @@ describe("TeacherMinHoursDaily", () => {
     expect(constraint.isSatisfied(assignment)).toBe(true);
   });
 
-  it("should ignore activities for other teachers", () => {
-    const otherTeacher = new Teacher("t2", "Jane Smith");
+  it('should ignore activities for other teachers', () => {
+    const otherTeacher = new Teacher('t2', 'Jane Smith');
 
     // Create activities for other teacher with sufficient hours
     const otherTeacherActivities = [];
@@ -182,10 +182,10 @@ describe("TeacherMinHoursDaily", () => {
     assignment.assignActivity(activities[9], { day: 0, hour: 13, minute: 0 }, room.id); // 30 min
 
     // Total main teacher hours (90 min) is insufficient
-    expect(() => constraint.isSatisfied(assignment)).toThrow();
+    expect(constraint.isSatisfied(assignment)).toBe(false);
   });
 
-  it("should calculate total duration correctly with activities of different lengths", () => {
+  it('should calculate total duration correctly with activities of different lengths', () => {
     // Day 0: Mix of activities totaling 3 hours (180 minutes)
     assignment.assignActivity(activities[0], { day: 0, hour: 8, minute: 0 }, room.id); // 60 min
     assignment.assignActivity(activities[9], { day: 0, hour: 9, minute: 0 }, room.id); // 30 min
@@ -200,7 +200,7 @@ describe("TeacherMinHoursDaily", () => {
     expect(constraint.isSatisfied(assignment)).toBe(true);
   });
 
-  it("should handle a high number of activities across multiple days", () => {
+  it('should handle a high number of activities across multiple days', () => {
     // Create many short activities
     const manyActivities = [];
     for (let i = 0; i < 20; i++) {

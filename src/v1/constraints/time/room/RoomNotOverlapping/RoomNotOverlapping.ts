@@ -1,20 +1,24 @@
 import moment from 'moment';
 import { Activity } from '../../../../models/Activity';
+import { Room } from '../../../../models/Room';
 import { TimetableAssignment } from '../../../../scheduler/TimetableAssignment';
 import { Constraint } from '../../../../types/constraints';
 import { DEFAULT_WEIGHT } from '../../../../utils/defaultWeight';
 import { ConstraintType } from '../../../constraintType.enum';
 
-export class ActivitiesNotOverlapping implements Constraint {
-  type = ConstraintType.time.activity.ActivitiesNotOverlapping;
+export class RoomNotOverlapping implements Constraint {
+  type = ConstraintType.time.room.RoomNotOverlapping;
   weight: number;
   active: boolean;
+  room: Room;
   activities: Activity[] = [];
 
-  constructor(weight = DEFAULT_WEIGHT, active = true) {
+  constructor(room: Room, weight = DEFAULT_WEIGHT, active = true) {
+    this.room = room;
     this.weight = weight;
     this.active = active;
   }
+
   addActivity(activity: Activity): void {
     if (this.activities.includes(activity)) return;
     this.activities.push(activity);
@@ -23,15 +27,15 @@ export class ActivitiesNotOverlapping implements Constraint {
   isSatisfied(assignment: TimetableAssignment): boolean {
     if (!this.active) return true;
 
-    const activityAssignments = assignment.getAllActivityAssignments();
-    activityAssignments.forEach(activityAssignment => {
-      this.addActivity(activityAssignment);
+    const roomActivities = assignment.getAllActivitiesInRoom(this.room.id);
+    roomActivities.forEach(activity => {
+      this.addActivity(activity);
     });
 
-    for (let i = 0; i < activityAssignments.length; i++) {
-      const activityA = activityAssignments[i];
-      for (let j = i + 1; j < activityAssignments.length; j++) {
-        const activityB = activityAssignments[j];
+    for (let i = 0; i < roomActivities.length; i++) {
+      const activityA = roomActivities[i];
+      for (let j = i + 1; j < roomActivities.length; j++) {
+        const activityB = roomActivities[j];
         if (activityA.id === activityB.id) continue;
         if (this.checkActivityOverlap(assignment, activityA, activityB)) {
           return false;
@@ -39,7 +43,7 @@ export class ActivitiesNotOverlapping implements Constraint {
       }
     }
 
-    return true;
+    return true; // Return true if constraint is satisfied
   }
 
   private checkActivityOverlap(
