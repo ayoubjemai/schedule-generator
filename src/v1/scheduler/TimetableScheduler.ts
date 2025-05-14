@@ -279,16 +279,16 @@ class TimetableScheduler {
         break;
       }
 
-      if (acceptanceProbability > this.random()) {
-        currentSolution = neighborSolution;
-        currentScore = neighborScore;
+      //if (acceptanceProbability > this.random()) {
+      currentSolution = neighborSolution;
+      currentScore = neighborScore;
 
-        if (currentScore > bestScore) {
-          bestSolution = currentSolution;
-          bestScore = currentScore;
-          console.log(`New best score: ${bestScore} at iteration ${iteration}`);
-        }
+      if (currentScore > bestScore) {
+        bestSolution = currentSolution;
+        bestScore = currentScore;
+        console.log(`New best score: ${bestScore} at iteration ${iteration}`);
       }
+      // }
 
       temperature *= coolingRate;
       iteration++;

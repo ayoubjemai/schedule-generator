@@ -1,25 +1,40 @@
+import payload from '../../test3.json';
 import { validatePayload } from '../helpers/validatePayload';
-import payload from '../../test.json';
-import { Constraint } from './types/constraints';
-import { ActivitiesNotOverlapping } from './constraints';
-import { Teacher } from './models/Teacher';
-import Subject from './models/Subject';
-import { StudentSet } from './models/StudentSet';
-import { Room } from './models/Room';
+import {
+  MaxConsecutiveHoursForTeacher,
+  PreferredRoomsForActivity,
+  StudentSetNotAvailablePeriods,
+  TeacherMaxMinutesPerDay,
+  TeacherMinDaysPerWeek,
+  TeacherMinHoursDaily,
+  TeacherNotAvailablePeriods,
+} from './constraints';
+import { RoomNotOverlapping } from './constraints/time/room/RoomNotOverlapping/RoomNotOverlapping';
+import { StudentSetMaxHoursPerDay } from './constraints/time/room/StudentSetMaxHoursPerDay/StudentSetMaxHoursPerDay';
+import { StudentSetMaxConsecutiveHours } from './constraints/time/studentSet/StudentSetMaxConsecutiveHours/StudentSetMaxConsecutiveHours';
+import { StudentSetMaxGapPerDay } from './constraints/time/studentSet/StudentSetMaxGapPerDay/StudentSetMaxGapPerDay';
+import { StudentSetMinHoursDaily } from './constraints/time/studentSet/StudentSetMinHoursDaily/StudentSetMinHoursDaily';
+import { StudentSetNotOverlapping } from './constraints/time/studentSet/StudentSetNotOverlapping/StudentSetNotOverlapping';
+import { TeachersNotOverlapping } from './constraints/time/teacher/TeachersNotOverlapping/TeachersNotOverlapping';
 import { Activity } from './models/Activity';
-import { ValidationError } from './utils/ValidationError';
+import { Room } from './models/Room';
+import { StudentSet } from './models/StudentSet';
+import Subject from './models/Subject';
+import { Teacher } from './models/Teacher';
 import { TimetableScheduler } from './scheduler/TimetableScheduler';
-import { renderConsoleTimetable } from './utils/renderConsoleTimetable';
+import { Constraint } from './types/constraints';
 import { logToFile } from './utils/logToFile';
+import { renderConsoleTimetable } from './utils/renderConsoleTimetable';
+import { ValidationError } from './utils/ValidationError';
 
 try {
   const data = validatePayload.parse(payload);
   const { dayCount, periodsPerDay } = data;
-  const constraints: Constraint[] = [new ActivitiesNotOverlapping()];
+  const constraints: Constraint[] = [];
 
   const teachers = data.teachers.map(teacher => {
     const { id, name } = teacher;
-    return new Teacher(id, name);
+    return new Teacher(id, name, teacher);
   });
 
   const subjects = data.subjects.map(subject => {
@@ -29,7 +44,7 @@ try {
 
   const classes = data.classes.map(classData => {
     const { id, name } = classData;
-    return new StudentSet(id, { name });
+    return new StudentSet(id, classData);
   });
 
   const rooms = data.rooms.map(room => {
@@ -76,13 +91,59 @@ try {
     return activityInstance;
   });
 
-  const scheduler = new TimetableScheduler(data.dayCount, data.periodsPerDay, 1234);
+  const scheduler = new TimetableScheduler(data.dayCount, data.periodsPerDay, 12345, 1);
 
   rooms.forEach(room => {
+    constraints.push(new RoomNotOverlapping(room));
     scheduler.addRoom(room);
   });
 
+  teachers.forEach(teacher => {
+    constraints.push(new TeachersNotOverlapping(teacher));
+    if (teacher.get('notAvailablePeriods')?.length) {
+      constraints.push(new TeacherNotAvailablePeriods(teacher));
+    }
+
+    if (teacher.get('minDaysPerWeek')) {
+      constraints.push(new TeacherMinDaysPerWeek(teacher, teacher.get('minDaysPerWeek')!));
+    }
+    if (teacher.get('maxHoursContinuously')) {
+      constraints.push(new MaxConsecutiveHoursForTeacher(teacher, teacher.get('maxHoursContinuously')!));
+    }
+
+    if (teacher.get('maxHoursDaily')) {
+      constraints.push(new TeacherMaxMinutesPerDay(teacher, teacher.get('maxHoursDaily')! * 60));
+    }
+
+    if (teacher.get('minHoursDaily')) {
+      constraints.push(new TeacherMinHoursDaily(teacher, teacher.get('minHoursDaily')!));
+    }
+  });
+
+  classes.forEach(classData => {
+    constraints.push(new StudentSetNotOverlapping(classData));
+    if (classData.get('notAvailablePeriods').length) {
+      constraints.push(new StudentSetNotAvailablePeriods(classData));
+    }
+
+    if (classData.get('maxHoursDaily')) {
+      constraints.push(new StudentSetMaxHoursPerDay(classData, classData.get('maxHoursDaily')!));
+    }
+    if (classData.get('minHoursDaily')) {
+      constraints.push(new StudentSetMinHoursDaily(classData, classData.get('minHoursDaily')!));
+    }
+
+    if (classData.get('maxGapsPerDay')) {
+      constraints.push(new StudentSetMaxGapPerDay(classData, classData.get('maxGapsPerDay')! * 60));
+    }
+
+    if (classData.get('maxHoursContinuously')) {
+      constraints.push(new StudentSetMaxConsecutiveHours(classData, classData.get('maxHoursContinuously')!));
+    }
+  });
+
   activities.forEach(activity => {
+    constraints.push(new PreferredRoomsForActivity(activity, activity.preferredRooms));
     scheduler.addActivity(activity);
   });
 

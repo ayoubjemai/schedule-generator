@@ -19,6 +19,8 @@ export function renderConsoleTimetable(
         room: string | null;
         totalDurationInMinutes: number;
         activityId: string;
+        studentSetId: string;
+        teacherId: string;
       }[],
     };
 
@@ -41,6 +43,8 @@ export function renderConsoleTimetable(
           minute: slot.minute,
           totalDurationInMinutes: activity.totalDurationInMinutes,
           activityId: activity.id,
+          studentSetId: activity.studentSets[0].id,
+          teacherId: activity.teachers[0].id,
         });
       } else {
         // daySchedule.periods.push({
