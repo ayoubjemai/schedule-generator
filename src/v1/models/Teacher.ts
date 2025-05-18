@@ -38,30 +38,30 @@ interface ITeacher {
 export class Teacher extends Model {
   id: ID;
   name: string;
-  protected notAvailablePeriods: Period[] = [];
-  protected maxDaysPerWeek?: number;
-  protected minDaysPerWeek?: number;
-  protected maxGapsPerDay?: number;
-  protected minGapsPerDay?: number;
-  protected maxGapsPerWeek?: number;
-  protected maxHoursDaily?: number;
-  protected maxHoursContinuously?: number;
-  protected minHoursContinuously?: number;
-  protected maxSpanPerDay?: number;
-  protected minHoursDaily?: number;
-  protected activityTagMaxHoursDaily: Map<string, number> = new Map();
-  protected activityTagMaxHoursContinuously: Map<string, number> = new Map();
-  protected activityTagMinHoursDaily: Map<string, number> = new Map();
-  protected maxDaysPerWeekForHourlyInterval: Map<[number, number], number> = new Map();
-  protected minRestingHours?: number;
-  protected homeRooms: ID[] = [];
-  protected maxRoomChangesPerDay?: number;
-  protected maxRoomChangesPerWeek?: number;
-  protected maxBuildingChangesPerDay?: number;
-  protected maxBuildingChangesPerWeek?: number;
-  protected minGapsBetweenRoomChanges?: number;
-  protected minGapsBetweenBuildingChanges?: number;
-  protected minHoursDailyActivityTagPerMinutes: Map<`${string}_${string}`, number> = new Map();
+  notAvailablePeriods: Period[] = [];
+  maxDaysPerWeek?: number;
+  minDaysPerWeek?: number;
+  maxGapsPerDay?: number;
+  minGapsPerDay?: number;
+  maxGapsPerWeek?: number;
+  maxHoursDaily?: number;
+  maxHoursContinuously?: number;
+  minHoursContinuously?: number;
+  maxSpanPerDay?: number;
+  minHoursDaily?: number;
+  activityTagMaxHoursDaily: Map<string, number> = new Map();
+  activityTagMaxHoursContinuously: Map<string, number> = new Map();
+  activityTagMinHoursDaily: Map<string, number> = new Map();
+  maxDaysPerWeekForHourlyInterval: Map<[number, number], number> = new Map();
+  minRestingHours?: number;
+  homeRooms: ID[] = [];
+  maxRoomChangesPerDay?: number;
+  maxRoomChangesPerWeek?: number;
+  maxBuildingChangesPerDay?: number;
+  maxBuildingChangesPerWeek?: number;
+  minGapsBetweenRoomChanges?: number;
+  minGapsBetweenBuildingChanges?: number;
+  minHoursDailyActivityTagPerMinutes: Map<`${string}_${string}`, number> = new Map();
 
   constructor(
     id: ID,

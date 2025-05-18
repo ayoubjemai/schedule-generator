@@ -1,22 +1,27 @@
-import payload from '../../test4.json';
+import payload from '../../data-test/test4.json';
 import { validatePayload } from '../helpers/validatePayload';
 import {
   MaxConsecutiveHoursForTeacher,
   PreferredRoomsForActivity,
   PreferredStartingTimesForActivity,
   StudentSetNotAvailablePeriods,
+  TeacherMaxDaysPerWeek,
+  TeacherMaxGapPerDayBetweenActivities,
   TeacherMaxMinutesPerDay,
+  TeacherMaxSpanPerDay,
   TeacherMinDaysPerWeek,
+  TeacherMinGapPerDayBetweenActivities,
   TeacherMinHoursDaily,
+  TeacherMinRestingHours,
   TeacherNotAvailablePeriods,
+  StudentSetMaxHoursPerDay,
+  RoomNotOverlapping,
+  StudentSetMaxConsecutiveHours,
+  StudentSetMaxGapPerDay,
+  StudentSetMinHoursDaily,
+  StudentSetNotOverlapping,
+  TeachersNotOverlapping,
 } from './constraints';
-import { RoomNotOverlapping } from './constraints/time/room/RoomNotOverlapping/RoomNotOverlapping';
-import { StudentSetMaxHoursPerDay } from './constraints/time/room/StudentSetMaxHoursPerDay/StudentSetMaxHoursPerDay';
-import { StudentSetMaxConsecutiveHours } from './constraints/time/studentSet/StudentSetMaxConsecutiveHours/StudentSetMaxConsecutiveHours';
-import { StudentSetMaxGapPerDay } from './constraints/time/studentSet/StudentSetMaxGapPerDay/StudentSetMaxGapPerDay';
-import { StudentSetMinHoursDaily } from './constraints/time/studentSet/StudentSetMinHoursDaily/StudentSetMinHoursDaily';
-import { StudentSetNotOverlapping } from './constraints/time/studentSet/StudentSetNotOverlapping/StudentSetNotOverlapping';
-import { TeachersNotOverlapping } from './constraints/time/teacher/TeachersNotOverlapping/TeachersNotOverlapping';
 import { Activity } from './models/Activity';
 import { Room } from './models/Room';
 import { StudentSet } from './models/StudentSet';
@@ -100,24 +105,52 @@ try {
   });
 
   teachers.forEach(teacher => {
+    // Existing constraints
     constraints.push(new TeachersNotOverlapping(teacher));
-    if (teacher.get('notAvailablePeriods')?.length) {
+
+    // Handle both notAvailablePeriods and notAvailableTimes
+    if (teacher.get('notAvailablePeriods')?.length || teacher.notAvailablePeriods?.length) {
       constraints.push(new TeacherNotAvailablePeriods(teacher));
     }
 
-    if (teacher.get('minDaysPerWeek')) {
-      constraints.push(new TeacherMinDaysPerWeek(teacher, teacher.get('minDaysPerWeek')!));
-    }
-    if (teacher.get('maxHoursContinuously')) {
-      constraints.push(new MaxConsecutiveHoursForTeacher(teacher, teacher.get('maxHoursContinuously')!));
+    if (teacher.minDaysPerWeek) {
+      constraints.push(new TeacherMinDaysPerWeek(teacher, teacher.minDaysPerWeek));
     }
 
-    if (teacher.get('maxHoursDaily')) {
-      constraints.push(new TeacherMaxMinutesPerDay(teacher, teacher.get('maxHoursDaily')! * 60));
+    if (teacher.maxDaysPerWeek) {
+      constraints.push(new TeacherMaxDaysPerWeek(teacher, teacher.maxDaysPerWeek));
     }
 
-    if (teacher.get('minHoursDaily')) {
-      constraints.push(new TeacherMinHoursDaily(teacher, teacher.get('minHoursDaily')!));
+    if (teacher.maxHoursContinuously) {
+      constraints.push(new MaxConsecutiveHoursForTeacher(teacher, teacher.maxHoursContinuously));
+    }
+
+    if (teacher.maxHoursDaily) {
+      constraints.push(new TeacherMaxMinutesPerDay(teacher, teacher.maxHoursDaily * 60));
+    }
+
+    if (teacher.maxHoursDaily) {
+      constraints.push(new TeacherMaxMinutesPerDay(teacher, teacher.maxHoursDaily * 60));
+    }
+
+    if (teacher.minHoursDaily) {
+      constraints.push(new TeacherMinHoursDaily(teacher, teacher.minHoursDaily));
+    }
+
+    if (teacher.maxGapsPerDay) {
+      constraints.push(new TeacherMaxGapPerDayBetweenActivities(teacher, teacher.maxGapsPerDay * 60));
+    }
+
+    if (teacher.minGapsPerDay) {
+      constraints.push(new TeacherMinGapPerDayBetweenActivities(teacher, teacher.minGapsPerDay * 60));
+    }
+
+    if (teacher.maxSpanPerDay) {
+      constraints.push(new TeacherMaxSpanPerDay(teacher, teacher.maxSpanPerDay));
+    }
+
+    if (teacher.minRestingHours) {
+      constraints.push(new TeacherMinRestingHours(teacher, teacher.minRestingHours));
     }
   });
 

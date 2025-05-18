@@ -18,4 +18,11 @@ export { TeacherMaxHoursContinouslyInActivityTag } from './time/teacher/TeacherM
 export { TeacherMinHoursDailyInActivityTag } from './time/teacher/TeacherMinHoursDailyInActivityTag/TeacherMinHoursDailyInActivityTag';
 export { TeacherMinGapBetweenActivityTags } from './time/teacher/TeacherMinGapBetweenActivityTags/TeacherMinGapBetweenActivityTags';
 export { TeacherMaxDayInIntervalHours } from './time/teacher/TeacherMaxDayInIntervalHours/TeacherMaxDayInIntervalHours';
-export { TeacherMinRestinHours } from './time/teacher/TeacherMinRestingHours/TeacherMinRestingHours';
+export { TeacherMinRestingHours } from './time/teacher/TeacherMinRestingHours/TeacherMinRestingHours';
+export { RoomNotOverlapping } from './time/room/RoomNotOverlapping/RoomNotOverlapping';
+export { StudentSetMaxHoursPerDay } from './time/room/StudentSetMaxHoursPerDay/StudentSetMaxHoursPerDay';
+export { StudentSetMaxConsecutiveHours } from './time/studentSet/StudentSetMaxConsecutiveHours/StudentSetMaxConsecutiveHours';
+export { StudentSetMaxGapPerDay } from './time/studentSet/StudentSetMaxGapPerDay/StudentSetMaxGapPerDay';
+export { StudentSetMinHoursDaily } from './time/studentSet/StudentSetMinHoursDaily/StudentSetMinHoursDaily';
+export { StudentSetNotOverlapping } from './time/studentSet/StudentSetNotOverlapping/StudentSetNotOverlapping';
+export { TeachersNotOverlapping } from './time/teacher/TeachersNotOverlapping/TeachersNotOverlapping';

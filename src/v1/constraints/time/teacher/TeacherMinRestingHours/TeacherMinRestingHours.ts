@@ -6,8 +6,8 @@ import { Constraint } from '../../../../types/constraints';
 import { DEFAULT_WEIGHT } from '../../../../utils/defaultWeight';
 import { ConstraintType } from '../../../constraintType.enum';
 
-class TeacherMinRestinHours implements Constraint {
-  type = ConstraintType.time.teacher.TeacherMinRestinHours;
+class TeacherMinRestingHours implements Constraint {
+  type = ConstraintType.time.teacher.TeacherMinRestingHours;
   weight: number;
   active: boolean;
   teacher: Teacher;
@@ -69,4 +69,4 @@ class TeacherMinRestinHours implements Constraint {
   }
 }
 
-export { TeacherMinRestinHours };
+export { TeacherMinRestingHours };
