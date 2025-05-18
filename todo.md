@@ -6,6 +6,7 @@
 
 ## For Teachers
 
+- Teacher activity not overlapping periods ✅
 - Not available periods ✅
 - Max days per week ✅
 - Min days per week ✅
@@ -25,6 +26,7 @@
 
 ## For Students (Sets)
 
+- Student activity not overlapping periods ✅
 - Not available periods ✅
 - Max days per week ✅
 - Min days per week ✅
@@ -70,6 +72,9 @@
 
 ## General
 
+## Room
+
+- Room activity not overlapping periods ✅
 - Room not available periods ✅
 
 ## For Teachers

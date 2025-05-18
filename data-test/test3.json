@@ -1,0 +1,281 @@
+{
+  "dayCount": 5,
+  "periodsPerDay": 8,
+  "teachers": [
+    { "id": "T1", "name": "Mr. Ahmed" },
+    { "id": "T2", "name": "Ms. Lina" },
+    { "id": "T3", "name": "Mr. Omar" },
+    { "id": "T4", "name": "Ms. Sara" },
+    { "id": "T5", "name": "Ms. Fatma" }
+  ],
+  "subjects": [
+    { "id": "S1", "name": "Math" },
+    { "id": "S2", "name": "Physics" },
+    { "id": "S3", "name": "Chemistry" },
+    { "id": "S4", "name": "Biology" },
+    { "id": "S5", "name": "History" },
+    { "id": "S6", "name": "Geography" },
+    { "id": "S7", "name": "English" },
+    { "id": "S8", "name": "PE" },
+    { "id": "S9", "name": "Art" },
+    { "id": "S10", "name": "Computer Science" },
+    { "id": "S11", "name": "Lab Work" },
+    { "id": "S12", "name": "Project" }
+  ],
+  "classes": [
+    { "id": "C1", "name": "Grade 10-A" },
+    { "id": "C2", "name": "Grade 10-B" },
+    { "id": "C3", "name": "Grade 10-C" },
+    { "id": "C4", "name": "Grade 10-D" }
+  ],
+  "rooms": [
+    { "id": "R1", "name": "Room A" },
+    { "id": "R2", "name": "Room B" },
+    { "id": "R3", "name": "Lab Room" },
+    { "id": "R4", "name": "Field 1" },
+    { "id": "R5", "name": "Physics Lab" },
+    { "id": "R6", "name": "Room 12" }
+  ],
+  "activities": [
+    {
+      "id": "A1",
+      "name": "Math A",
+      "subject": "S1",
+      "classes": ["C1"],
+      "teachers": ["T1"],
+      "totalDurationInMinutes": 60
+    },
+    {
+      "id": "A2",
+      "name": "Math B",
+      "subject": "S1",
+      "classes": ["C2"],
+      "teachers": ["T1"],
+      "totalDurationInMinutes": 60
+    },
+    {
+      "id": "A3",
+      "name": "Physics A",
+      "subject": "S2",
+      "classes": ["C1"],
+      "teachers": ["T2"],
+      "totalDurationInMinutes": 60
+    },
+    {
+      "id": "A4",
+      "name": "Physics B",
+      "subject": "S2",
+      "classes": ["C2"],
+      "teachers": ["T2"],
+      "totalDurationInMinutes": 60
+    },
+    {
+      "id": "A5",
+      "name": "Chemistry A",
+      "subject": "S3",
+      "classes": ["C3"],
+      "teachers": ["T3"],
+      "totalDurationInMinutes": 120
+    },
+    {
+      "id": "A6",
+      "name": "Chemistry B",
+      "subject": "S3",
+      "classes": ["C4"],
+      "teachers": ["T3"],
+      "totalDurationInMinutes": 120
+    },
+    {
+      "id": "A7",
+      "name": "Biology A",
+      "subject": "S4",
+      "classes": ["C1"],
+      "teachers": ["T4"],
+      "totalDurationInMinutes": 60
+    },
+    {
+      "id": "A8",
+      "name": "Biology B",
+      "subject": "S4",
+      "classes": ["C2"],
+      "teachers": ["T4"],
+      "totalDurationInMinutes": 60
+    },
+    {
+      "id": "A9",
+      "name": "History A",
+      "subject": "S5",
+      "classes": ["C3"],
+      "teachers": ["T5"],
+      "totalDurationInMinutes": 60
+    },
+    {
+      "id": "A10",
+      "name": "History B",
+      "subject": "S5",
+      "classes": ["C4"],
+      "teachers": ["T5"],
+      "totalDurationInMinutes": 60
+    },
+    {
+      "id": "A11",
+      "name": "Geography A",
+      "subject": "S6",
+      "classes": ["C1"],
+      "teachers": ["T2"],
+      "totalDurationInMinutes": 60
+    },
+    {
+      "id": "A12",
+      "name": "Geography B",
+      "subject": "S6",
+      "classes": ["C2"],
+      "teachers": ["T2"],
+      "totalDurationInMinutes": 60
+    },
+    {
+      "id": "A13",
+      "name": "English A",
+      "subject": "S7",
+      "classes": ["C3"],
+      "teachers": ["T1"],
+      "totalDurationInMinutes": 60
+    },
+    {
+      "id": "A14",
+      "name": "English B",
+      "subject": "S7",
+      "classes": ["C4"],
+      "teachers": ["T1"],
+      "totalDurationInMinutes": 60
+    },
+    {
+      "id": "A15",
+      "name": "PE A",
+      "subject": "S8",
+      "classes": ["C1"],
+      "teachers": ["T3"],
+      "totalDurationInMinutes": 60
+    },
+    {
+      "id": "A16",
+      "name": "PE B",
+      "subject": "S8",
+      "classes": ["C2"],
+      "teachers": ["T3"],
+      "totalDurationInMinutes": 60
+    },
+    {
+      "id": "A17",
+      "name": "Art A",
+      "subject": "S9",
+      "classes": ["C3"],
+      "teachers": ["T4"],
+      "totalDurationInMinutes": 60
+    },
+    {
+      "id": "A18",
+      "name": "Art B",
+      "subject": "S9",
+      "classes": ["C4"],
+      "teachers": ["T4"],
+      "totalDurationInMinutes": 60
+    },
+    {
+      "id": "A19",
+      "name": "Comp Sci A",
+      "subject": "S10",
+      "classes": ["C1"],
+      "teachers": ["T5"],
+      "totalDurationInMinutes": 60
+    },
+    {
+      "id": "A20",
+      "name": "Comp Sci B",
+      "subject": "S10",
+      "classes": ["C2"],
+      "teachers": ["T5"],
+      "totalDurationInMinutes": 60
+    },
+    {
+      "id": "A21",
+      "name": "Lab Work A",
+      "subject": "S11",
+      "classes": ["C3"],
+      "teachers": ["T2"],
+      "totalDurationInMinutes": 60
+    },
+    {
+      "id": "A22",
+      "name": "Lab Work B",
+      "subject": "S11",
+      "classes": ["C4"],
+      "teachers": ["T2"],
+      "totalDurationInMinutes": 60
+    },
+    {
+      "id": "A23",
+      "name": "Project A",
+      "subject": "S12",
+      "classes": ["C1"],
+      "teachers": ["T1"],
+      "totalDurationInMinutes": 120
+    },
+    {
+      "id": "A24",
+      "name": "Project B",
+      "subject": "S12",
+      "classes": ["C2"],
+      "teachers": ["T1"],
+      "totalDurationInMinutes": 120
+    },
+    {
+      "id": "A25",
+      "name": "History C",
+      "subject": "S5",
+      "classes": ["C1"],
+      "teachers": ["T5"],
+      "totalDurationInMinutes": 60
+    },
+    {
+      "id": "A26",
+      "name": "Biology C",
+      "subject": "S4",
+      "classes": ["C4"],
+      "teachers": ["T4"],
+      "totalDurationInMinutes": 60
+    },
+    {
+      "id": "A27",
+      "name": "Chemistry C",
+      "subject": "S3",
+      "classes": ["C2"],
+      "teachers": ["T3"],
+      "totalDurationInMinutes": 120
+    },
+    {
+      "id": "A28",
+      "name": "English C",
+      "subject": "S7",
+      "classes": ["C3"],
+      "teachers": ["T1"],
+      "totalDurationInMinutes": 60
+    },
+    {
+      "id": "A29",
+      "name": "Math C",
+      "subject": "S1",
+      "classes": ["C4"],
+      "teachers": ["T1"],
+      "totalDurationInMinutes": 60
+    },
+    {
+      "id": "A30",
+      "name": "Physics C",
+      "subject": "S2",
+      "classes": ["C1"],
+      "teachers": ["T2"],
+      "totalDurationInMinutes": 60
+    }
+  ]
+}
