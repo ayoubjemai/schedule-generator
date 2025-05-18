@@ -37,7 +37,7 @@ export { MinHoursContinouslyInActivityTag } from './time/common/MinHoursContinou
 export { MinHoursDaily } from './time/common/MinHoursDaily/MinHoursDaily';
 export { MinSpanPerDay } from './time/common/MinSpanPerDay/MinSpanPerDay';
 export { StudentSetMaxDaysPerWeek } from './time/studentSet/StudentSetMaxDaysPerWeek/StudentSetMaxDaysPerWeek';
-export { StudentSetMaxHoursContinouslyInActivityTag } from './time/studentSet/StudentSetMaxHoursContinouslyInActivityTag/StudentSetMaxHoursContinouslyInActivityTag';
+export { StudentSetMaxHoursContinuouslyInActivityTag } from './time/studentSet/StudentSetMaxHoursContinuouslyInActivityTag/StudentSetMaxHoursContinuouslyInActivityTag';
 export { StudentSetMaxSpanPerDay } from './time/studentSet/StudentSetMaxSpanPerDay/StudentSetMaxSpanPerDay';
 export { StudentSetMinDaysPerWeek } from './time/studentSet/StudentSetMinDaysPerWeek/StudentSetMinDaysPerWeek';
 export { StudentSetMinGap } from './time/studentSet/StudentSetMinGap/StudentSetMinGap';

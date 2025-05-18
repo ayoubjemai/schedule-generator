@@ -13,7 +13,7 @@ export const ConstraintType = {
       StudentSetMaxConsecutiveHours: 'StudentSetMaxConsecutiveHours',
       StudentSetMaxSpanPerDay: 'StudentSetMaxSpanPerDay',
       StudentSetMinHoursDaily: 'StudentSetMinHoursDaily',
-      StudentSetMaxHoursContinouslyInActivityTag: 'StudentSetMaxHoursContinouslyInActivityTag',
+      StudentSetMaxHoursContinuouslyInActivityTag: 'StudentSetMaxHoursContinuouslyInActivityTag',
       StudentSetMinDaysPerWeek: 'StudentSetMinDaysPerWeek',
       StudentSetMinGap: 'StudentSetMinGap',
       StudentSetMinSpanPerDay: 'StudentSetMinSpanPerDay',
@@ -59,3 +59,6 @@ export type ExtractTypeFromObject<T extends Record<string, any>> = {
 }[keyof T];
 
 export type TConstraintType = ExtractTypeFromObject<typeof ConstraintType>;
+
+const t = 'StudentSetMaxHoursContinuouslyInActivityTag';
+const t2 = 'StudentSetMaxHoursContinuouslyInActivityTag';

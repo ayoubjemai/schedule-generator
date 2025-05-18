@@ -8,11 +8,11 @@ import { Period } from '../../../../types/core';
 import { ActivityHelper } from '../../../../../helpers/activity.helper';
 import { MaxHoursContinouslyInActivityTag } from '../../common/MaxHoursContinouslyInActivityTag/MaxHoursContinouslyInActivityTag';
 
-export class StudentSetMaxHoursContinouslyInActivityTag
+export class StudentSetMaxHoursContinuouslyInActivityTag
   extends MaxHoursContinouslyInActivityTag
   implements Constraint
 {
-  type = ConstraintType.time.studentSet.StudentSetMaxHoursContinouslyInActivityTag;
+  type = ConstraintType.time.studentSet.StudentSetMaxHoursContinuouslyInActivityTag;
   weight: number;
   active: boolean;
   studentSet: StudentSet;

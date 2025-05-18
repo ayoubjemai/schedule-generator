@@ -3,10 +3,10 @@ import { Room } from '../../../../models/Room';
 import { TimetableAssignment } from '../../../../scheduler/TimetableAssignment';
 import Subject from '../../../../models/Subject';
 import { StudentSet } from '../../../../models/StudentSet';
-import { StudentSetMaxHoursContinouslyInActivityTag } from './StudentSetMaxHoursContinouslyInActivityTag';
+import { StudentSetMaxHoursContinuouslyInActivityTag } from './StudentSetMaxHoursContinuouslyInActivityTag';
 import { ActivityTag } from '../../../../models/ActivityTag';
 
-describe('StudentSetMaxHoursContinouslyInActivityTag', () => {
+describe('StudentSetMaxHoursContinuouslyInActivityTag', () => {
   const DAYS_COUNT = 5;
   const PERIODS_PER_DAY = 8;
   const MAX_HOURS_CONTINUOUSLY = 2;
@@ -15,7 +15,7 @@ describe('StudentSetMaxHoursContinouslyInActivityTag', () => {
   let assignment: TimetableAssignment;
   let activities: Activity[];
   let subject: Subject;
-  let constraint: StudentSetMaxHoursContinouslyInActivityTag;
+  let constraint: StudentSetMaxHoursContinuouslyInActivityTag;
   let room: Room;
   let studentSet: StudentSet;
   let labTag: ActivityTag;
@@ -49,7 +49,7 @@ describe('StudentSetMaxHoursContinouslyInActivityTag', () => {
 
     room = new Room('r1', 'Laboratory 101', 30);
 
-    constraint = new StudentSetMaxHoursContinouslyInActivityTag(
+    constraint = new StudentSetMaxHoursContinuouslyInActivityTag(
       studentSet,
       MAX_HOURS_CONTINUOUSLY,
       ACTIVITY_TAG_ID
@@ -79,7 +79,7 @@ describe('StudentSetMaxHoursContinouslyInActivityTag', () => {
 
   it('should use studentSet minGapsPerDay value for determining gaps', () => {
     studentSet.set('minGapsPerDay', 40); // Override default value
-    constraint = new StudentSetMaxHoursContinouslyInActivityTag(
+    constraint = new StudentSetMaxHoursContinuouslyInActivityTag(
       studentSet,
       MAX_HOURS_CONTINUOUSLY,
       ACTIVITY_TAG_ID
