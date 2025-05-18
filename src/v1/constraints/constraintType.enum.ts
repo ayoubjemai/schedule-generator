@@ -59,6 +59,3 @@ export type ExtractTypeFromObject<T extends Record<string, any>> = {
 }[keyof T];
 
 export type TConstraintType = ExtractTypeFromObject<typeof ConstraintType>;
-
-const t = 'StudentSetMaxHoursContinuouslyInActivityTag';
-const t2 = 'StudentSetMaxHoursContinuouslyInActivityTag';
