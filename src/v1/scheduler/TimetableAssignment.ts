@@ -31,7 +31,7 @@ class TimetableAssignment {
     }
   }
 
-  assignActivity(activity: Activity, period: Period, roomId: string): boolean {
+  assignActivity(activity: Activity, period: Period, roomId: string): true {
     const periodInMinutes = IntervalTree.periodToMinutes(period);
 
     this.timeIntervals.set(periodInMinutes, activity);
@@ -105,7 +105,12 @@ class TimetableAssignment {
   }
 
   getAllActivityAssignments(): Activity[] {
-    return Array.from(this.timeIntervals.values());
+    const activities: Activity[] = [];
+    this.timeIntervals.forEach(activity => {
+      activities.push(activity);
+    });
+
+    return activities;
   }
 
   getAllActivitiesInRoom(roomId: string): Activity[] {
@@ -139,7 +144,7 @@ class TimetableAssignment {
   }
 }
 
-class IntervalTree {
+export class IntervalTree {
   private intervals: Array<{ start: number; end: number; value: Activity }> = [];
 
   insert(period: Period, totalDuraionInMinutes: number, value: Activity): void {
