@@ -1,8 +1,9 @@
-import payload from '../../test3.json';
+import payload from '../../test4.json';
 import { validatePayload } from '../helpers/validatePayload';
 import {
   MaxConsecutiveHoursForTeacher,
   PreferredRoomsForActivity,
+  PreferredStartingTimesForActivity,
   StudentSetNotAvailablePeriods,
   TeacherMaxMinutesPerDay,
   TeacherMinDaysPerWeek,
@@ -43,7 +44,7 @@ try {
   });
 
   const classes = data.classes.map(classData => {
-    const { id, name } = classData;
+    const { id } = classData;
     return new StudentSet(id, classData);
   });
 
@@ -91,7 +92,7 @@ try {
     return activityInstance;
   });
 
-  const scheduler = new TimetableScheduler(data.dayCount, data.periodsPerDay, 12345, 1);
+  const scheduler = new TimetableScheduler(data.dayCount, data.periodsPerDay, 1234567, 1);
 
   rooms.forEach(room => {
     constraints.push(new RoomNotOverlapping(room));
@@ -144,6 +145,7 @@ try {
 
   activities.forEach(activity => {
     constraints.push(new PreferredRoomsForActivity(activity, activity.preferredRooms));
+    constraints.push(new PreferredStartingTimesForActivity(activity, activity.preferredStartingTimes));
     scheduler.addActivity(activity);
   });
 
