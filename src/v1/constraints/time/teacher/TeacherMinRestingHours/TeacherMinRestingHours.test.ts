@@ -4,7 +4,7 @@ import { Teacher } from '../../../../models/Teacher';
 import { TimetableAssignment } from '../../../../scheduler/TimetableAssignment';
 import { Period } from '../../../../types/core';
 import Subject from '../../../../models/Subject';
-import { TeacherMinRestinHours } from './TeacherMinRestingHours';
+import { TeacherMinRestingHours } from './TeacherMinRestingHours';
 
 describe('TeacherMinRestingHours', () => {
   const DAYS_COUNT = 5;
@@ -16,7 +16,7 @@ describe('TeacherMinRestingHours', () => {
   let firstActivityDay2: Activity;
   let subject: Subject;
   let teacher: Teacher;
-  let constraint: TeacherMinRestinHours;
+  let constraint: TeacherMinRestingHours;
   let room: Room;
 
   beforeEach(() => {
@@ -34,7 +34,7 @@ describe('TeacherMinRestingHours', () => {
 
     room = new Room('r1', 'Classroom 101', 30);
 
-    constraint = new TeacherMinRestinHours(teacher, MIN_RESTING_HOURS);
+    constraint = new TeacherMinRestingHours(teacher, MIN_RESTING_HOURS);
   });
 
   it('should be satisfied when no activities are assigned to the teacher', () => {

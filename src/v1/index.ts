@@ -12,7 +12,7 @@ import {
   TeacherMinGapBetweenActivityTags,
   TeacherMinHoursDaily,
   TeacherMinHoursDailyInActivityTag,
-  TeacherMinRestinHours,
+  TeacherMinRestingHours,
   TeacherNotAvailablePeriods,
 } from './constraints';
 
@@ -157,7 +157,7 @@ scheduler.addTimeConstraint(new TeacherMinDaysPerWeek(teacher1, teacher1.get('mi
 scheduler.addTimeConstraint(new TeacherMinHoursDaily(teacher1, teacher1.get('minHoursDaily') || 1));
 scheduler.addTimeConstraint(new TeacherMaxMinutesPerDay(teacher1, (teacher1.get('maxHoursDaily') || 0) * 60));
 scheduler.addTimeConstraint(new TeacherMaxSpanPerDay(teacher1, teacher1.get('maxSpanPerDay') || 0));
-scheduler.addTimeConstraint(new TeacherMinRestinHours(teacher1, teacher1.get('minRestingHours') || 12));
+scheduler.addTimeConstraint(new TeacherMinRestingHours(teacher1, teacher1.get('minRestingHours') || 12));
 
 // scheduler.addTimeConstraint(
 //   new MinConsecutiveHoursForTeacher(teacher1, teacher1.get('minHoursContinuously') || 3)

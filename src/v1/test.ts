@@ -1,4 +1,4 @@
-import data from '../../examples/1747170170199/timetable.json';
+import data from '../../examples/1747578449416/timetable.json';
 type Period = {
   hour: number;
   minute: number;

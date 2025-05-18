@@ -9,7 +9,7 @@ import { StudentSet } from '../../../../models/StudentSet';
 describe('studentSet StudentSetNotOverlapping', () => {
   const DAYS_COUNT = 5;
   const PERIODS_PER_DAY = 8;
-  
+
   let assignment: any;
   let activity: any;
   let subject: any;
@@ -21,15 +21,15 @@ describe('studentSet StudentSetNotOverlapping', () => {
   beforeEach(() => {
     assignment = new TimetableAssignment(DAYS_COUNT, PERIODS_PER_DAY);
     subject = new Subject('sub1', 'Mathematics');
-    
+
     // Create an activity
     activity = new Activity('a1', 'Math Lecture', subject, 60);
-    
+
     // Create a room
     room = new Room('r1', 'Classroom 101', 30);
     // Create a student set
-    studentSet = new StudentSet('s1', 'Class 1A');
-    
+    studentSet = new StudentSet('s1', { name: 'Class 1A' });
+
     // Add student set to activity
     activity.studentSets.push(studentSet);
     // Create a time slot
@@ -46,14 +46,14 @@ describe('studentSet StudentSetNotOverlapping', () => {
   it('should be satisfied when conditions are met', () => {
     // Set up a scenario where the constraint should be satisfied
     assignment.assignActivity(activity, slot, room.id);
-    
+
     expect(constraint.isSatisfied(assignment)).toBe(true);
   });
 
   it('should not be satisfied when conditions are not met', () => {
     // Set up a scenario where the constraint should not be satisfied
     // assignment.assignActivity(activity, { day: 0, hour: 9, minute: 0 }, room.id);
-    
+
     // TODO: Implement this test after completing the constraint logic
     // expect(constraint.isSatisfied(assignment)).toBe(false);
     expect(true).toBe(true); // Placeholder
@@ -61,10 +61,10 @@ describe('studentSet StudentSetNotOverlapping', () => {
 
   it('should always be satisfied when constraint is inactive', () => {
     constraint.active = false;
-    
+
     // Set up a scenario that would normally violate the constraint
     // assignment.assignActivity(activity, { day: 0, hour: 9, minute: 0 }, room.id);
-    
+
     expect(constraint.isSatisfied(assignment)).toBe(true);
   });
 
@@ -76,7 +76,7 @@ describe('studentSet StudentSetNotOverlapping', () => {
     expect(constraint.activities.length).toBe(1);
 
     const activity2 = new Activity('a2', 'Another Math Lecture', subject, 60);
-    
+
     activity2.studentSets.push(studentSet);
     assignment.assignActivity(activity2, slot, room.id);
     constraint.isSatisfied(assignment);
