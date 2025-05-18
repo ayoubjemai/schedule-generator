@@ -14,8 +14,8 @@ class MaxHoursContinouslyInActivityTag {
   ): boolean {
     const maxContinuousMinutes = this.maxHourContinously * 60;
     let isMaxContinuouslyHoursReached = false;
-    const activitieByDays = groupActivitiesByDay(assignment, activities);
-    for (const [_, activities] of Object.entries(activitieByDays)) {
+    const activitiesByDays = groupActivitiesByDay(assignment, activities);
+    for (const [_, activities] of Object.entries(activitiesByDays)) {
       const filterdActivities = activities.filter(activity =>
         activity.activity.activityTags.some(tag => tag.id === this.activityTagId)
       );

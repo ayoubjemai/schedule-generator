@@ -20,6 +20,7 @@ interface ITeacher {
   minHoursDaily?: number;
   activityTagMaxHoursDaily?: Map<string, number>;
   activityTagMaxHoursContinuously?: Map<string, number>;
+  activityTagMinHoursContinuously?: Map<string, number>;
   activityTagMinHoursDaily?: Map<string, number>;
   minGapsBetweenActivityTags?: Map<[string, string], number>;
   maxDaysPerWeekForHourlyInterval?: Map<[number, number], number>;
@@ -51,6 +52,8 @@ export class Teacher extends Model {
   minHoursDaily?: number;
   activityTagMaxHoursDaily: Map<string, number> = new Map();
   activityTagMaxHoursContinuously: Map<string, number> = new Map();
+  activityTagMinHoursContinuously: Map<string, number> = new Map();
+  minGapsBetweenActivityTags: Map<[string, string], number> = new Map();
   activityTagMinHoursDaily: Map<string, number> = new Map();
   maxDaysPerWeekForHourlyInterval: Map<[number, number], number> = new Map();
   minRestingHours?: number;
@@ -88,6 +91,7 @@ export class Teacher extends Model {
       minGapsBetweenBuildingChanges: number;
       activityTagMaxHoursDaily: Map<string, number>;
       activityTagMaxHoursContinuously: Map<string, number>;
+      activityTagMinHoursContinuously: Map<string, number>;
       activityTagMinHoursDaily: Map<string, number>;
       minGapsBetweenActivityTags: Map<[string, string], number>;
       maxDaysPerWeekForHourlyInterval: Map<[number, number], number>;
@@ -125,10 +129,15 @@ export class Teacher extends Model {
       if (payload.activityTagMaxHoursContinuously)
         this.activityTagMaxHoursContinuously = payload.activityTagMaxHoursContinuously;
 
+      if (payload.activityTagMinHoursContinuously)
+        this.activityTagMinHoursContinuously = payload.activityTagMinHoursContinuously;
+
       if (payload.activityTagMinHoursDaily) this.activityTagMinHoursDaily = payload.activityTagMinHoursDaily;
 
       if (payload.maxDaysPerWeekForHourlyInterval)
         this.maxDaysPerWeekForHourlyInterval = payload.maxDaysPerWeekForHourlyInterval;
+      if (payload.minGapsBetweenActivityTags)
+        this.minGapsBetweenActivityTags = payload.minGapsBetweenActivityTags;
 
       if (payload.homeRooms) this.homeRooms = payload.homeRooms;
 

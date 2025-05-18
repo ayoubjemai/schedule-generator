@@ -15,7 +15,7 @@ export const ConstraintType = {
       StudentSetMinHoursDaily: 'StudentSetMinHoursDaily',
       StudentSetMaxHoursContinuouslyInActivityTag: 'StudentSetMaxHoursContinuouslyInActivityTag',
       StudentSetMinDaysPerWeek: 'StudentSetMinDaysPerWeek',
-      StudentSetMinGap: 'StudentSetMinGap',
+      StudentSetMinGapPerDay: 'StudentSetMinGapPerDay',
       StudentSetMinSpanPerDay: 'StudentSetMinSpanPerDay',
       StudentSetMinHoursContinouslyInActivityTag: 'StudentSetMinHoursContinouslyInActivityTag',
       StudentSetNotOverlapping: 'StudentSetNotOverlapping',

@@ -9,6 +9,20 @@ const validatePeriod = z.object({
   hour: z.number().int(),
   minute: z.number().int().default(0),
 });
+
+const activityTagConstraint = z.object({
+  activityTag: z.string(),
+  maxHours: z.number().int().optional(),
+  minHours: z.number().int().optional(),
+  days: z.array(z.number().int()).optional(),
+});
+
+const minGapBetweenActivityTags = z.object({
+  firstActivityTag: z.string(),
+  secondActivityTag: z.string(),
+  minGapInMinutes: z.number().int(),
+});
+
 export const validatePayload = z.object({
   dayCount: z.number().int(),
   periodsPerDay: z.number().int(),
@@ -28,6 +42,10 @@ export const validatePayload = z.object({
         maxGapPerDay: z.number().int().optional(),
         minGapPerDay: z.number().int().optional(),
         maxSpanPerDay: z.number().int().optional(),
+        maxHoursContinuouslyInActivityTag: z.array(activityTagConstraint).optional(),
+        minHoursContinuouslyInActivityTag: z.array(activityTagConstraint).optional(),
+        minHoursDailyInActivityTag: z.array(activityTagConstraint).optional(),
+        minGapBetweenActivityTags: z.array(minGapBetweenActivityTags).optional(),
       })
     )
   ),
@@ -44,6 +62,10 @@ export const validatePayload = z.object({
         minDaysPerWeek: z.number().int().optional(),
         maxDaysPerWeek: z.number().int().optional(),
         maxSpanPerDay: z.number().int().optional(),
+        minSpanPerDay: z.number().int().optional(),
+        minGap: z.number().int().optional(),
+        maxHoursContinuouslyInActivityTag: z.array(activityTagConstraint).optional(),
+        minHoursContinuouslyInActivityTag: z.array(activityTagConstraint).optional(),
       })
     )
   ),
@@ -51,6 +73,7 @@ export const validatePayload = z.object({
     modelValidation.merge(
       z.object({
         notAvailableTimes: z.array(z.object({ day: z.number(), hour: z.number() })).optional(),
+        notAvailablePeriods: z.array(validatePeriod).optional(),
         preferredFor: z.array(z.string()).optional(),
       })
     )

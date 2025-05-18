@@ -2,7 +2,7 @@ import { Activity } from '../../../../models/Activity';
 import { Room } from '../../../../models/Room';
 import { TimetableAssignment } from '../../../../scheduler/TimetableAssignment';
 import Subject from '../../../../models/Subject';
-import { StudentSetMinGap } from './StudentSetMinGap';
+import { StudentSetMinGapPerDay } from './StudentSetMinGap';
 import { StudentSet } from '../../../../models/StudentSet';
 
 describe('StudentSetMinGap', () => {
@@ -15,7 +15,7 @@ describe('StudentSetMinGap', () => {
   let subject: Subject;
   let studentSet: StudentSet;
   let anotherStudentSet: StudentSet;
-  let constraint: StudentSetMinGap;
+  let constraint: StudentSetMinGapPerDay;
   let room: Room;
 
   beforeEach(() => {
@@ -44,7 +44,7 @@ describe('StudentSetMinGap', () => {
 
     room = new Room('r1', 'Classroom 101', 30);
 
-    constraint = new StudentSetMinGap(studentSet, MIN_GAP_MINUTES);
+    constraint = new StudentSetMinGapPerDay(studentSet, MIN_GAP_MINUTES);
   });
 
   it('should be initialized with correct properties', () => {

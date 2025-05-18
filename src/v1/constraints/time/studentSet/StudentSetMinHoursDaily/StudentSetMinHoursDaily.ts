@@ -6,6 +6,8 @@ import { DEFAULT_WEIGHT } from '../../../../utils/defaultWeight';
 import { ConstraintType } from '../../../constraintType.enum';
 import { MinHoursDaily } from '../../common/MinHoursDaily/MinHoursDaily';
 
+const warnedStudentSets: Record<string, 1 | undefined> = {};
+
 export class StudentSetMinHoursDaily extends MinHoursDaily implements Constraint {
   type = ConstraintType.time.studentSet.StudentSetMinHoursDaily;
   weight: number;
@@ -41,9 +43,13 @@ export class StudentSetMinHoursDaily extends MinHoursDaily implements Constraint
 
     const minDuration = this.minHoursDaily * 60;
     if (allStudentSetDurationInMinutes < minDuration) {
-      throw new Error(
-        `Student set ${this.studentSet.name} has only ${allStudentSetDurationInMinutes} minutes of activities, but needs at least ${minDuration} minutes.`
-      );
+      if (!warnedStudentSets[this.studentSet.id]) {
+        console.warn(
+          `Student set ${this.studentSet.name} has only ${allStudentSetDurationInMinutes} minutes of activities, but needs at least ${minDuration} minutes.`
+        );
+        warnedStudentSets[this.studentSet.id] = 1;
+      }
+      return false;
     }
 
     studentSetActivities.forEach(activity => {

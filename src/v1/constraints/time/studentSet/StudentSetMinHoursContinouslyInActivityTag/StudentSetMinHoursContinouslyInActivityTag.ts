@@ -22,7 +22,7 @@ export class StudentSetMinHoursContinouslyInActivityTag
     studentSet: StudentSet,
     protected minHours: number,
     protected activityTagId: string,
-    protected MIN_GAP_MINUTES: number,
+    protected MIN_GAP_MINUTES: number = 5,
     weight = DEFAULT_WEIGHT,
     active = true
   ) {

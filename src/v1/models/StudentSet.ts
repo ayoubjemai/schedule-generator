@@ -4,7 +4,7 @@ import { Model } from './model';
 
 type ID = string;
 
-interface IStudnetSet {
+interface IStudentSet {
   id: ID;
   name: string;
   notAvailablePeriods: Period[];
@@ -16,9 +16,11 @@ interface IStudnetSet {
   maxHoursDaily?: number;
   maxHoursContinuously?: number;
   maxSpanPerDay?: number;
+  minSpanPerDay?: number;
   minHoursDaily?: number;
   activityTagMaxHoursDaily: Map<string, number>;
   activityTagMaxHoursContinuously: Map<string, number>;
+  activityTagMinHoursContinuously: Map<string, number>;
   activityTagMinHoursDaily: Map<string, number>;
   minGapsBetweenActivityTags: Map<[string, string], number>;
   maxDaysPerWeekForHourlyInterval: Map<[number, number], number>;
@@ -30,36 +32,40 @@ interface IStudnetSet {
   maxBuildingChangesPerWeek?: number;
   minGapsBetweenRoomChanges?: number;
   minGapsBetweenBuildingChanges?: number;
+  minDaysPerWeek?: number;
 }
 
 export class StudentSet extends Model {
   id: string;
   name: string;
-  protected notAvailablePeriods: Period[] = [];
-  protected maxDaysPerWeek?: number;
-  protected maxEarlyBeginnings?: number;
-  protected maxGapsPerDay?: number;
-  protected minGapsPerDay?: number;
-  protected maxGapsPerWeek?: number;
-  protected maxHoursDaily?: number;
-  protected maxHoursContinuously?: number;
-  protected maxSpanPerDay?: number;
-  protected minHoursDaily?: number;
-  protected activityTagMaxHoursDaily: Map<string, number> = new Map();
-  protected activityTagMaxHoursContinuously: Map<string, number> = new Map();
-  protected activityTagMinHoursDaily: Map<string, number> = new Map();
-  protected minGapsBetweenActivityTags: Map<[string, string], number> = new Map();
-  protected maxDaysPerWeekForHourlyInterval: Map<[number, number], number> = new Map();
-  protected minRestingHours?: number;
-  protected homeRooms: string[] = [];
-  protected maxRoomChangesPerDay?: number;
-  protected maxRoomChangesPerWeek?: number;
-  protected maxBuildingChangesPerDay?: number;
-  protected maxBuildingChangesPerWeek?: number;
-  protected minGapsBetweenRoomChanges?: number;
-  protected minGapsBetweenBuildingChanges?: number;
+  notAvailablePeriods: Period[] = [];
+  maxDaysPerWeek?: number;
+  maxEarlyBeginnings?: number;
+  maxGapsPerDay?: number;
+  minGapsPerDay?: number;
+  maxGapsPerWeek?: number;
+  maxHoursDaily?: number;
+  maxHoursContinuously?: number;
+  maxSpanPerDay?: number;
+  minSpanPerDay?: number;
+  minHoursDaily?: number;
+  activityTagMaxHoursDaily: Map<string, number> = new Map();
+  activityTagMaxHoursContinuously: Map<string, number> = new Map();
+  activityTagMinHoursContinuously: Map<string, number> = new Map();
+  activityTagMinHoursDaily: Map<string, number> = new Map();
+  minGapsBetweenActivityTags: Map<[string, string], number> = new Map();
+  maxDaysPerWeekForHourlyInterval: Map<[number, number], number> = new Map();
+  minRestingHours?: number;
+  homeRooms: string[] = [];
+  maxRoomChangesPerDay?: number;
+  maxRoomChangesPerWeek?: number;
+  maxBuildingChangesPerDay?: number;
+  maxBuildingChangesPerWeek?: number;
+  minGapsBetweenRoomChanges?: number;
+  minGapsBetweenBuildingChanges?: number;
+  minDaysPerWeek?: number;
 
-  constructor(id: string, data: Partial<Omit<IStudnetSet, 'name'>> & { name: string }) {
+  constructor(id: string, data: Partial<Omit<IStudentSet, 'name'>> & { name: string }) {
     super(id, data.name);
     this.id = id;
     const {
@@ -73,9 +79,11 @@ export class StudentSet extends Model {
       maxHoursDaily,
       maxHoursContinuously,
       maxSpanPerDay,
+      minSpanPerDay,
       minHoursDaily,
       activityTagMaxHoursDaily,
       activityTagMaxHoursContinuously,
+      activityTagMinHoursContinuously,
       activityTagMinHoursDaily,
       minGapsBetweenActivityTags,
       maxDaysPerWeekForHourlyInterval,
@@ -87,10 +95,12 @@ export class StudentSet extends Model {
       maxBuildingChangesPerWeek,
       minGapsBetweenRoomChanges,
       minGapsBetweenBuildingChanges,
+      minDaysPerWeek,
     } = data;
     this.name = name;
     notAvailablePeriods && (this.notAvailablePeriods = notAvailablePeriods);
     this.maxDaysPerWeek = maxDaysPerWeek;
+    this.minDaysPerWeek = minDaysPerWeek;
     this.maxEarlyBeginnings = maxEarlyBeginnings;
     this.maxGapsPerDay = maxGapsPerDay;
     this.minGapsPerDay = minGapsPerDay;
@@ -98,10 +108,13 @@ export class StudentSet extends Model {
     this.maxHoursDaily = maxHoursDaily;
     this.maxHoursContinuously = maxHoursContinuously;
     this.maxSpanPerDay = maxSpanPerDay;
+    this.minSpanPerDay = minSpanPerDay;
     this.minHoursDaily = minHoursDaily;
     activityTagMaxHoursDaily && (this.activityTagMaxHoursDaily = activityTagMaxHoursDaily);
     activityTagMaxHoursContinuously &&
       (this.activityTagMaxHoursContinuously = activityTagMaxHoursContinuously);
+    activityTagMinHoursContinuously &&
+      (this.activityTagMinHoursContinuously = activityTagMinHoursContinuously);
     activityTagMinHoursDaily && (this.activityTagMinHoursDaily = activityTagMinHoursDaily);
     minGapsBetweenActivityTags && (this.minGapsBetweenActivityTags = minGapsBetweenActivityTags);
     maxDaysPerWeekForHourlyInterval &&
@@ -126,12 +139,12 @@ export class StudentSet extends Model {
     }
   }
 
-  get<T extends keyof IStudnetSet>(fieldName: T): IStudnetSet[T] {
+  get<T extends keyof IStudentSet>(fieldName: T): IStudentSet[T] {
     //@ts-ignore
     return this[fieldName];
   }
 
-  set<T extends keyof IStudnetSet>(fieldName: T, value: IStudnetSet[T]): void {
+  set<T extends keyof IStudentSet>(fieldName: T, value: IStudentSet[T]): void {
     //@ts-ignore
     this[fieldName] = value;
   }

@@ -35,7 +35,7 @@ export class StudentSetMinDaysPerWeek extends MinDaysPerWeek implements Constrai
 
     const studentSetActivities = assignment.getActivitiesForStudentSet(this.studentSet.id);
 
-    studentSetActivities.forEach(activitiy => this.addActivity(activitiy));
+    studentSetActivities.forEach(activity => this.addActivity(activity));
 
     return this.isValid(assignment, this.activities);
   }

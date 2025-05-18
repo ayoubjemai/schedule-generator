@@ -1,4 +1,4 @@
-import payload from '../../data-test/test4.json';
+import payload from '../../data-test/test6.json';
 import { validatePayload } from '../helpers/validatePayload';
 import {
   MaxConsecutiveHoursForTeacher,
@@ -21,6 +21,22 @@ import {
   StudentSetMinHoursDaily,
   StudentSetNotOverlapping,
   TeachersNotOverlapping,
+  RoomNotAvailable,
+  ActivitiesNotOverlapping,
+  MinGapsBetweenActivities,
+  StudentSetMaxDaysPerWeek,
+  StudentSetMaxHoursContinuouslyInActivityTag,
+  StudentSetMaxSpanPerDay,
+  StudentSetMinDaysPerWeek,
+  StudentSetMinGap,
+  StudentSetMinHoursContinouslyInActivityTag,
+  StudentSetMinSpanPerDay,
+  MinConsecutiveHoursForTeacher,
+  TeacherMaxDayInIntervalHours,
+  TeacherMaxHoursContinouslyInActivityTag,
+  TeacherMinGapBetweenActivityTags,
+  TeacherMinHourContinouslyInActivityTag,
+  TeacherMinHoursDailyInActivityTag,
 } from './constraints';
 import { Activity } from './models/Activity';
 import { Room } from './models/Room';
@@ -97,10 +113,13 @@ try {
     return activityInstance;
   });
 
-  const scheduler = new TimetableScheduler(data.dayCount, data.periodsPerDay, 1234567, 1);
+  const scheduler = new TimetableScheduler(data.dayCount, data.periodsPerDay, 1234, 1);
 
   rooms.forEach(room => {
     constraints.push(new RoomNotOverlapping(room));
+    if (room.notAvailablePeriods?.length) {
+      constraints.push(new RoomNotAvailable(room));
+    }
     scheduler.addRoom(room);
   });
 
@@ -152,6 +171,32 @@ try {
     if (teacher.minRestingHours) {
       constraints.push(new TeacherMinRestingHours(teacher, teacher.minRestingHours));
     }
+
+    if (teacher.activityTagMaxHoursContinuously) {
+      teacher.activityTagMaxHoursContinuously.forEach((maxHours, activityTag) => {
+        constraints.push(new TeacherMaxHoursContinouslyInActivityTag(teacher, activityTag, maxHours));
+      });
+    }
+
+    if (teacher.activityTagMinHoursContinuously) {
+      teacher.activityTagMinHoursContinuously.forEach((minHours, activityTag) => {
+        constraints.push(new TeacherMinHourContinouslyInActivityTag(teacher, minHours, activityTag));
+      });
+    }
+
+    if (teacher.activityTagMinHoursDaily) {
+      teacher.activityTagMinHoursDaily.forEach((minHours, activityTag) => {
+        constraints.push(new TeacherMinHoursDailyInActivityTag(teacher, activityTag, minHours));
+      });
+    }
+
+    if (teacher.minGapsBetweenActivityTags) {
+      teacher.minGapsBetweenActivityTags.forEach((minGapInMinutes, [firstActivityTag, secondActivityTag]) => {
+        constraints.push(
+          new TeacherMinGapBetweenActivityTags(teacher, firstActivityTag, secondActivityTag, minGapInMinutes)
+        );
+      });
+    }
   });
 
   classes.forEach(classData => {
@@ -174,6 +219,39 @@ try {
     if (classData.get('maxHoursContinuously')) {
       constraints.push(new StudentSetMaxConsecutiveHours(classData, classData.get('maxHoursContinuously')!));
     }
+
+    if (classData.maxDaysPerWeek) {
+      constraints.push(new StudentSetMaxDaysPerWeek(classData, classData.maxDaysPerWeek!));
+    }
+
+    if (classData.minDaysPerWeek) {
+      constraints.push(new StudentSetMinDaysPerWeek(classData, classData.minDaysPerWeek));
+    }
+
+    if (classData.maxSpanPerDay) {
+      constraints.push(new StudentSetMaxSpanPerDay(classData, classData.maxSpanPerDay));
+    }
+
+    if (classData.minSpanPerDay) {
+      constraints.push(new StudentSetMinSpanPerDay(classData, classData.minSpanPerDay));
+    }
+
+    if (classData.minGapsPerDay) {
+      constraints.push(new StudentSetMinGap(classData, classData.minGapsPerDay * 60));
+    }
+
+    //    if (classData.get('maxHoursContinuouslyInActivityTag')) {
+    if (classData.activityTagMaxHoursContinuously) {
+      classData.activityTagMaxHoursContinuously.forEach((maxHour, activityTag) => {
+        constraints.push(new StudentSetMaxHoursContinuouslyInActivityTag(classData, maxHour, activityTag));
+      });
+    }
+
+    if (classData.activityTagMinHoursContinuously) {
+      classData.activityTagMinHoursContinuously.forEach((minHour, activityTag) => {
+        constraints.push(new StudentSetMinHoursContinouslyInActivityTag(classData, minHour, activityTag));
+      });
+    }
   });
 
   activities.forEach(activity => {
@@ -182,6 +260,11 @@ try {
     scheduler.addActivity(activity);
   });
 
+  //console.log('Number  of constraints: ', constraints.length);
+
+  const constraintType = Array.from(new Set(constraints.map(constraint => constraint.type)));
+  //console.log('Number of constraint types: ', constraintType.length);
+  //console.log('Percentage to succes of generation ', (constraintType.length / constraints.length) * 100);
   constraints.forEach(constraint => {
     scheduler.addTimeConstraint(constraint);
   });

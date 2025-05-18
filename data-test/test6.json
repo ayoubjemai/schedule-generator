@@ -1,0 +1,356 @@
+{
+  "dayCount": 5,
+  "periodsPerDay": 8,
+  "teachers": [
+    {
+      "id": "T1",
+      "name": "John Smith",
+      "notAvailablePeriods": [
+        { "day": 0, "hour": 0, "minute": 0 },
+        { "day": 4, "hour": 7, "minute": 0 }
+      ],
+      "maxHoursContinuously": 3,
+      "minHoursDaily": 2,
+      "maxHoursDaily": 5,
+      "minDaysPerWeek": 3,
+      "maxDaysPerWeek": 5,
+      "maxGapPerDay": 2,
+      "minGapPerDay": 1,
+      "maxHoursContinuouslyInActivityTag": [{ "activityTag": "TAG1", "maxHours": 2 }],
+      "minHoursContinuouslyInActivityTag": [{ "activityTag": "TAG3", "minHours": 1 }],
+      "minHoursDailyInActivityTag": [{ "activityTag": "TAG1", "minHours": 1, "days": [1, 3] }]
+    },
+    {
+      "id": "T2",
+      "name": "Jane Doe",
+      "maxDailyMinutes": 240,
+      "maxWeeklyMinutes": 960,
+      "minRestingHours": 12,
+      "maxSpanPerDay": 6,
+      "maxHoursContinuouslyInActivityTag": [{ "activityTag": "TAG2", "maxHours": 3 }]
+    },
+    {
+      "id": "T3",
+      "name": "Robert Johnson",
+      "notAvailablePeriods": [
+        { "day": 2, "hour": 3, "minute": 0 },
+        { "day": 2, "hour": 4, "minute": 0 }
+      ],
+      "maxHoursContinuously": 2,
+      "minHoursDaily": 3,
+      "minGapBetweenActivityTags": [
+        { "firstActivityTag": "TAG1", "secondActivityTag": "TAG2", "minGapInMinutes": 60 }
+      ]
+    },
+    {
+      "id": "T4",
+      "name": "Emily Williams",
+      "minDaysPerWeek": 2,
+      "maxDaysPerWeek": 4,
+      "maxSpanPerDay": 5,
+      "minGapBetweenActivityTags": [
+        { "firstActivityTag": "TAG2", "secondActivityTag": "TAG3", "minGapInMinutes": 30 }
+      ]
+    },
+    {
+      "id": "T5",
+      "name": "Michael Brown",
+      "maxHoursDaily": 6,
+      "minGapPerDay": 1
+    }
+  ],
+  "subjects": [
+    { "id": "S1", "name": "Mathematics" },
+    { "id": "S2", "name": "Physics" },
+    { "id": "S3", "name": "Chemistry" },
+    { "id": "S4", "name": "Biology" },
+    { "id": "S5", "name": "History" },
+    { "id": "S6", "name": "Geography" },
+    { "id": "S7", "name": "Languages" },
+    { "id": "S8", "name": "Physical Education" },
+    { "id": "S9", "name": "Art" },
+    { "id": "S10", "name": "Computer Science" }
+  ],
+  "classes": [
+    {
+      "id": "C1",
+      "name": "Class 10A",
+      "maxHoursDaily": 6,
+      "minHoursDaily": 4,
+      "maxGapsPerDay": 2,
+      "maxHoursContinuously": 3,
+      "notAvailablePeriods": [
+        { "day": 4, "hour": 6, "minute": 0 },
+        { "day": 4, "hour": 7, "minute": 0 }
+      ],
+      "maxDaysPerWeek": 5,
+      "minDaysPerWeek": 4,
+      "maxSpanPerDay": 7,
+      "minSpanPerDay": 5,
+      "minGap": 15,
+      "maxHoursContinuouslyInActivityTag": [{ "activityTag": "TAG1", "maxHours": 2 }],
+      "minHoursContinuouslyInActivityTag": [{ "activityTag": "TAG2", "minHours": 2 }]
+    },
+    {
+      "id": "C2",
+      "name": "Class 10B",
+      "maxHoursDaily": 6,
+      "minHoursDaily": 3,
+      "maxGapsPerDay": 1,
+      "maxHoursContinuously": 2,
+      "maxDaysPerWeek": 5,
+      "minDaysPerWeek": 4,
+      "maxSpanPerDay": 6,
+      "minSpanPerDay": 4
+    },
+    {
+      "id": "C3",
+      "name": "Class 11A",
+      "maxHoursDaily": 7,
+      "minHoursDaily": 2,
+      "maxGapsPerDay": 2,
+      "maxDaysPerWeek": 5,
+      "minDaysPerWeek": 3
+    }
+  ],
+  "rooms": [
+    {
+      "id": "R1",
+      "name": "Standard Classroom 101",
+      "notAvailablePeriods": [
+        { "day": 0, "hour": 0, "minute": 0 },
+        { "day": 0, "hour": 1, "minute": 0 }
+      ]
+    },
+    {
+      "id": "R2",
+      "name": "Standard Classroom 102"
+    },
+    {
+      "id": "R3",
+      "name": "Physics Laboratory",
+      "preferredFor": ["S2", "S3", "S4"],
+      "notAvailablePeriods": [
+        { "day": 4, "hour": 6, "minute": 0 },
+        { "day": 4, "hour": 7, "minute": 0 }
+      ]
+    },
+    {
+      "id": "R4",
+      "name": "Computer Lab",
+      "preferredFor": ["S10"]
+    },
+    {
+      "id": "R5",
+      "name": "Gym",
+      "preferredFor": ["S8"]
+    }
+  ],
+  "activityTags": [
+    { "id": "TAG1", "name": "Lecture" },
+    { "id": "TAG2", "name": "Lab" },
+    { "id": "TAG3", "name": "Exercise" },
+    { "id": "TAG4", "name": "Project" }
+  ],
+  "activities": [
+    {
+      "id": "A1",
+      "name": "Math Lecture 10A",
+      "subject": "S1",
+      "classes": ["C1"],
+      "teachers": ["T1"],
+      "totalDurationInMinutes": 90,
+      "preferredStartingTimes": [
+        { "day": 0, "hour": 2, "minute": 0 },
+        { "day": 2, "hour": 2, "minute": 0 }
+      ],
+      "activityTags": ["TAG1"]
+    },
+    {
+      "id": "A2",
+      "name": "Math Exercise 10A",
+      "subject": "S1",
+      "classes": ["C1"],
+      "teachers": ["T1"],
+      "totalDurationInMinutes": 60,
+      "activityTags": ["TAG3"]
+    },
+    {
+      "id": "A3",
+      "name": "Physics Lecture 10A",
+      "subject": "S2",
+      "classes": ["C1"],
+      "teachers": ["T2"],
+      "totalDurationInMinutes": 60,
+      "preferredRooms": ["R3"],
+      "activityTags": ["TAG1"]
+    },
+    {
+      "id": "A4",
+      "name": "Physics Lab 10A",
+      "subject": "S2",
+      "classes": ["C1"],
+      "teachers": ["T2"],
+      "totalDurationInMinutes": 120,
+      "preferredRooms": ["R3"],
+      "activityTags": ["TAG2"]
+    },
+    {
+      "id": "A5",
+      "name": "History 10A",
+      "subject": "S5",
+      "classes": ["C1"],
+      "teachers": ["T3"],
+      "totalDurationInMinutes": 60,
+      "activityTags": ["TAG1"]
+    },
+    {
+      "id": "A6",
+      "name": "PE 10A",
+      "subject": "S8",
+      "classes": ["C1"],
+      "teachers": ["T5"],
+      "totalDurationInMinutes": 60,
+      "preferredRooms": ["R5"],
+      "activityTags": ["TAG3"]
+    },
+    {
+      "id": "A7",
+      "name": "Math Lecture 10B",
+      "subject": "S1",
+      "classes": ["C2"],
+      "teachers": ["T1"],
+      "totalDurationInMinutes": 90,
+      "preferredStartingTimes": [
+        { "day": 1, "hour": 2, "minute": 0 },
+        { "day": 3, "hour": 2, "minute": 0 }
+      ],
+      "activityTags": ["TAG1"]
+    },
+    {
+      "id": "A8",
+      "name": "Chemistry Lab 10B",
+      "subject": "S3",
+      "classes": ["C2"],
+      "teachers": ["T2"],
+      "totalDurationInMinutes": 120,
+      "preferredRooms": ["R3"],
+      "activityTags": ["TAG2"]
+    },
+    {
+      "id": "A9",
+      "name": "Computer Science 10B",
+      "subject": "S10",
+      "classes": ["C2"],
+      "teachers": ["T4"],
+      "totalDurationInMinutes": 120,
+      "preferredRooms": ["R4"],
+      "allowSplit": true,
+      "activityTags": ["TAG2", "TAG4"]
+    },
+    {
+      "id": "A10",
+      "name": "Geography 10B",
+      "subject": "S6",
+      "classes": ["C2"],
+      "teachers": ["T3"],
+      "totalDurationInMinutes": 60,
+      "activityTags": ["TAG1"]
+    },
+    {
+      "id": "A11",
+      "name": "Math Advanced 11A",
+      "subject": "S1",
+      "classes": ["C3"],
+      "teachers": ["T1"],
+      "totalDurationInMinutes": 120,
+      "allowSplit": false,
+      "activityTags": ["TAG1"]
+    },
+    {
+      "id": "A12",
+      "name": "Biology Lab 11A",
+      "subject": "S4",
+      "classes": ["C3"],
+      "teachers": ["T5"],
+      "totalDurationInMinutes": 120,
+      "activityTags": ["TAG2"]
+    },
+    {
+      "id": "A13",
+      "name": "Joint PE Class",
+      "subject": "S8",
+      "classes": ["C1", "C2"],
+      "teachers": ["T5"],
+      "totalDurationInMinutes": 60,
+      "preferredRooms": ["R5"],
+      "activityTags": ["TAG3"]
+    },
+    {
+      "id": "A14",
+      "name": "Computer Science Project 11A",
+      "subject": "S10",
+      "classes": ["C3"],
+      "teachers": ["T4"],
+      "totalDurationInMinutes": 120,
+      "preferredRooms": ["R4"],
+      "activityTags": ["TAG4"]
+    },
+    {
+      "id": "A15",
+      "name": "Art Session",
+      "subject": "S9",
+      "classes": ["C3"],
+      "teachers": ["T3"],
+      "totalDurationInMinutes": 60,
+      "activityTags": ["TAG3"]
+    },
+    {
+      "id": "A16",
+      "name": "Team Teaching Science",
+      "subject": "S3",
+      "classes": ["C3"],
+      "teachers": ["T2", "T4"],
+      "totalDurationInMinutes": 90,
+      "preferredRooms": ["R3"],
+      "activityTags": ["TAG1", "TAG2"]
+    },
+    {
+      "id": "A17",
+      "name": "Languages 10A",
+      "subject": "S7",
+      "classes": ["C1"],
+      "teachers": ["T3"],
+      "totalDurationInMinutes": 90,
+      "activityTags": ["TAG1"]
+    },
+    {
+      "id": "A18",
+      "name": "Languages 10B",
+      "subject": "S7",
+      "classes": ["C2"],
+      "teachers": ["T3"],
+      "totalDurationInMinutes": 90,
+      "activityTags": ["TAG1"]
+    },
+    {
+      "id": "A19",
+      "name": "Languages 11A",
+      "subject": "S7",
+      "classes": ["C3"],
+      "teachers": ["T3"],
+      "totalDurationInMinutes": 90,
+      "activityTags": ["TAG1"]
+    },
+    {
+      "id": "A20",
+      "name": "Physics Lab 11A",
+      "subject": "S2",
+      "classes": ["C3"],
+      "teachers": ["T2"],
+      "totalDurationInMinutes": 120,
+      "preferredRooms": ["R3"],
+      "activityTags": ["TAG2"]
+    }
+  ]
+}

@@ -3,16 +3,6 @@ export { RoomNotAvailable } from './space/room/RoomNotAvailable/RoomNotAvailable
 export { ActivitiesNotOverlapping } from './time/activity/ActivitiesNotOverlapping/ActivitiesNotOverlapping';
 export { MinGapsBetweenActivities } from './time/activity/MinGapsBetweenActivities/MinGapsBetweenActivities';
 export { PreferredStartingTimesForActivity } from './time/activity/PreferredStartingTimesForActivity/PreferredStartingTimesForActivity';
-export { MaxConsecutiveHours } from './time/common/MaxConsectiveHours/MaxConsecutiveHours';
-export { MaxGapPerDay } from './time/common/MaxGapPerDay/MaxGapPerDay';
-export { MaxHoursContinouslyInActivityTag } from './time/common/MaxHoursContinouslyInActivityTag/MaxHoursContinouslyInActivityTag';
-export { MaxHoursPerDay } from './time/common/MaxHoursPerDay/MaxHoursPerDay';
-export { MaxSpanPerDay } from './time/common/MaxSpanPerDay/MaxSpanPerDay';
-export { MinDaysPerWeek } from './time/common/MinDaysPerWeek/MinDaysPerWeek';
-export { MinGapPerDay } from './time/common/MinGapPerDay/MinGapPerDay';
-export { MinHoursContinouslyInActivityTag } from './time/common/MinHoursContinouslyInActivityTag/MinHoursContinouslyInActivityTag';
-export { MinHoursDaily } from './time/common/MinHoursDaily/MinHoursDaily';
-export { MinSpanPerDay } from './time/common/MinSpanPerDay/MinSpanPerDay';
 export { RoomNotOverlapping } from './time/room/RoomNotOverlapping/RoomNotOverlapping';
 export { StudentSetMaxHoursPerDay } from './time/room/StudentSetMaxHoursPerDay/StudentSetMaxHoursPerDay';
 export { StudentSetMaxConsecutiveHours } from './time/studentSet/StudentSetMaxConsecutiveHours/StudentSetMaxConsecutiveHours';
@@ -21,7 +11,7 @@ export { StudentSetMaxGapPerDay } from './time/studentSet/StudentSetMaxGapPerDay
 export { StudentSetMaxHoursContinuouslyInActivityTag } from './time/studentSet/StudentSetMaxHoursContinuouslyInActivityTag/StudentSetMaxHoursContinuouslyInActivityTag';
 export { StudentSetMaxSpanPerDay } from './time/studentSet/StudentSetMaxSpanPerDay/StudentSetMaxSpanPerDay';
 export { StudentSetMinDaysPerWeek } from './time/studentSet/StudentSetMinDaysPerWeek/StudentSetMinDaysPerWeek';
-export { StudentSetMinGap } from './time/studentSet/StudentSetMinGap/StudentSetMinGap';
+export { StudentSetMinGapPerDay as StudentSetMinGap } from './time/studentSet/StudentSetMinGap/StudentSetMinGap';
 export { StudentSetMinHoursContinouslyInActivityTag } from './time/studentSet/StudentSetMinHoursContinouslyInActivityTag/StudentSetMinHoursContinouslyInActivityTag';
 export { StudentSetMinHoursDaily } from './time/studentSet/StudentSetMinHoursDaily/StudentSetMinHoursDaily';
 export { StudentSetMinSpanPerDay } from './time/studentSet/StudentSetMinSpanPerDay/StudentSetMinSpanPerDay';

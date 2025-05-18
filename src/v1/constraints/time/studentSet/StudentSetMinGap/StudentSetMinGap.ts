@@ -8,8 +8,8 @@ import { Period } from '../../../../types/core';
 import { ActivityHelper } from '../../../../../helpers/activity.helper';
 import { MinGapPerDay } from '../../common/MinGapPerDay/MinGapPerDay';
 
-export class StudentSetMinGap extends MinGapPerDay implements Constraint {
-  type = ConstraintType.time.studentSet.StudentSetMinGap;
+export class StudentSetMinGapPerDay extends MinGapPerDay implements Constraint {
+  type = ConstraintType.time.studentSet.StudentSetMinGapPerDay;
   weight: number;
   active: boolean;
   studentSet: StudentSet;
