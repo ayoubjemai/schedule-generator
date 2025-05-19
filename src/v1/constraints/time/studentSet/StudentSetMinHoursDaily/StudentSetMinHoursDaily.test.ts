@@ -44,7 +44,7 @@ describe('StudentSetMinHoursDaily', () => {
 
   it('should be satisfied when no activities are assigned', () => {
     // This should technically not be satisfied, but the constraint throws an error instead
-    expect(() => constraint.isSatisfied(assignment)).toThrow(Error);
+    expect(constraint.isSatisfied(assignment)).toBe(false);
   });
 
   it('should throw an error when total student set hours are less than minimum', () => {
@@ -52,7 +52,7 @@ describe('StudentSetMinHoursDaily', () => {
     assignment.assignActivity(activity1, { day: 0, hour: 9, minute: 0 }, room.id); // 1 hour
     assignment.assignActivity(activity2, { day: 1, hour: 9, minute: 0 }, room.id); // 1.5 hours
 
-    expect(() => constraint.isSatisfied(assignment)).toThrow(Error);
+    expect(constraint.isSatisfied(assignment)).toBe(false);
   });
 
   it('should not be satisfied when hours on any day are below minimum', () => {

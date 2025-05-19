@@ -6,7 +6,7 @@
     "build": "tsc",
     "v1": "ts-node src/v1/index.ts",
     "v2": "ts-node src/v1/main.ts",
-    "test": "ts-node src/v1/test.ts"
+    "test": "ts-node src/v1/testSchedule.ts"
   },
   "author": "",
   "license": "ISC",
