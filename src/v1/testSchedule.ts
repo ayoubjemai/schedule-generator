@@ -15,8 +15,9 @@ type DaySchedule = {
   periods: Period[];
 };
 
-function validateSchedule(schedule: DaySchedule[]): string[] {
+function validateSchedule(schedule: DaySchedule[]): { errors: string[]; warns: string[] } {
   const errors: string[] = [];
+  const warns: string[] = [];
 
   for (const dayBlock of schedule) {
     const periods = dayBlock.periods.map(p => {
@@ -31,12 +32,19 @@ function validateSchedule(schedule: DaySchedule[]): string[] {
     for (let i = 1; i < periods.length; i++) {
       const prev = periods[i - 1];
       const curr = periods[i];
-      if (
+      const isOverlapping =
         curr.start < prev.end &&
         (curr.studentSetId === prev.studentSetId ||
           curr.teacherId === prev.teacherId ||
-          curr.room === prev.room)
-      ) {
+          curr.room === prev.room);
+
+      const isJustActivity = curr.start < prev.end;
+      if (isJustActivity) {
+        warns.push(
+          `Just an activity on day ${dayBlock.day} between activity ${prev.activityId} and ${curr.activityId}`
+        );
+      }
+      if (isOverlapping) {
         errors.push(
           `Overlap on day ${dayBlock.day} between activity ${prev.activityId} and ${curr.activityId}`
         );
@@ -44,16 +52,20 @@ function validateSchedule(schedule: DaySchedule[]): string[] {
     }
   }
 
-  return errors;
+  return { errors, warns };
 }
 
 // Example usage:
 const schedule = data;
-const result = validateSchedule(schedule);
+const { errors, warns } = validateSchedule(schedule);
 
-if (result.length === 0) {
+if (warns.length > 0) {
+  console.warn('Schedule validation warnings:');
+  warns.forEach(warn => console.warn(warn));
+}
+if (errors.length === 0) {
   console.log('Schedule is valid.');
 } else {
   console.error('Schedule validation errors:');
-  result.forEach(err => console.error(err));
+  errors.forEach(err => console.error(err));
 }
