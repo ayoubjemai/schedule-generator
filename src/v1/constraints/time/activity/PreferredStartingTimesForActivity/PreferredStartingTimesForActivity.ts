@@ -13,7 +13,7 @@ export class PreferredStartingTimesForActivity implements Constraint {
   preferredTimes: Period[];
   activities: Activity[] = [];
 
-  constructor(activity: Activity, preferredTimes: Period[], weight = DEFAULT_WEIGHT, active = true) {
+  constructor(activity: Activity, preferredTimes: Period[], weight = DEFAULT_WEIGHT * 0.5, active = true) {
     this.activity = activity;
     this.preferredTimes = preferredTimes;
     this.weight = weight;

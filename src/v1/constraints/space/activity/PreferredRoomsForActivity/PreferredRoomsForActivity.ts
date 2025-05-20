@@ -12,7 +12,7 @@ export class PreferredRoomsForActivity implements Constraint {
   preferredRooms: string[];
   activities: Activity[] = [];
 
-  constructor(activity: Activity, preferredRooms: string[], weight = DEFAULT_WEIGHT, active = true) {
+  constructor(activity: Activity, preferredRooms: string[], weight = DEFAULT_WEIGHT * 0.5, active = true) {
     this.activity = activity;
     this.preferredRooms = preferredRooms.length > 0 ? preferredRooms : activity.preferredRooms;
     this.weight = weight;

@@ -10,7 +10,7 @@ class TimetableAssignment {
   private activityRooms: Map<ActivityId, RoomId> = new Map(); // activityId -> roomId
 
   // New data structures
-  private timeIntervals: Map<PeriodInMinutes, Activity> = new Map(); // PeriodInMinutes -> Activity
+  private timeIntervals: Map<PeriodInMinutes, Activity[]> = new Map(); // PeriodInMinutes -> Activity
   private roomTimeIntervals: Map<PeriodInMinutes, Activity> = new Map(); // roomId -> day -> IntervalTree
 
   constructor(
@@ -19,7 +19,7 @@ class TimetableAssignment {
     data?: {
       activitySlots: Map<string, Period>;
       activityRooms: Map<string, string>;
-      timeIntervals: Map<PeriodInMinutes, Activity>;
+      timeIntervals: Map<PeriodInMinutes, Activity[]>;
       roomTimeIntervals: Map<PeriodInMinutes, Activity>;
     }
   ) {
@@ -34,7 +34,12 @@ class TimetableAssignment {
   assignActivity(activity: Activity, period: Period, roomId: string): true {
     const periodInMinutes = IntervalTree.periodToMinutes(period);
 
-    this.timeIntervals.set(periodInMinutes, activity);
+    const isThereActivityWithSamePeriod = this.timeIntervals.get(periodInMinutes);
+    if (isThereActivityWithSamePeriod) {
+      this.timeIntervals.set(periodInMinutes, [...isThereActivityWithSamePeriod, activity]);
+    } else {
+      this.timeIntervals.set(periodInMinutes, [activity]);
+    }
     this.roomTimeIntervals.set(periodInMinutes, activity);
 
     this.activitySlots.set(activity.id, period);
@@ -50,7 +55,16 @@ class TimetableAssignment {
     if (!period || !roomId) return;
 
     const periodInMinutes = IntervalTree.periodToMinutes(period);
-    this.timeIntervals.delete(periodInMinutes);
+    const isThereActivityWithSamePeriod = this.timeIntervals.get(periodInMinutes);
+    if (isThereActivityWithSamePeriod) {
+      const updatedActivities = isThereActivityWithSamePeriod.filter(
+        (act: Activity) => act.id !== activity.id
+      );
+
+      this.timeIntervals.set(periodInMinutes, updatedActivities);
+    } else {
+      this.timeIntervals.delete(periodInMinutes);
+    }
     this.roomTimeIntervals.delete(periodInMinutes);
     this.activitySlots.delete(activity.id);
     this.activityRooms.delete(activity.id);
@@ -64,17 +78,17 @@ class TimetableAssignment {
     return this.activityRooms.get(activityId);
   }
 
-  getActivityAtSlot(slot: Period): Activity | undefined {
+  getActivityAtSlot(slot: Period): Activity[] | undefined {
     const PeriodInMinutes = IntervalTree.periodToMinutes(slot);
     return this.timeIntervals.get(PeriodInMinutes);
   }
 
-  getActivityInRoomAtSlot(roomId: string, day: number, hour: number, minute: number): Activity | undefined {
-    const period: Period = { day, hour, minute };
-    const periodInMinutes = IntervalTree.periodToMinutes(period);
-    const activity = this.roomTimeIntervals.get(periodInMinutes);
-    return activity;
-  }
+  // getActivityInRoomAtSlot(roomId: string, day: number, hour: number, minute: number): Activity | undefined {
+  //   const period: Period = { day, hour, minute };
+  //   const periodInMinutes = IntervalTree.periodToMinutes(period);
+  //   const activity = this.roomTimeIntervals.get(periodInMinutes);
+  //   return activity;
+  // }
 
   getActivitiesForTeacher(teacherId: string): Activity[] {
     const activities: Activity[] = [];
@@ -107,7 +121,7 @@ class TimetableAssignment {
   getAllActivityAssignments(): Activity[] {
     const activities: Activity[] = [];
     this.timeIntervals.forEach(activity => {
-      activities.push(activity);
+      activities.push(...activity);
     });
 
     return activities;

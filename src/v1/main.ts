@@ -1,4 +1,4 @@
-import payload from '../../data-test/test6.json';
+import payload from '../../data-test/test4.json';
 import { validatePayload } from '../helpers/validatePayload';
 import {
   MaxConsecutiveHoursForTeacher,
@@ -113,7 +113,7 @@ try {
     return activityInstance;
   });
 
-  const scheduler = new TimetableScheduler(data.dayCount, data.periodsPerDay, 1234, 1);
+  const scheduler = new TimetableScheduler(data.dayCount, data.periodsPerDay, undefined, 5);
 
   rooms.forEach(room => {
     constraints.push(new RoomNotOverlapping(room));
@@ -269,9 +269,10 @@ try {
     scheduler.addTimeConstraint(constraint);
   });
 
-  const assignment = scheduler.generateSchedule();
+  const assignment = scheduler.generateSchedule(100);
   console.log('\nGenerated Timetable:');
 
+  console.log('assignment.activities.length', assignment.getAllActivityAssignments().length);
   renderConsoleTimetable(assignment, dayCount, periodsPerDay);
   const { teacherSchedules, studentSetSchedules, roomSchedules } = scheduler.exportSchedule(assignment);
   logToFile('schedule', { teacherSchedules, studentSetSchedules, roomSchedules });

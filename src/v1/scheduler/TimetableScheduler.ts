@@ -12,7 +12,7 @@ import {
   TeacherScheduleExport,
 } from '../types/core';
 import { convertMinutesToHoursAndMinutes } from '../utils/convertMinutesToHoursAndMinutes';
-import { TimetableAssignment } from './TimetableAssignment';
+import { IntervalTree, TimetableAssignment } from './TimetableAssignment';
 
 class TimetableScheduler {
   private activities: Activity[] = [];
@@ -25,7 +25,7 @@ class TimetableScheduler {
     private daysCount: number,
     private periodsPerDay: number,
     private randomSeed = 123456,
-    minuteIncrement: number = 5
+    minuteIncrement: number = 1
   ) {
     for (let day = 0; day < this.daysCount; day++) {
       for (let hour = 0; hour <= this.periodsPerDay; hour++) {
@@ -64,6 +64,12 @@ class TimetableScheduler {
       [result[i], result[j]] = [result[j], result[i]];
     }
     return result;
+  }
+
+  private getRandomElement<T>(arr: T[]): T | undefined {
+    if (arr.length === 0) return undefined;
+    const randomIndex = Math.floor(Math.random() * arr.length);
+    return arr[randomIndex];
   }
 
   private evaluateConstraint(constraint: Constraint, assignment: TimetableAssignment): number {
@@ -185,43 +191,7 @@ class TimetableScheduler {
     roomId: string,
     assignment: TimetableAssignment
   ): boolean {
-    const totalMinutes = activity.totalDurationInMinutes;
-
-    const currentMinute = period.minute;
-    const currentHour = period.hour;
-    let currentDay = period.day;
-
-    for (let minutesElapsed = 0; minutesElapsed < totalMinutes; minutesElapsed++) {
-      const { hours, minutes } = convertMinutesToHoursAndMinutes(minutesElapsed);
-
-      // Check if there's an existing activity at this precise time slot
-      const existingActivity = assignment.getActivityAtSlot({
-        day: currentDay,
-        hour: currentHour + hours,
-        minute: currentMinute + minutes,
-      });
-
-      if (existingActivity) {
-        return false;
-      }
-
-      // Check if there's an existing activity in this room at this time
-      const existingActivityInRoom = assignment.getActivityInRoomAtSlot(
-        roomId,
-        currentDay,
-        currentHour + hours,
-        currentMinute + minutes
-      );
-
-      if (existingActivityInRoom) {
-        return false;
-      }
-    }
-
-    const tempResult = assignment.assignActivity(activity, period, roomId);
-    if (!tempResult) {
-      return false;
-    }
+    assignment.assignActivity(activity, period, roomId);
 
     let satisfiesHardConstraints = true;
 
@@ -275,9 +245,6 @@ class TimetableScheduler {
         neighborScore,
         temperature
       );
-      if (currentScore === 100) {
-        break;
-      }
 
       //if (acceptanceProbability > this.random()) {
       currentSolution = neighborSolution;
@@ -289,6 +256,10 @@ class TimetableScheduler {
         console.log(`New best score: ${bestScore} at iteration ${iteration}`);
       }
       // }
+
+      if (bestScore === 100) {
+        break;
+      }
 
       temperature *= coolingRate;
       iteration++;
@@ -309,6 +280,8 @@ class TimetableScheduler {
 
     const modification = Math.floor(this.random() * 3);
 
+    const originalCount = neighbor.getAllActivityAssignments().length;
+
     switch (modification) {
       case 0:
         this.swapRandomActivities(neighbor);
@@ -319,21 +292,152 @@ class TimetableScheduler {
       case 2:
         this.moveRandomActivity(neighbor);
         break;
+      // case 3:
+      //   this.shuffleAllActivities(neighbor);
+      //   break;
       default:
         throw new Error('Invalid modification type');
+    }
+
+    const newCount = neighbor.getAllActivityAssignments().length;
+    if (newCount !== originalCount) {
+      throw new Error(
+        `Activity count changed from ${originalCount} to ${newCount} during neighbor generation`
+      );
     }
 
     return neighbor;
   }
 
+  private shuffleAllActivities(solution: TimetableAssignment): void {
+    // Get all activities currently in the solution
+    const allActivities = solution.getAllActivityAssignments();
+
+    if (allActivities.length <= 1) return; // Need at least 2 activities to shuffle
+
+    // Store original positions before shuffling
+    const originalPositions: Record<string, { slot: Period; roomId: string }> = {};
+
+    // Capture original positions
+    for (const activity of allActivities) {
+      const slot = solution.getSlotForActivity(activity.id);
+      const roomId = solution.getRoomForActivity(activity.id);
+
+      if (slot && roomId) {
+        originalPositions[activity.id] = { slot, roomId };
+      }
+    }
+
+    // Remove all activities from the solution
+    for (const activity of allActivities) {
+      solution.removeActivity(activity);
+    }
+
+    // Shuffle the activities to randomize placement order
+    const shuffledActivities = this.shuffle([...allActivities]);
+
+    // Keep track of which activities were successfully placed
+    const successfullyPlaced: Set<string> = new Set();
+
+    // Try to place each activity in a new position
+    for (const activity of shuffledActivities) {
+      // Get random periods and rooms to try
+      const shuffledPeriods = this.shuffle(this.possibleTimes);
+      let placed = false;
+
+      // Prioritize activity's preferred rooms if available
+      let preferredRooms: Room[] = [];
+      if (activity.preferredRooms.length > 0) {
+        preferredRooms = this.rooms.filter(r => activity.preferredRooms.includes(r.id));
+      }
+
+      // If no preferred rooms, use all rooms
+      const roomsToTry =
+        preferredRooms.length > 0
+          ? [...preferredRooms, ...this.rooms.filter(r => !preferredRooms.map(pr => pr.id).includes(r.id))]
+          : this.rooms;
+
+      // Shuffle the rooms for random selection
+      const shuffledRooms = this.shuffle(roomsToTry);
+
+      // Try each period and room combination
+      for (const period of shuffledPeriods) {
+        if (placed) break;
+
+        for (const room of shuffledRooms) {
+          if (this.canPlaceActivity(activity, period, room.id, solution)) {
+            solution.assignActivity(activity, period, room.id);
+            successfullyPlaced.add(activity.id);
+            placed = true;
+            break;
+          }
+        }
+      }
+
+      // If couldn't place in a new position, revert to original position
+      if (!placed) {
+        const original = originalPositions[activity.id];
+        if (original) {
+          // Try to place back in original position
+          if (this.canPlaceActivity(activity, original.slot, original.roomId, solution)) {
+            solution.assignActivity(activity, original.slot, original.roomId);
+            successfullyPlaced.add(activity.id);
+          } else {
+            console.warn(`Could not place activity ${activity.id} back in its original position`);
+            // As a last resort, try any possible position
+            const lastAttemptPlaced = this.findAnyValidPosition(activity, solution);
+            if (lastAttemptPlaced) {
+              successfullyPlaced.add(activity.id);
+            }
+          }
+        }
+      }
+    }
+
+    // Check if any activities couldn't be placed and try to re-add them
+    for (const activity of allActivities) {
+      if (!successfullyPlaced.has(activity.id)) {
+        const original = originalPositions[activity.id];
+        if (original) {
+          // Try to place back in original position
+          if (this.canPlaceActivity(activity, original.slot, original.roomId, solution)) {
+            solution.assignActivity(activity, original.slot, original.roomId);
+          } else {
+            // As a last resort, try any possible position
+            this.findAnyValidPosition(activity, solution);
+          }
+        }
+      }
+    }
+  }
+
+  // Helper method to find any valid position for an activity
+  private findAnyValidPosition(activity: Activity, solution: TimetableAssignment): boolean {
+    const shuffledPeriods = this.shuffle(this.possibleTimes);
+    const shuffledRooms = this.shuffle(this.rooms);
+
+    for (const period of shuffledPeriods) {
+      for (const room of shuffledRooms) {
+        if (this.canPlaceActivity(activity, period, room.id, solution)) {
+          solution.assignActivity(activity, period, room.id);
+          return true;
+        }
+      }
+    }
+
+    // If we get here, we couldn't place the activity anywhere
+    console.warn(`Could not find any valid position for activity ${activity.id}: ${activity.name}`);
+    return false;
+  }
+
   private moveRandomActivity(solution: TimetableAssignment): void {
     // Get all activities currently in the solution
     const allActivities = solution.getAllActivityAssignments();
+
     if (allActivities.length === 0) return;
 
     // Pick a random activity
-    const randomIndex = Math.floor(this.random() * allActivities.length);
-    const activity = allActivities[randomIndex];
+    const activity = this.getRandomElement(allActivities)!;
 
     // Get current slot and room
     const currentSlot = solution.getSlotForActivity(activity.id);
@@ -347,6 +451,7 @@ class TimetableScheduler {
     // Shuffle possible periods to try
     const shuffledPeriods = this.shuffle(this.possibleTimes);
     // Try to place activity in a new position
+
     let placed = false;
     for (const period of shuffledPeriods) {
       // Try current room first, then others if necessary
